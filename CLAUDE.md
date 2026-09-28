@@ -54,12 +54,12 @@ Next.js 16 docs matching the installed version are in `node_modules/next/dist/do
 ## AI adapter rules
 - Anthropic/Bedrock (Claude 5.x): never send `temperature`, `top_p`, `top_k`, forced `tool_choice`, assistant prefill or `thinking: {type:'disabled'}` (all return 400). Use `output_config.effort` (`low` for interviewer phrasing, `medium` otherwise). Check `stop_reason === 'refusal'`.
 - Structured output: hand-written JSON schema (`jsonSchemaOutputFormat(schema, { transform: false })`) on the first-party API; prompt-JSON on Bedrock; `format: z.toJSONSchema(...)` on Ollama. **Always validate with zod in code**, with one repair retry.
-- Ollama: always `think: false`, identical `options` on every call (`num_ctx`, `temperature: 0`, `num_predict`), `keep_alive: '60m'`, `redirect: 'error'`; refuse models with a non-empty `remote_host`; non-loopback hosts need https.
+- Ollama: always `think: false`, identical `options` on every call (`num_ctx`, `temperature: 0`, `num_predict`), `keep_alive: '60m'`, `redirect: 'error'`; refuse models with a non-empty `remote_host`; non-loopback hosts must be in `OLLAMA_HOST_ALLOWLIST` and use https unless `OLLAMA_ALLOW_PLAINTEXT_LAN=true`.
 - Bedrock: `AWS_REGION` and `BEDROCK_MODEL_ID` are required (fail closed); never hardcode model IDs — point to the AWS/Anthropic docs in `.env.example`. Surface global cross-region profiles and covered (30-day retention) models.
 - Citations use per-request source keys `[S1]…`; strip any citation to a source that wasn't sent.
 
 ## Seed data conventions (`seed-data/`)
-- Editable by a non-programmer SME: YAML for entities and cards, CSV for the expertise matrix, Markdown + frontmatter for transcripts and setup sheets. Every file starts with a comment explaining what to edit.
+- Editable by a non-programmer SME: YAML for entities and cards, CSV for the expertise matrix, Markdown + frontmatter for transcripts and setup sheets. Every YAML/Markdown file starts with a comment explaining what to edit; the CSV has no comment row (it must open cleanly in Excel), so its instructions live in `seed-data/README.md`.
 - Stable, human-typable IDs; never reuse or renumber an ID. Add generated records at the end.
 - Deterministic: mulberry32 with per-record sub-seeds; fixed `DEMO_TODAY`; canonical JSON for hashes; LF line endings and NFC normalization.
 - Run `npm run seed:check` after any edit (it explains errors with `file:line`). After an intentional edit, run `npm run seed:lock` and commit the lock with the edit. The Reset button replays the last *valid* bundle in `data/seed-bundle.json`.
