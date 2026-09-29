@@ -832,14 +832,14 @@ Route handlers: `POST /api/ai/[task]`, `POST /api/ai/preview`, `GET /api/health`
 | R4 | Ray | "Close. Under forty thou and taller than about ten times the wall — a short thin wall is fine. Same on Inconel 718. On 6061 I don't bother. That one's always." | |
 | T5 | AI (template) | "Got it — I've added the height limit, Inconel 718 and the 6061 exception. I'll draft cards for you to review." | wrap |
 
-**Draft cards** (≈ 2 s) → four cards, each passing the traceability gate (pinned in `seed-data/demo/ray-live-interview.yaml`):
+**Draft cards** (≈ 2 s) → four cards, each passing the traceability gate (pinned in `seed-data/demo/ray-live-interview.yaml`, which is authoritative for their exact wording; titles are ≤ 90 characters):
 
 | Card | Type · confidence | Title | Key content (evidence) | Topics / links |
 |---|---|---|---|---|
 | **KC-091** | quoting_rule · always (R4) | "Thin-wall Ti / Inconel 718: add 35% to finishing, two ops, spare blank" | applies when Ti-6Al-4V or Inconel 718, wall < 0.040 in ("under forty thou"), taller than ~10× the wall; not for 6061 or short thin walls; +35 % finishing ("thirty-five percent"), two ops, one spare blank (R1, R3, R4) | quoting, thin-wall, Ti · Q-A01 |
 | **KC-092** | setup_tip · always (R2 "Every time now") | "Thin Ti walls: rough, leave 0.020 in, unclamp and rest, finish in soft jaws" | leave 0.020 in ("twenty thou"), unclamp and let it sit, soft jaws, light passes (R2) | thin-wall, Ti, DMU 50 · m-dmu50 + Q-A01 (session context) |
-| **KC-093** | customer_quirk · always (R3 "always wants") | "Aerovance: full first article on every new revision (~3 h CMM + paperwork); no rework without their MRB" | ~3 h per new revision ("about three more hours"); scrap, don't rework, without MRB sign-off (R2, R3) | Aerovance, FAI/CMM · CUS-01 |
-| **KC-094** | failure_story | "Duct support bracket in April: walls sprang about 0.004 in after unclamping; 4 of 12 scrapped" | "about four thou", "four of the twelve" (R2) | thin-wall (session topic), Ti (J-A03's material), Aerovance · J-A03 (mentioned candidate) + CUS-01 (session context) |
+| **KC-093** | customer_quirk · always (R3 "always wants") | "Aerovance: full first article every new rev (~3 h); no rework without MRB" | ~3 h per new revision ("about three more hours"); scrap, don't rework, without MRB sign-off (R2, R3) | Aerovance, FAI/CMM · CUS-01 |
+| **KC-094** | failure_story | "Duct support bracket in April: walls sprang ~0.004 in after unclamping; 4 of 12 scrapped" | "about four thou", "four of the twelve" (R2) | thin-wall (session topic), Ti (J-A03's material), Aerovance · J-A03 (mentioned candidate) + CUS-01 (session context) |
 
 Ray clicks **Approve all 4** (*ASSUMPTION: approval happens here, while Ray is the active persona* — otherwise steps 3 and 5 can't use them). Toast: "4 cards approved — credited to Ray Delgado". AI calls: tracker ×4, phrasing ×2, extraction ×1 = 7 audited calls.
 
