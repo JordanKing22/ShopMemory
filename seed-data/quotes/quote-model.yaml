@@ -1,0 +1,42 @@
+# Knobs for generating the non-anchor quotes and jobs. All values are fictional starting points for an SME.
+# Hours: quoted_hours = setup + cycle * qty / 60, rounded to 0.5 h.
+setup_hours_by_machine_kind: { vmc: 2.0, five_axis: 3.5, mill_turn: 3.0, swiss: 2.5, lathe: 1.5, wire_edm: 1.0, cmm: 0.5 }
+cycle_minutes_by_family: { bracket: 18, housing: 45, manifold: 60, fitting: 12, shaft: 10, sleeve: 9, ring: 25, plate: 30, insulator: 6, instrument: 8, fixture: 20 }
+material_time_factor: { mat-6061: 1.0, mat-7075: 1.05, mat-peek: 1.1, mat-316: 1.6, mat-174ph: 1.7, mat-ti64: 2.4, mat-in718: 3.2 }
+complexity_factor: { "1": 0.7, "2": 0.85, "3": 1.0, "4": 1.25, "5": 1.6 }
+qty: { min: 5, max: 200 }
+shop_rate_usd_per_hr: { vmc: 110, five_axis: 165, mill_turn: 150, swiss: 120, lathe: 95, wire_edm: 105, cmm: 90 }
+material_cost_per_part_usd: { mat-6061: 12, mat-7075: 18, mat-peek: 9, mat-316: 22, mat-174ph: 40, mat-ti64: 85, mat-in718: 120 }
+target_margin_pct: 22
+variance:
+  base: { mean: 0.02, sd: 0.06 }
+  drivers:
+    thin_wall: { mean: 0.10, sd: 0.08 }
+    titanium: { mean: 0.08, sd: 0.07 }
+    inconel: { mean: 0.10, sd: 0.08 }
+    five_axis: { mean: 0.04, sd: 0.05 }
+    tight_tolerance: { mean: 0.05, sd: 0.05 }
+    new_customer: { mean: 0.06, sd: 0.06 }
+    first_article: { mean: 0.03, sd: 0.03 }
+  quoted_by_ray: { mean_multiplier: 0.35, sd_multiplier: 0.6 }   # Ray prices the judgment in
+  clamp: [-0.25, 0.90]
+quoters: { PER-01: 0.80, PER-04: 0.10, PER-05: 0.10 }   # Maya only after her hire date; Tomás only on turned parts
+quoters_turned_only: [PER-04]
+turned_families: [shaft, sleeve, ring, fitting]
+turned_machine_kinds: [lathe, swiss, mill_turn]
+ray_leave: ["2026-04-06", "2026-04-30"]                  # others quote during this window (explains J-A03)
+job_leads_by_machine_kind: { five_axis: PER-02, vmc: PER-02, wire_edm: PER-02, mill_turn: PER-04, swiss: PER-04, lathe: PER-04, cmm: PER-03 }
+win_odds: { base: 0.58, repeat_part: 0.20, new_customer: -0.10, ray_judgment_job: -0.05 }
+quote_window_days: 540
+generated_quotes_per_part: [1, 2, 2, 3, 3]
+debriefs:
+  routine: ["Ran close to quote.", "No surprises; shipped on time.", "Routine job; setup as planned."]
+  thin_wall: ["Walls needed extra light finishing passes.", "Wall thickness drifted; added a spring pass."]
+  titanium: ["Tool wear ran higher than planned.", "Slower finishing than quoted in titanium."]
+  inconel: ["Insert life shorter than planned; extra tool changes.", "Work hardening slowed the finish passes."]
+  five_axis: ["Extra time proving out the 5-axis program.", "Fixture changes between ops took longer than planned."]
+  tight_tolerance: ["Extra inspection loops to hold the tight bores.", "Thermal growth forced a re-measure and offset."]
+  new_customer: ["Extra first-article questions from a new customer.", "Source inspection added a day."]
+  first_article: ["First article took an extra CMM cycle.", "Balloon drawing needed a revision before approval."]
+reserved_combinations:   # the generator must never create these (anchors only)
+  - { customer: CUS-01, material: mat-ti64, family: bracket, feature: thin_wall }

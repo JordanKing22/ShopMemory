@@ -1,0 +1,29 @@
+# The 28 heat-map rows. Process topics are shop-defined; machine/material/customer topics point at their entity.
+- { id: t-thin-wall, category: process, label: "Thin-wall & low-rigidity parts" }
+- { id: t-quoting, category: process, label: "Quoting & estimating judgment" }
+- { id: t-5ax-workholding, category: process, label: "5-axis setups & workholding" }
+- { id: t-tight-tol, category: process, label: "Tight tolerance & thermal control" }
+- { id: t-fai-cmm, category: process, label: "First article (AS9102) & CMM inspection" }
+- { id: t-outside-proc, category: process, label: "Heat treat, finishing & outside processing" }
+- { id: t-cam, category: process, label: "CAM programming & toolpath strategy" }
+- { id: t-m-vf4, category: machine, label: "Haas VF-4", machine: m-vf4 }
+- { id: t-m-st20, category: machine, label: "Haas ST-20", machine: m-st20 }
+- { id: t-m-dmu50, category: machine, label: "DMG MORI DMU 50", machine: m-dmu50 }
+- { id: t-m-genos, category: machine, label: "Okuma GENOS M560-V", machine: m-genos }
+- { id: t-m-integrex, category: machine, label: "Mazak INTEGREX i-200", machine: m-integrex }
+- { id: t-m-swiss, category: machine, label: "Citizen Cincom L20 (Swiss)", machine: m-swiss }
+- { id: t-m-cmm, category: machine, label: "ZEISS CONTURA (CMM)", machine: m-cmm }
+- { id: t-m-wedm, category: machine, label: "Mitsubishi MV2400R (wire EDM)", machine: m-wedm }
+- { id: t-mat-6061, category: material, label: "6061 aluminum", material: mat-6061 }
+- { id: t-mat-7075, category: material, label: "7075 aluminum", material: mat-7075 }
+- { id: t-mat-174ph, category: material, label: "17-4 PH stainless", material: mat-174ph }
+- { id: t-mat-316, category: material, label: "316 stainless", material: mat-316 }
+- { id: t-mat-ti64, category: material, label: "Titanium (Ti-6Al-4V)", material: mat-ti64 }
+- { id: t-mat-in718, category: material, label: "Inconel 718", material: mat-in718 }
+- { id: t-mat-peek, category: material, label: "PEEK", material: mat-peek }
+- { id: t-cus-01, category: customer, label: "Aerovance", customer: CUS-01 }
+- { id: t-cus-02, category: customer, label: "Halvorsen Flight Controls", customer: CUS-02 }
+- { id: t-cus-03, category: customer, label: "Sutrella Surgical", customer: CUS-03 }
+- { id: t-cus-04, category: customer, label: "Quantrel Semiconductor Equipment", customer: CUS-04 }
+- { id: t-cus-05, category: customer, label: "Graymoor Defense Systems", customer: CUS-05 }
+- { id: t-cus-06, category: customer, label: "Velmont Guidance Systems", customer: CUS-06 }

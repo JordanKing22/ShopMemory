@@ -1,0 +1,55 @@
+# Cards contributed by Marv Tollefson (PER-02). IDs KC-013..029 belong to this file.
+# Phase 1a holds the demo-critical cards (KC-021 and KC-026); the rest are added in Phase 1b.
+# Placeholder domain wording — for SME review.
+
+- id: KC-021
+  type: failure_story
+  status: approved
+  title: "Sensor-mount bracket first piece: finisher ran one part too long, wall tapered"
+  statement: >-
+    On the first piece of the titanium sensor-mount bracket I let the finisher go one part too long and the wall
+    came out tapered. We caught it at first article.
+  applies_when: []
+  does_not_apply_when: []
+  rationale: null
+  cues: ["taper on a finished wall"]
+  actions: []
+  common_mistake: "Stretching a finisher to save a tool change in titanium."
+  expert_confidence: not_stated
+  topics: [t-mat-ti64]
+  tags: [titanium, tool-wear, first-article]
+  links: { jobs: [J-A02], machine: m-dmu50 }
+  source:
+    kind: manual
+    text: >-
+      First piece on the titanium sensor-mount bracket — I let the finisher go one part too long and the wall came out
+      tapered. Caught it at first article.
+    note: Entered by Marv after the job.
+  approved: { by: PER-02, on: "2025-12-15", mode: self }
+  created_on: "2025-12-12"
+
+- id: KC-026
+  type: setup_tip
+  status: approved
+  title: "Graymoor 4-port manifold: drill the cross ports before the deep pockets"
+  statement: >-
+    On the Graymoor 4-port manifold in 17-4, drill the cross ports before you open the deep pockets. With the pockets
+    open first, the drill walks when it breaks through.
+  applies_when: ["17-4 manifold with cross-drilled ports and deep pockets"]
+  does_not_apply_when: []
+  rationale: "An open pocket gives the drill nothing to break through into cleanly."
+  cues: ["cross ports that break into a pocket"]
+  actions: ["drill the cross ports before opening the deep pockets"]
+  common_mistake: "Roughing all the pockets first because it's faster."
+  expert_confidence: always
+  topics: [t-mat-174ph, t-m-genos]
+  tags: [deep-pocket, stainless, genos, defense]
+  links: { jobs: [J-A10], machine: m-genos }
+  source:
+    kind: manual
+    text: >-
+      Graymoor 4-port manifold, 17-4: always drill the cross ports before you open the deep pockets. Open the pockets
+      first and the drill walks when it breaks through.
+    note: Entered by Marv after the manifold job.
+  approved: { by: PER-02, on: "2026-05-12", mode: self }
+  created_on: "2026-05-11"

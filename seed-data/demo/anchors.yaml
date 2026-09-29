@@ -1,0 +1,67 @@
+# Demo-critical IDs and the invariants seed:check enforces. If an edit breaks one of these, seed:check reports a
+# "demo invariant" error. The golden numbers are PLAN.md §6 / Appendix A (verified by script).
+required_ids:
+  people: [PER-01, PER-05]
+  personas: [P-OWNER, P-PER-01, P-PER-05]
+  customers: [CUS-01, CUS-05, CUS-06]
+  parts: [PRT-A01, PRT-A02, PRT-A03, PRT-A04, PRT-A06, PRT-A09, PRT-A10]
+  quotes: [Q-A01]
+  jobs: [J-A02, J-A03, J-A04, J-A06, J-A09, J-A10]
+  cards: [KC-001, KC-002, KC-003, KC-004, KC-005, KC-006, KC-007, KC-008, KC-009, KC-010, KC-011, KC-012, KC-021, KC-034]
+  documents: [DOC-SS-05]
+
+similar_jobs:
+  query: "How do we quote thin-wall Ti brackets for Aerovance?"
+  expected_top3: [J-A02, J-A03, J-A04]
+  expected_rank4: J-A06
+
+golden:
+  before:
+    "PER-01|t-mat-ti64": 57
+    "PER-01|t-thin-wall": 57
+    "PER-01|t-quoting": 30
+    "coverage:t-mat-ti64": 14.0
+    "coverage:t-thin-wall": 13.0
+    "deep:PER-01": 18.2
+  after:
+    "PER-01|t-mat-ti64": 41
+    "PER-01|t-thin-wall": 41
+    "PER-01|t-quoting": 26
+    "coverage:t-mat-ti64": 28.0
+    "coverage:t-thin-wall": 27.0
+    "deep:PER-01": 32.2
+    "top:PER-01": 46
+  spof: ["PER-01|t-mat-ti64", "PER-01|t-thin-wall"]
+
+# Values the demo script, the talk track and the cached AI responses depend on ("RECORD-ID.field": value, using
+# the field names from the seed files). Changing one of these records means re-recording the demo cassettes.
+pinned:
+  "PER-01.planned_departure_date": "2028-05-15"
+  "PER-05.hire_date": "2026-01-12"
+  "CUS-01.name": Aerovance
+  "PRT-A01.part_number": AV-2231-07
+  "PRT-A01.revision": C
+  "PRT-A01.material": mat-ti64
+  "PRT-A01.min_wall_in": 0.035
+  "PRT-A01.max_wall_height_in": 1.6
+  "Q-A01.quote_number": RQ-26-0911
+  "Q-A01.quoted_by": PER-01
+  "Q-A01.quoted_on": "2026-09-11"
+  "Q-A01.qty": 24
+  "Q-A01.quoted_hours": 58.0
+  "Q-A01.outcome": pending
+  "Q-A01.primary_machine": m-dmu50
+  "J-A02.actual_hours": 33.5
+  "J-A03.actual_hours": 41.5
+  "J-A03.scrap_qty": 4
+  "J-A03.ncr_count": 1
+  "Q-A03.quoted_by": PER-05
+  "Q-A03.quoted_hours": 27.0
+  "Q-A03.qty": 12
+  "J-A04.actual_hours": 42.5
+  "PRT-A06.export_control": itar
+  "PRT-A10.part_number": GDS-4410-120
+  "PRT-A10.export_control": itar
+  "J-A10.job_number": RJ-26-0310
+  "Q-A10.quoted_hours": 96.0
+  "J-A10.actual_hours": 118.5

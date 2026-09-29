@@ -1,0 +1,38 @@
+# Ridgeline's own fixtures and tooling (internal work orders, no customer).
+- id: PRT-I01
+  customer: null
+  part_number: RP-FX-101
+  revision: A
+  description: Fixture plate, DMU 50 dovetail
+  family: fixture
+  material: mat-6061
+  features: []
+  complexity: 2
+- id: PRT-I02
+  customer: null
+  part_number: RP-FX-102
+  revision: B
+  description: Soft jaw set, VF-4 vise
+  family: fixture
+  material: mat-6061
+  features: []
+  complexity: 1
+- id: PRT-I03
+  customer: null
+  part_number: RP-FX-103
+  revision: A
+  description: Fixture, Integrex sub-spindle stop
+  family: fixture
+  material: mat-174ph
+  features:
+  - tight_tolerance
+  complexity: 2
+- id: PRT-I04
+  customer: null
+  part_number: RP-FX-104
+  revision: A
+  description: Holder, thread gauge rack
+  family: fixture
+  material: mat-6061
+  features: []
+  complexity: 1

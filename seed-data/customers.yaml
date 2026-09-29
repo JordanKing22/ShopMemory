@@ -1,0 +1,77 @@
+# The 6 fictional customers. part_classification_floor is the minimum classification of their parts, quotes and
+# jobs (defense customers: export_controlled). The customer record itself is customer_confidential.
+# `account` is role-hidden (owner/quoter only) and never sent to any model. Contact emails are always @example.com.
+# part_number_pattern is a regular expression the loader checks every part number against.
+- id: CUS-01
+  name: Aerovance
+  industry: aerospace
+  segment: Aerostructure brackets and fittings
+  customer_since: "2012-04-02"
+  is_new_customer: false
+  part_classification_floor: customer_confidential
+  classification: customer_confidential
+  quality_requirements: >-
+    AS9102 first article on new parts and revisions. Certs and material traceability with every lot.
+  aliases: []
+  part_number_pattern: '^AV-\d{4}-\d{2}$'
+  account: { contact_name: Morgan Ellery (fictional), contact_email: buyer@aerovance.example.com, payment_terms: Net 45, annual_spend_usd: 1180000, pricing_notes: "Price-sensitive on repeat parts; values on-time delivery." }
+- id: CUS-02
+  name: Halvorsen Flight Controls
+  industry: aerospace
+  segment: Actuation housings
+  customer_since: "2008-09-15"
+  is_new_customer: false
+  part_classification_floor: customer_confidential
+  classification: customer_confidential
+  quality_requirements: AS9102 first article. Heat-treat and passivation certs from approved sources only.
+  aliases: [Halvorsen, HFC]
+  part_number_pattern: '^HFC-\d{5}$'
+  account: { contact_name: Terry Vandam (fictional), contact_email: purchasing@halvorsen.example.com, payment_terms: Net 30, annual_spend_usd: 640000, pricing_notes: "" }
+- id: CUS-03
+  name: Sutrella Surgical
+  industry: medical
+  segment: 316L instruments and PEEK components
+  customer_since: "2019-02-11"
+  is_new_customer: false
+  part_classification_floor: customer_confidential
+  classification: customer_confidential
+  quality_requirements: Lot traceability, passivation per their spec, cleaning and bagging requirements.
+  aliases: [Sutrella]
+  part_number_pattern: '^SUR-\d{3}-\d{3}$'
+  account: { contact_name: Jess Moreau (fictional), contact_email: supply@sutrella.example.com, payment_terms: Net 30, annual_spend_usd: 410000, pricing_notes: "" }
+- id: CUS-04
+  name: Quantrel Semiconductor Equipment
+  industry: semiconductor
+  segment: 6061 chamber parts and PEEK insulators
+  customer_since: "2016-06-20"
+  is_new_customer: false
+  part_classification_floor: customer_confidential
+  classification: customer_confidential
+  quality_requirements: Cleanliness and packaging requirements on every chamber part; no rework without approval.
+  aliases: [Quantrel]
+  part_number_pattern: '^QRL-\d{6}$'
+  account: { contact_name: Sam Okonkwo-Reyes (fictional), contact_email: sourcing@quantrel.example.com, payment_terms: Net 60, annual_spend_usd: 720000, pricing_notes: "" }
+- id: CUS-05
+  name: Graymoor Defense Systems
+  industry: defense
+  segment: 17-4 PH manifolds and 7075 housings
+  customer_since: "2014-03-10"
+  is_new_customer: false
+  part_classification_floor: export_controlled
+  classification: customer_confidential
+  quality_requirements: DFARS flow-downs, source inspection on first lots, AS9102 first article.
+  aliases: [Graymoor]
+  part_number_pattern: '^GDS-\d{4}-\d{3}$'
+  account: { contact_name: Riley Tran (fictional), contact_email: buyer@graymoor.example.com, payment_terms: Net 30, annual_spend_usd: 950000, pricing_notes: "" }
+- id: CUS-06
+  name: Velmont Guidance Systems
+  industry: defense
+  segment: Titanium and Inconel housings (defense and space)
+  customer_since: "2025-11-03"
+  is_new_customer: true
+  part_classification_floor: export_controlled
+  classification: customer_confidential
+  quality_requirements: New supplier onboarding, AS9102 first article, source inspection on first lots.
+  aliases: [Velmont]
+  part_number_pattern: '^VLM-\d{5}$'
+  account: { contact_name: Avery Lindqvist (fictional), contact_email: supplychain@velmont.example.com, payment_terms: Net 45, annual_spend_usd: 260000, pricing_notes: "New account; first lots under review." }

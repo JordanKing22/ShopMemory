@@ -1,0 +1,6 @@
+# Force LF everywhere so seed-data offsets and hashes are identical on Windows and Ubuntu.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff2 binary

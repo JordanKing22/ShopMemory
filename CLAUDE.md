@@ -1,6 +1,8 @@
-# CLAUDE.md — ShopMemory conventions
+@AGENTS.md
 
-ShopMemory is a **scripted sales demo** for CNC / precision machine shops: it captures senior people's tacit know-how through an AI interviewer and makes it usable by newer employees, with a visible privacy layer for ITAR/CUI shops. **All data is fictional.** A polished, reliable scripted demo matters more than scale.
+# CLAUDE.md — Floorwise conventions
+
+Floorwise is a **scripted sales demo** for CNC / precision machine shops: it captures senior people's tacit know-how through an AI interviewer and makes it usable by newer employees, with a visible privacy layer for ITAR/CUI shops. **All data is fictional.** A polished, reliable scripted demo matters more than scale.
 
 `PLAN.md` is the source of truth for architecture, data model, the six-step demo script and the phase plan. Read the relevant PLAN.md section before changing a module. If a change contradicts PLAN.md, update PLAN.md in the same commit (or ask first if it changes the demo script or a policy decision).
 
@@ -45,7 +47,7 @@ Next.js 16 docs matching the installed version are in `node_modules/next/dist/do
 
 ## Database conventions
 - One synchronous better-sqlite3 connection per process on `globalThis` (WAL, busy timeout 5000, foreign keys on, `secure_delete` on). **Transactions are synchronous** — an async callback throws.
-- DB path: `SHOPMEMORY_DB` (via `env.ts`) chooses between two **static** `path.join(process.cwd(), 'data', …)` literals (`shopmemory.db` / `e2e.db`) so Turbopack doesn't trace the whole project.
+- DB path: `FLOORWISE_DB` (via `env.ts`) chooses between two **static** `path.join(process.cwd(), 'data', …)` literals (`floorwise.db` / `e2e.db`) so Turbopack doesn't trace the whole project.
 - Migrations: `npm run db:generate` then migrate. **Never `drizzle-kit push`** (it drops the FTS5 tables). FTS5 tables and triggers live in a custom migration; app code never writes to `*_fts` directly.
 - **Always sanitize user text before FTS5 `MATCH`** (`src/lib/retrieval/fts-query.ts`). Raw text like `thin-wall` or `Ti-6Al-4V` throws.
 - Reset = delete + deterministic reinsert inside one transaction (`src/db/reset.ts`), archiving live-call audit rows first. **Never delete or replace the `.db` file while a server is running.**

@@ -1,0 +1,9 @@
+# Materials (implicitly general). `aliases` feed search synonyms and entity detection — add every way people
+# write the material. Notes are for the SME; the app never states material facts on its own.
+- { id: mat-6061, name: 6061-T6 aluminum, short_name: "6061", family: aluminum, aliases: ["6061", "6061-T6", "6061 aluminum"] }
+- { id: mat-7075, name: 7075-T651 aluminum, short_name: "7075", family: aluminum, aliases: ["7075", "7075-T6", "7075-T651", "7075 aluminum"] }
+- { id: mat-174ph, name: 17-4 PH stainless, short_name: 17-4 PH, family: stainless, aliases: ["17-4", "17-4 PH", "17-4PH", "17-4 stainless"] }
+- { id: mat-316, name: 316/316L stainless, short_name: 316 SS, family: stainless, aliases: ["316", "316L", "316 SS", "316 stainless"] }
+- { id: mat-ti64, name: Ti-6Al-4V (Grade 5), short_name: Ti-6Al-4V, family: titanium, aliases: ["Ti", "titanium", "Ti-6Al-4V", "Ti 6-4", "6-4", "Grade 5", "Ti64"] }
+- { id: mat-in718, name: Inconel 718, short_name: Inconel 718, family: nickel_alloy, aliases: ["Inconel", "Inconel 718", "IN718", "In718", "718"] }
+- { id: mat-peek, name: PEEK, short_name: PEEK, family: plastic, aliases: ["PEEK"] }

@@ -1,0 +1,187 @@
+# Hand-authored demo parts (PRT-A01..A12). IDs and part numbers are pinned: the demo script and cached
+# responses depend on them. Classification is derived (customer floor + export_control) unless overridden.
+- id: PRT-A01
+  customer: CUS-01
+  part_number: AV-2231-07
+  revision: C
+  description: Bracket, fuel line support
+  family: bracket
+  material: mat-ti64
+  features:
+  - thin_wall
+  - five_axis
+  - first_article
+  min_wall_in: 0.035
+  max_wall_height_in: 1.6
+  tightest_tol_in: 0.002
+  envelope_in: 4.2 x 2.1 x 1.6
+  complexity: 4
+  notes: The recent quote Ray is interviewed about (demo step 2).
+- id: PRT-A02
+  customer: CUS-01
+  part_number: AV-1874-03
+  revision: B
+  description: Bracket, sensor mount
+  family: bracket
+  material: mat-ti64
+  features:
+  - thin_wall
+  - five_axis
+  - first_article
+  min_wall_in: 0.045
+  max_wall_height_in: 1.2
+  tightest_tol_in: 0.002
+  envelope_in: 3.6 x 1.8 x 1.2
+  complexity: 4
+- id: PRT-A03
+  customer: CUS-01
+  part_number: AV-2107-11
+  revision: A
+  description: Bracket, duct support
+  family: bracket
+  material: mat-ti64
+  features:
+  - thin_wall
+  - five_axis
+  min_wall_in: 0.038
+  max_wall_height_in: 1.45
+  tightest_tol_in: 0.003
+  envelope_in: 4.8 x 2.0 x 1.5
+  complexity: 4
+  notes: The job that went sideways in April (J-A03).
+- id: PRT-A04
+  customer: CUS-01
+  part_number: AV-1932-05
+  revision: D
+  description: Bracket, harness clip
+  family: bracket
+  material: mat-ti64
+  features:
+  - thin_wall
+  - first_article
+  min_wall_in: 0.05
+  max_wall_height_in: 0.9
+  tightest_tol_in: 0.003
+  envelope_in: 2.9 x 1.4 x 0.9
+  complexity: 3
+- id: PRT-A05
+  customer: CUS-01
+  part_number: AV-2215-02
+  revision: A
+  description: Bracket, access panel hinge
+  family: bracket
+  material: mat-7075
+  features:
+  - five_axis
+  - anodize
+  min_wall_in: 0.08
+  max_wall_height_in: 0.75
+  tightest_tol_in: 0.002
+  envelope_in: 5.1 x 2.2 x 1.0
+  complexity: 3
+- id: PRT-A06
+  customer: CUS-06
+  part_number: VLM-40215
+  revision: A
+  description: Housing, sensor, thin-wall
+  family: housing
+  material: mat-ti64
+  features:
+  - thin_wall
+  - five_axis
+  - first_article
+  min_wall_in: 0.04
+  max_wall_height_in: 1.8
+  tightest_tol_in: 0.001
+  envelope_in: 3.9 x 3.9 x 2.1
+  complexity: 5
+  export_control: itar
+- id: PRT-A07
+  customer: CUS-05
+  part_number: GDS-3120-044
+  revision: B
+  description: Ring, seal carrier
+  family: ring
+  material: mat-in718
+  features:
+  - tight_tolerance
+  - first_article
+  tightest_tol_in: 0.0005
+  envelope_in: 5.5 dia x 0.8
+  complexity: 4
+  export_control: itar
+- id: PRT-A08
+  customer: CUS-02
+  part_number: HFC-20518
+  revision: C
+  description: Housing, actuator end cap
+  family: housing
+  material: mat-174ph
+  features:
+  - heat_treat
+  - tight_tolerance
+  - passivation
+  tightest_tol_in: 0.0005
+  envelope_in: 3.2 dia x 1.9
+  complexity: 4
+  notes: Bores moved after heat treat (INT-01 context).
+- id: PRT-A09
+  customer: CUS-05
+  part_number: GDS-7702-015
+  revision: A
+  description: Bracket, commercial mounting (spare)
+  family: bracket
+  material: mat-7075
+  features:
+  - anodize
+  min_wall_in: 0.12
+  tightest_tol_in: 0.005
+  envelope_in: 3.0 x 2.0 x 0.5
+  complexity: 2
+  export_control: ear99
+  classification: customer_confidential
+  classification_override:
+    direction: down
+    reason: Commercial spare, not on the USML (EAR99). Reviewed by the owner on 2026-05-04.
+- id: PRT-A10
+  customer: CUS-05
+  part_number: GDS-4410-120
+  revision: A
+  description: Manifold, hydraulic, 4-port
+  family: manifold
+  material: mat-174ph
+  features:
+  - deep_pocket
+  - tight_tolerance
+  - heat_treat
+  - first_article
+  tightest_tol_in: 0.0005
+  envelope_in: 4.0 x 3.0 x 2.5
+  complexity: 5
+  export_control: itar
+  notes: The export-controlled job used in demo step 6c (J-A10).
+- id: PRT-A11
+  customer: CUS-04
+  part_number: QRL-310442
+  revision: B
+  description: Plate, chamber lid
+  family: plate
+  material: mat-6061
+  features:
+  - cleanroom
+  - tight_tolerance
+  tightest_tol_in: 0.001
+  envelope_in: 12.0 x 12.0 x 0.75
+  complexity: 3
+- id: PRT-A12
+  customer: CUS-03
+  part_number: SUR-118-204
+  revision: A
+  description: Insulator, instrument handle
+  family: insulator
+  material: mat-peek
+  features:
+  - tight_tolerance
+  tightest_tol_in: 0.001
+  envelope_in: 0.5 dia x 2.4
+  complexity: 2

@@ -1,0 +1,26 @@
+# Every fictional company, person and part-number prefix, with the date and result of a web check for
+# real-world collisions in the same industry. seed:check fails if a customer or the shop is missing here.
+# result: no_collision_found | low | medium | high
+- { name: Floorwise, kind: product, checked_on: "2026-09-28", result: no_collision_found, note: "No product found in web search; USPTO and domain check still needed before external use." }
+- { name: Ridgeline Precision, kind: shop, checked_on: "2026-09-28", result: high, source: brief, note: "Several real CNC businesses use this name; always shown as 'Ridgeline Precision (fictional)'." }
+- { name: Aerovance, kind: customer, checked_on: "2026-09-28", result: high, source: brief, note: "AeroVance Solutions Inc. is a real AS9120B parts distributor; shown with a '(fictional customer)' chip." }
+- { name: Halvorsen Flight Controls, kind: customer, checked_on: "2026-09-28", result: low, note: "No company found; the surname evokes a well-known USAF pilot." }
+- { name: Sutrella Surgical, kind: customer, checked_on: "2026-09-28", result: no_collision_found, note: "Replaces 'Lumacor' (a real coating product)." }
+- { name: Quantrel Semiconductor Equipment, kind: customer, checked_on: "2026-09-28", result: low, note: "Close to Quantel; no semiconductor-equipment company found." }
+- { name: Graymoor Defense Systems, kind: customer, checked_on: "2026-09-28", result: low, note: "Graymoor is a friary and a Kentucky city, not a defense firm." }
+- { name: Velmont Guidance Systems, kind: customer, checked_on: "2026-09-28", result: no_collision_found, note: "Replaces 'Stellan' (one letter from a real defense company)." }
+- { name: Ray Delgado, kind: person, checked_on: "2026-09-28", result: no_collision_found, source: brief }
+- { name: Maya Chen, kind: person, checked_on: "2026-09-28", result: no_collision_found, source: brief }
+- { name: Marv Tollefson, kind: person, checked_on: "2026-09-28", result: no_collision_found }
+- { name: Linda Marchetti, kind: person, checked_on: "2026-09-28", result: no_collision_found }
+- { name: Tomás Ibarra, kind: person, checked_on: "2026-09-28", result: no_collision_found }
+- { name: Devin Okafor, kind: person, checked_on: "2026-09-28", result: no_collision_found }
+- { name: Priya Raman, kind: person, checked_on: "2026-09-28", result: no_collision_found }
+- { name: Jonah Pruitt, kind: person, checked_on: "2026-09-28", result: no_collision_found }
+- { name: Dana Whitcomb, kind: person, checked_on: "2026-09-28", result: no_collision_found }
+- { name: "AV-", kind: part_number_prefix, checked_on: "2026-09-28", result: no_collision_found }
+- { name: "HFC-", kind: part_number_prefix, checked_on: "2026-09-28", result: no_collision_found }
+- { name: "SUR-", kind: part_number_prefix, checked_on: "2026-09-28", result: no_collision_found }
+- { name: "QRL-", kind: part_number_prefix, checked_on: "2026-09-28", result: no_collision_found, note: "Not QSE- (a real connector series)." }
+- { name: "GDS-", kind: part_number_prefix, checked_on: "2026-09-28", result: no_collision_found }
+- { name: "VLM-", kind: part_number_prefix, checked_on: "2026-09-28", result: no_collision_found }

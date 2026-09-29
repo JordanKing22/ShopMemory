@@ -1,0 +1,159 @@
+# The scripted live interview with Ray (demo step 2) and the four cards it must produce (KC-091..094).
+# Ray's words are placeholder domain content for SME review. If you edit a reply (R1..R4), the expected cards'
+# evidence quotes must still be exact substrings of it — run `npm run seed:check`, then re-key the demo cassettes.
+# Interviewer lines: T0/F3/T5 are templates; F1/F2 are model-phrased in live mode (this text is what the cassettes hold).
+interview:
+  id: INT-LIVE-RAY
+  title: Thin-wall titanium quoting
+  topic: t-thin-wall
+  context_quote: Q-A01
+  script_key: "demo:ray-live"
+  candidates:   # the pinned mention the candidate-records step resolves (PLAN.md §7.6)
+    - { kind: job, id: J-A03, mention: "duct support bracket in April" }
+
+turns:
+  - key: T0
+    speaker: interviewer
+    move: ANCHOR
+    source: template
+    text: "Thanks, Ray. You quoted the AV-2231-07 fuel line bracket for Aerovance on Sep 11 at 58 hours for 24 pieces. In one sentence, what drove that number the most?"
+  - key: R1
+    speaker: expert
+    source: simulated
+    text: "The walls. Anything under forty thou in titanium moves on you, so I padded the finish passes, split it into two ops, and priced in a spare blank."
+  - key: F1
+    speaker: interviewer
+    move: INCIDENT
+    source: llm
+    text: "You said titanium under forty thou 'moves on you.' Walk me through the last job where that actually happened."
+  - key: R2
+    speaker: expert
+    source: simulated
+    text: "The duct support bracket in April, while I was out. One clamping, rough and finish. When they unclamped, the walls sprang about four thou and four of the twelve failed profile on the CMM. Aerovance won't take rework without their MRB signing off, so we scrapped them. Now I rough, leave twenty thou, unclamp and let it sit, then finish in soft jaws with light passes. Every time now."
+  - key: F2
+    speaker: interviewer
+    move: NOVICE_GAP
+    source: llm
+    text: "When a newer quoter picks up a bracket like this, what are they most likely to get wrong?"
+  - key: R3
+    speaker: expert
+    source: simulated
+    text: "They take the cycle time the software gives them and stop there. On thin Ti the finish passes run a lot slower, so I add thirty-five percent to finishing. And Aerovance always wants a full first article on every new revision — about three more hours of CMM time and paperwork."
+  - key: F3
+    speaker: interviewer
+    move: TEACH_BACK
+    source: template
+    text: "Let me say it back as a rule: anything under forty thou in titanium — add thirty-five percent to finishing, split it into two ops, leave twenty thou, and price in a spare blank, because when they unclamped, the walls sprang. What did I get wrong or leave out?"
+  - key: R4
+    speaker: expert
+    source: simulated
+    text: "Close. Under forty thou and taller than about ten times the wall — a short thin wall is fine. Same on Inconel 718. On 6061 I don't bother. That one's always."
+  - key: T5
+    speaker: interviewer
+    move: WRAP
+    source: template
+    text: "Got it — I've added the height limit, Inconel 718 and the 6061 exception. I'll draft cards for you to review."
+
+expected_cards:
+  - id: KC-091
+    type: quoting_rule
+    status: approved
+    title: "Thin-wall Ti / Inconel 718: add 35% to finishing, two ops, spare blank"
+    statement: >-
+      When a titanium or Inconel 718 wall is under forty thou and taller than about ten times its thickness,
+      add thirty-five percent to finishing, split it into two ops, and price in a spare blank.
+    applies_when: ["Ti-6Al-4V or Inconel 718", "wall under forty thou (0.040 in)", "wall taller than about ten times its thickness"]
+    does_not_apply_when: ["6061", "a short thin wall"]
+    rationale: "Thin titanium walls move on you."
+    cues: ["walls under forty thou in titanium"]
+    actions: ["add thirty-five percent to finishing", "split it into two ops", "price in a spare blank"]
+    common_mistake: "Taking the cycle time the software gives and stopping there."
+    thresholds:
+      - { quantity: wall thickness, comparator: "<", value: 0.040, unit: in, verbatim: "under forty thou" }
+      - { quantity: wall height to thickness, comparator: ">", value: 10, unit: x, verbatim: "about ten times the wall" }
+      - { quantity: finishing time adder, comparator: "=", value: 35, unit: "%", verbatim: "thirty-five percent" }
+    expert_confidence: always
+    topics: [t-thin-wall, t-mat-ti64, t-quoting]
+    tags: [thin-wall, titanium, inconel, quoting, finishing, spare-blank]
+    links: { quotes: [Q-A01] }
+    link_basis: { "quote:Q-A01": session_context }
+    evidence:
+      - { turn_key: R1, quote: "Anything under forty thou in titanium moves on you, so I padded the finish passes, split it into two ops, and priced in a spare blank." }
+      - { turn_key: R3, quote: "so I add thirty-five percent to finishing" }
+      - { turn_key: R4, quote: "Under forty thou and taller than about ten times the wall — a short thin wall is fine. Same on Inconel 718. On 6061 I don't bother." }
+      - { turn_key: R4, quote: "That one's always.", confidence: true }
+    approved: { by: PER-01, on: "2026-09-15", mode: self }
+    created_on: "2026-09-15"
+  - id: KC-092
+    type: setup_tip
+    status: approved
+    title: "Thin Ti walls: rough, leave 0.020 in, unclamp and rest, finish in soft jaws"
+    statement: "Rough first and leave twenty thou, unclamp and let it sit, then finish in soft jaws with light passes."
+    applies_when: ["thin titanium walls"]
+    does_not_apply_when: []
+    rationale: "Walls spring after unclamping; letting the part sit before finishing takes that out."
+    cues: []
+    actions: ["rough and leave twenty thou", "unclamp and let it sit", "finish in soft jaws with light passes"]
+    common_mistake: "Roughing and finishing in one clamping."
+    thresholds:
+      - { quantity: finish stock, comparator: "=", value: 0.020, unit: in, verbatim: "leave twenty thou" }
+    expert_confidence: always
+    topics: [t-thin-wall, t-mat-ti64, t-m-dmu50]
+    tags: [thin-wall, titanium, workholding, springback, dmu]
+    links: { machines: [m-dmu50], quotes: [Q-A01] }
+    link_basis: { "machine:m-dmu50": session_context, "quote:Q-A01": session_context }
+    evidence:
+      - { turn_key: R2, quote: "Now I rough, leave twenty thou, unclamp and let it sit, then finish in soft jaws with light passes." }
+      - { turn_key: R2, quote: "One clamping, rough and finish." }
+      - { turn_key: R2, quote: "Every time now.", confidence: true }
+    approved: { by: PER-01, on: "2026-09-15", mode: self }
+    created_on: "2026-09-15"
+  - id: KC-093
+    type: customer_quirk
+    status: approved
+    title: "Aerovance: full first article every new rev (~3 h); no rework without MRB"
+    statement: >-
+      Aerovance always wants a full first article on every new revision — about three more hours of CMM time and
+      paperwork — and won't take rework without their MRB signing off.
+    applies_when: ["Aerovance part", "new revision"]
+    does_not_apply_when: []
+    rationale: null
+    cues: []
+    actions: ["add about three more hours of CMM time and paperwork for a new revision", "plan to scrap rather than rework"]
+    common_mistake: "Forgetting the first article on a new revision."
+    thresholds:
+      - { quantity: first article allowance, comparator: approx, value: 3, unit: h, verbatim: "about three more hours" }
+    expert_confidence: always
+    topics: [t-cus-01, t-fai-cmm]
+    tags: [first-article, rework, cmm]
+    links: { customers: [CUS-01] }
+    link_basis: { "customer:CUS-01": session_context }
+    evidence:
+      - { turn_key: R3, quote: "And Aerovance always wants a full first article on every new revision — about three more hours of CMM time and paperwork.", confidence: true }
+      - { turn_key: R2, quote: "Aerovance won't take rework without their MRB signing off, so we scrapped them." }
+    approved: { by: PER-01, on: "2026-09-15", mode: self }
+    created_on: "2026-09-15"
+  - id: KC-094
+    type: failure_story
+    status: approved
+    title: "Duct support bracket in April: walls sprang ~0.004 in after unclamping; 4 of 12 scrapped"
+    statement: >-
+      On the duct support bracket in April we roughed and finished in one clamping. When they unclamped, the walls
+      sprang about four thou and four of the twelve failed profile on the CMM, so they were scrapped.
+    applies_when: []
+    does_not_apply_when: []
+    rationale: null
+    cues: ["walls moving after unclamping"]
+    actions: []
+    common_mistake: "Roughing and finishing in one clamping."
+    thresholds: []
+    expert_confidence: not_stated
+    topics: [t-thin-wall, t-mat-ti64, t-cus-01]
+    tags: [thin-wall, titanium, springback, scrap]
+    links: { jobs: [J-A03], customers: [CUS-01] }
+    link_basis: { "job:J-A03": mentioned_candidate, "customer:CUS-01": session_context }
+    evidence:
+      - { turn_key: R2, quote: "The duct support bracket in April, while I was out. One clamping, rough and finish. When they unclamped, the walls sprang about four thou and four of the twelve failed profile on the CMM." }
+      - { turn_key: R2, quote: "so we scrapped them" }
+    approved: { by: PER-01, on: "2026-09-15", mode: self }
+    created_on: "2026-09-15"

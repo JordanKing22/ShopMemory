@@ -1,0 +1,49 @@
+# Internal work orders (no quote): fixtures and tooling.
+- id: J-I01
+  part: PRT-I01
+  job_number: RJ-26-9001
+  status: complete
+  started_on: '2026-02-02'
+  shipped_on: '2026-02-04'
+  lead: PER-02
+  actual_machine: m-vf4
+  actual_setup_hours: 1.0
+  actual_run_hours: 5.0
+  actual_hours: 6.0
+  debrief: Internal fixture plate for the DMU 50.
+- id: J-I02
+  part: PRT-I02
+  job_number: RJ-26-9002
+  status: complete
+  started_on: '2026-04-13'
+  shipped_on: '2026-04-13'
+  lead: PER-06
+  actual_machine: m-vf4
+  actual_setup_hours: 0.5
+  actual_run_hours: 2.0
+  actual_hours: 2.5
+  debrief: Soft jaw set.
+- id: J-I03
+  part: PRT-I03
+  job_number: RJ-26-9003
+  status: complete
+  started_on: '2026-06-22'
+  shipped_on: '2026-06-23'
+  lead: PER-04
+  actual_machine: m-integrex
+  actual_setup_hours: 1.0
+  actual_run_hours: 3.0
+  actual_hours: 4.0
+  debrief: Sub-spindle stop.
+- id: J-I04
+  part: PRT-I04
+  job_number: RJ-26-9004
+  status: complete
+  started_on: '2026-08-10'
+  shipped_on: '2026-08-10'
+  lead: PER-08
+  actual_machine: m-vf4
+  actual_setup_hours: 0.5
+  actual_run_hours: 1.5
+  actual_hours: 2.0
+  debrief: Gauge rack.

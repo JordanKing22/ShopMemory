@@ -1,0 +1,42 @@
+# Controlled tag vocabulary. `topic` maps a tag to a heat-map row; `synonyms` are words that support the tag
+# (also used by search and by the traceability check for process topics).
+- { id: thin-wall, label: Thin wall, topic: t-thin-wall, synonyms: [thin, thin-wall, thin wall, thin walls, walls, wall, low rigidity] }
+- { id: quoting, label: Quoting, topic: t-quoting, synonyms: [quote, quoting, estimate, hours, price, priced] }
+- { id: workholding, label: Workholding, topic: t-5ax-workholding, synonyms: [workholding, fixture, vise, soft jaws, clamp, clamping, 5-axis] }
+- { id: tight-tolerance, label: Tight tolerance, topic: t-tight-tol, synonyms: [tolerance, tenths, bore, thermal, warm-up, size] }
+- { id: first-article, label: First article, topic: t-fai-cmm, synonyms: [first article, FAI, AS9102, balloon, CMM] }
+- { id: outside-processing, label: Outside processing, topic: t-outside-proc, synonyms: [heat treat, passivation, anodize, plating, outside processing, vendor] }
+- { id: cam, label: CAM, topic: t-cam, synonyms: [CAM, toolpath, program, post, stepover] }
+- { id: finishing, label: Finishing passes, topic: t-thin-wall, synonyms: [finish pass, finishing, light passes] }
+- { id: titanium, label: Titanium, topic: t-mat-ti64, synonyms: [Ti, titanium, Ti-6Al-4V] }
+- { id: inconel, label: Inconel, topic: t-mat-in718, synonyms: [Inconel, "718"] }
+- { id: stainless, label: Stainless, topic: null, synonyms: [stainless, "17-4", "316"] }
+- { id: aluminum, label: Aluminum, topic: null, synonyms: [aluminum, "6061", "7075"] }
+- { id: peek, label: PEEK, topic: t-mat-peek, synonyms: [PEEK] }
+- { id: springback, label: Walls moving after unclamping, topic: t-thin-wall, synonyms: [sprang, spring, moved, unclamp, unclamped, distortion] }
+- { id: scrap, label: Scrap, topic: null, synonyms: [scrap, scrapped, reject] }
+- { id: rework, label: Rework, topic: null, synonyms: [rework, MRB] }
+- { id: heat-treat, label: Heat treat, topic: t-outside-proc, synonyms: [heat treat, H1025, H1150, aging] }
+- { id: cleanliness, label: Cleanliness, topic: null, synonyms: [clean, bagging, particulate] }
+- { id: chatter, label: Chatter, topic: null, synonyms: [chatter, vibration] }
+- { id: tool-wear, label: Tool wear, topic: null, synonyms: [tool wear, worn, insert] }
+- { id: warm-up, label: Warm-up, topic: t-tight-tol, synonyms: [warm-up, warm up, thermal growth] }
+- { id: probing, label: Probing, topic: null, synonyms: [probe, probing] }
+- { id: deburr, label: Deburr, topic: null, synonyms: [deburr, burr, burrs] }
+- { id: new-customer, label: New customer, topic: null, synonyms: [new customer, first lot, pilot] }
+- { id: defense, label: Defense work, topic: null, synonyms: [defense, ITAR, DFARS, source inspection] }
+- { id: medical, label: Medical work, topic: null, synonyms: [medical, surgical, instrument] }
+- { id: semiconductor, label: Semiconductor work, topic: null, synonyms: [semiconductor, chamber] }
+- { id: swiss, label: Swiss turning, topic: t-m-swiss, synonyms: [Swiss, guide bushing] }
+- { id: mill-turn, label: Mill-turn, topic: t-m-integrex, synonyms: [mill-turn, Integrex, sub-spindle] }
+- { id: wire-edm, label: Wire EDM, topic: t-m-wedm, synonyms: [EDM, wire] }
+- { id: cmm, label: CMM, topic: t-m-cmm, synonyms: [CMM, Contura] }
+- { id: dmu, label: DMU 50, topic: t-m-dmu50, synonyms: [DMU, DMU 50] }
+- { id: genos, label: Genos, topic: t-m-genos, synonyms: [Genos, Okuma] }
+- { id: vf4, label: VF-4, topic: t-m-vf4, synonyms: [VF-4, VF4] }
+- { id: st20, label: ST-20, topic: t-m-st20, synonyms: [ST-20, ST20] }
+- { id: traceability, label: Traceability, topic: null, synonyms: [certs, traceability, lot] }
+- { id: lead-time, label: Lead time, topic: null, synonyms: [lead time, schedule] }
+- { id: spare-blank, label: Spare blank, topic: null, synonyms: [spare blank, extra blank] }
+- { id: threads, label: Threads, topic: null, synonyms: [thread, threads, thread mill] }
+- { id: deep-pocket, label: Deep pockets, topic: null, synonyms: [deep pocket, long reach] }

@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+/* Placeholder tokens; the full Floorwise theme (paper, ink, blue, signal orange) lands in Phase 2. */
+:root {
+  --background: #fafaf7;
+  --foreground: #16181c;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}

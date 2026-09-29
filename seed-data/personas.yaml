@@ -1,0 +1,6 @@
+# Demo role-switcher entries. The owner persona has no people row (not a knowledge holder).
+- { id: P-OWNER, label: "Dana Whitcomb · Owner/GM", role: owner, person: null, aliases: [Dana Whitcomb, Whitcomb, Dana], default_for_role: true }
+- { id: P-PER-01, label: "Ray Delgado · Lead Quoter", role: quoter, person: PER-01 }
+- { id: P-PER-05, label: "Maya Chen · Quoter", role: quoter, person: PER-05, default_for_role: true }
+- { id: P-PER-02, label: "Marv Tollefson · 5-Axis Lead", role: machinist, person: PER-02, default_for_role: true }
+- { id: P-PER-06, label: "Devin Okafor · Setup Machinist (trainee)", role: trainee, person: PER-06, default_for_role: true }

@@ -1,0 +1,55 @@
+# Cards contributed by Linda Marchetti (PER-03). IDs KC-030..046 belong to this file.
+# Phase 1a holds the demo-critical cards (KC-034 and KC-038); the rest are added in Phase 1b.
+# Placeholder domain wording — for SME review.
+
+- id: KC-034
+  type: inspection_gotcha
+  status: approved
+  title: "Thin walls: measure after the part has sat unclamped, never in the fixture"
+  statement: >-
+    On thin walls, always let the part sit unclamped for an hour before you measure wall thickness on the CMM.
+    Measured in the fixture, it lies.
+  applies_when: ["thin walls"]
+  does_not_apply_when: []
+  rationale: "Clamping holds the wall where you want it; it moves once it's free."
+  cues: ["a wall that passes in the fixture and fails at final"]
+  actions: ["unclamp and let the part sit before measuring"]
+  common_mistake: "Measuring wall thickness in the fixture."
+  expert_confidence: always
+  topics: [t-thin-wall]
+  tags: [thin-wall, cmm, springback]
+  links: { jobs: [J-A03], machine: m-cmm }
+  source:
+    kind: manual
+    text: >-
+      Thin walls — always let the part sit unclamped for an hour before you measure wall thickness on the CMM. In the
+      fixture it lies.
+    note: Entered by Linda after the duct support bracket.
+  approved: { by: PER-03, on: "2026-06-05", mode: self }
+  created_on: "2026-06-03"
+
+- id: KC-038
+  type: inspection_gotcha
+  status: approved
+  title: "Graymoor manifold: check sealing-face flatness after heat treat, not before"
+  statement: >-
+    On the Graymoor manifold, always check the sealing faces for flatness on the CMM after heat treat, not before.
+    They move in the furnace and a pre-heat-treat check tells you nothing.
+  applies_when: ["heat-treated 17-4 manifold with sealing faces"]
+  does_not_apply_when: []
+  rationale: "The faces move in heat treat."
+  cues: ["sealing faces on a heat-treated part"]
+  actions: ["check sealing-face flatness on the CMM after heat treat"]
+  common_mistake: "Signing off flatness before the parts go out for heat treat."
+  expert_confidence: always
+  topics: [t-fai-cmm, t-mat-174ph]
+  tags: [first-article, heat-treat, cmm, defense]
+  links: { jobs: [J-A10], machine: m-cmm }
+  source:
+    kind: manual
+    text: >-
+      Graymoor manifold — always check the sealing faces for flatness on the CMM after heat treat, not before. They
+      move in the furnace and a check before heat treat on 17-4 tells you nothing.
+    note: Entered by Linda after the manifold job.
+  approved: { by: PER-03, on: "2026-05-14", mode: self }
+  created_on: "2026-05-13"

@@ -1,0 +1,35 @@
+# Runs the same gate a contributor runs locally, on Ubuntu and Windows (the demo laptop runs Windows).
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  check:
+    name: check (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install (exact lockfile)
+        run: npm ci
+      - name: Lint, typecheck, unit tests, seed:check
+        run: npm run check
+      - name: Seed a fresh database
+        run: npm run seed
+      - name: Seed again over existing rows (reset must be idempotent)
+        run: npm run seed

@@ -1,0 +1,44 @@
+# Generator templates for the 44 non-anchor customer parts. For each customer: how many parts of each family to
+# generate (and `quotes`: the customer's total quote count, anchors included), candidate descriptions, materials, feature sets, complexity and machines. {n} in part_number_format is
+# n random digits. The generator never creates the reserved demo combination (see quotes/quote-model.yaml).
+- customer: CUS-01   # Aerovance: 9 generated (+5 anchors = 14)
+  part_number_format: "AV-{4}-{2}"
+  quotes: 32
+  families:
+    - { family: bracket, count: 4, descriptions: ["Bracket, clamp support", "Bracket, cable routing", "Bracket, stiffener", "Bracket, antenna mount"], materials: [mat-7075, mat-6061], features: [[five_axis], [first_article], [anodize]], complexity: [2, 3], machines: [m-dmu50, m-vf4] }
+    - { family: fitting, count: 3, descriptions: ["Fitting, bulkhead", "Fitting, tube end", "Fitting, lug"], materials: [mat-ti64, mat-174ph], features: [[first_article], [tight_tolerance]], complexity: [3, 4], machines: [m-dmu50, m-genos] }
+    - { family: plate, count: 2, descriptions: ["Plate, doubler", "Plate, mounting"], materials: [mat-6061, mat-7075], features: [[], [anodize]], complexity: [1, 2], machines: [m-vf4] }
+- customer: CUS-02   # Halvorsen: 8 generated (+1 anchor = 9)
+  part_number_format: "HFC-{5}"
+  quotes: 20
+  families:
+    - { family: housing, count: 4, descriptions: ["Housing, valve body", "Housing, bearing", "Housing, sensor boss", "Housing, actuator"], materials: [mat-174ph, mat-7075], features: [[heat_treat, tight_tolerance], [passivation], [tight_tolerance]], complexity: [3, 4], machines: [m-genos, m-dmu50] }
+    - { family: fitting, count: 2, descriptions: ["Fitting, pressure port", "Fitting, adapter"], materials: [mat-174ph, mat-316], features: [[passivation], [thread_milling]], complexity: [2, 3], machines: [m-st20, m-integrex] }
+    - { family: shaft, count: 2, descriptions: ["Shaft, actuator", "Shaft, pivot"], materials: [mat-174ph], features: [[heat_treat, tight_tolerance], [long_slender]], complexity: [3], machines: [m-integrex, m-st20] }
+- customer: CUS-03   # Sutrella: 7 generated (+1 anchor = 8)
+  part_number_format: "SUR-{3}-{3}"
+  quotes: 16
+  families:
+    - { family: instrument, count: 4, descriptions: ["Instrument, probe tip", "Instrument, cannula hub", "Instrument, retractor pin", "Instrument, drill guide"], materials: [mat-316], features: [[passivation, long_slender], [passivation], [tight_tolerance, passivation]], complexity: [2, 3], machines: [m-swiss] }
+    - { family: insulator, count: 3, descriptions: ["Insulator, handle spacer", "Insulator, cap", "Insulator, sleeve"], materials: [mat-peek], features: [[tight_tolerance], []], complexity: [1, 2], machines: [m-swiss, m-st20] }
+- customer: CUS-04   # Quantrel: 8 generated (+1 anchor = 9)
+  part_number_format: "QRL-{6}"
+  quotes: 20
+  families:
+    - { family: plate, count: 4, descriptions: ["Plate, gas distribution", "Plate, chamber shield", "Plate, adapter", "Plate, clamp ring base"], materials: [mat-6061], features: [[cleanroom], [cleanroom, tight_tolerance], [cleanroom, deep_pocket]], complexity: [2, 3, 4], machines: [m-vf4, m-genos] }
+    - { family: insulator, count: 2, descriptions: ["Insulator, lift pin", "Insulator, standoff"], materials: [mat-peek], features: [[cleanroom], [cleanroom, tight_tolerance]], complexity: [2], machines: [m-swiss, m-st20] }
+    - { family: ring, count: 2, descriptions: ["Ring, edge", "Ring, retaining"], materials: [mat-316, mat-6061], features: [[cleanroom], [tight_tolerance]], complexity: [2, 3], machines: [m-st20, m-integrex] }
+- customer: CUS-05   # Graymoor: 6 generated (+3 anchors = 9)
+  part_number_format: "GDS-{4}-{3}"
+  quotes: 20
+  families:
+    - { family: manifold, count: 2, descriptions: ["Manifold, coolant distribution", "Manifold, pressure block"], materials: [mat-174ph], features: [[deep_pocket, heat_treat], [deep_pocket, tight_tolerance]], complexity: [4, 5], export_control: itar, machines: [m-genos] }
+    - { family: housing, count: 3, descriptions: ["Housing, electronics", "Housing, gimbal", "Housing, connector"], materials: [mat-7075], features: [[anodize], [five_axis, anodize]], complexity: [3, 4], export_control: itar, machines: [m-dmu50, m-vf4] }
+    - { family: ring, count: 1, descriptions: ["Ring, bearing retainer"], materials: [mat-in718], features: [[tight_tolerance]], complexity: [4], export_control: itar, machines: [m-integrex] }
+- customer: CUS-06   # Velmont: 6 generated (+1 anchor = 7)
+  part_number_format: "VLM-{5}"
+  quotes: 12
+  families:
+    - { family: housing, count: 3, descriptions: ["Housing, optics", "Housing, gyro", "Housing, cover"], materials: [mat-ti64], features: [[five_axis], [five_axis, first_article]], complexity: [4, 5], export_control: itar, machines: [m-dmu50] }
+    - { family: housing, count: 2, descriptions: ["Housing, nozzle", "Housing, heat shield"], materials: [mat-in718], features: [[tight_tolerance], [first_article]], complexity: [4, 5], export_control: itar, machines: [m-integrex] }
+    - { family: bracket, count: 1, descriptions: ["Bracket, instrument mount"], materials: [mat-ti64], features: [[five_axis]], complexity: [3], export_control: itar, machines: [m-dmu50] }

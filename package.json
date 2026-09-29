@@ -1,0 +1,50 @@
+{
+  "name": "floorwise",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Floorwise — a scripted sales demo that captures machine-shop know-how. All data is fictional.",
+  "engines": {
+    "node": "^22.13.0 || ^24.0.0 || ^26.0.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start -H 127.0.0.1",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "tsx scripts/check.mts",
+    "seed": "tsx scripts/seed.mts",
+    "seed:check": "tsx scripts/seed-check.mts",
+    "seed:lock": "tsx scripts/seed-lock.mts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx scripts/db-migrate.mts",
+    "db:nuke": "tsx scripts/db-nuke.mts",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "better-sqlite3": "12.11.1",
+    "drizzle-orm": "0.45.3",
+    "next": "16.3.6",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "yaml": "2.9.1",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@next/env": "16.3.6",
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/better-sqlite3": "9.6.0",
+    "@types/node": "24.19.0",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "drizzle-kit": "0.31.11",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.6",
+    "tailwindcss": "4.3.3",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "vite": "8.3.1",
+    "vitest": "5.0.2"
+  }
+}

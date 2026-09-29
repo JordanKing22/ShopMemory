@@ -1,0 +1,91 @@
+# The 8 machines. IDs are permanent (printed QR codes encode /machines/<id>).
+# unit_history describes THIS unit (asset tag, dates, what we saw) — never a manufacturer or model-wide claim.
+# `events` are this unit's recent issues (last ~90 days before DEMO_TODAY), added in Phase 1b.
+- id: m-vf4
+  asset_tag: RP-M01
+  name: Haas VF-4
+  make: Haas
+  model: VF-4
+  kind: vmc
+  year_installed: 2011
+  acquired: used
+  location_cell: Mill cell A
+  capabilities: [3-axis milling, 4th-axis rotary, probing]
+  unit_history: Bought used in 2011. Rotary table added in 2016. Workhorse for aluminum brackets and plates.
+- id: m-st20
+  asset_tag: RP-M02
+  name: Haas ST-20
+  make: Haas
+  model: ST-20
+  kind: lathe
+  year_installed: 2015
+  acquired: new
+  location_cell: Turning cell
+  capabilities: [2-axis turning, bar feeder]
+  unit_history: Installed new in 2015. Bar feeder added in 2020.
+- id: m-dmu50
+  asset_tag: RP-M03
+  name: DMG MORI DMU 50
+  make: DMG MORI
+  model: DMU 50
+  kind: five_axis
+  year_installed: 2017
+  acquired: new
+  location_cell: 5-axis cell
+  capabilities: [5-axis simultaneous, probing, through-spindle coolant]
+  unit_history: Installed new in 2017. Runs most titanium and thin-wall aerospace work. Spindle serviced in 2024.
+- id: m-genos
+  asset_tag: RP-M04
+  name: Okuma GENOS M560-V
+  make: Okuma
+  model: GENOS M560-V
+  kind: vmc
+  year_installed: 2019
+  acquired: new
+  location_cell: Mill cell B
+  capabilities: [3-axis milling, probing, thermal compensation]
+  unit_history: Installed new in 2019. Spindle rebuilt in 2023 after a crash.
+- id: m-integrex
+  asset_tag: RP-M05
+  name: Mazak INTEGREX i-200
+  make: Mazak
+  model: INTEGREX i-200
+  kind: mill_turn
+  year_installed: 2014
+  acquired: used
+  location_cell: Turning cell
+  capabilities: [mill-turn, sub-spindle, B-axis milling head]
+  unit_history: Bought used in 2014 from an oilfield shop. Runs the Inconel rings and complex turned housings.
+- id: m-swiss
+  asset_tag: RP-M06
+  name: Citizen Cincom L20
+  make: Citizen
+  model: Cincom L20
+  kind: swiss
+  year_installed: 2018
+  acquired: new
+  location_cell: Turning cell
+  capabilities: [Swiss-type turning, guide bushing, live tooling]
+  unit_history: Installed new in 2018 for medical instrument work.
+- id: m-cmm
+  asset_tag: RP-Q01
+  name: ZEISS CONTURA
+  make: ZEISS
+  model: CONTURA
+  kind: cmm
+  year_installed: 2016
+  acquired: new
+  location_cell: Inspection room
+  capabilities: [bridge CMM, scanning probe]
+  unit_history: Installed new in 2016 in the temperature-controlled inspection room.
+- id: m-wedm
+  asset_tag: RP-M07
+  name: Mitsubishi Electric MV2400R
+  make: Mitsubishi Electric
+  model: MV2400R
+  kind: wire_edm
+  year_installed: 2013
+  acquired: used
+  location_cell: EDM corner
+  capabilities: [wire EDM, auto-threading]
+  unit_history: Bought used in 2013. Used for keyways, sharp internal corners and fixture details.

@@ -1,0 +1,11 @@
+# The fictional shop. Edit the name or notice freely; changing demo_today or seed changes every generated number
+# (then run: npm run seed:check && npm run seed:lock).
+name: Ridgeline Precision
+employee_count: 30
+certifications:
+  - AS9100D (fictional)
+demo_today: "2026-09-15"   # DEMO_TODAY: every seeded date and all tenure/retirement/risk math is relative to this
+seed: 20260915             # fixed random seed for the generator
+fictional_notice: >-
+  Demo software. Ridgeline Precision, its people, customers, parts and jobs are fictional.
+  Do not enter real CUI or export-controlled data.

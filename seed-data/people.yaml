@@ -1,0 +1,108 @@
+# The 8 knowledge holders (heat-map columns). IDs never change. No birth dates or ages — only hire and planned
+# departure dates. `aliases` are every way the name may appear in text (used by redaction and entity detection).
+- id: PER-01
+  full_name: Ray Delgado
+  display_name: Ray
+  job_title: Lead Quoter / Estimator
+  department: quoting
+  app_role: quoter
+  cohort: veteran
+  hire_date: "1995-06-05"
+  prior_experience_years: 3
+  planned_departure_date: "2028-05-15"
+  departure_kind: retirement
+  bio: >-
+    31 years at Ridgeline. Ran the first 5-axis machine for twelve years before moving to quoting in 2011.
+    The person everyone asks about titanium, thin walls and "will this part fight us".
+  aliases: [Ray Delgado, Delgado, Ray]
+- id: PER-02
+  full_name: Marv Tollefson
+  display_name: Marv
+  job_title: 5-Axis Lead
+  department: machining
+  app_role: machinist
+  cohort: veteran
+  hire_date: "2000-08-14"
+  prior_experience_years: 6
+  planned_departure_date: null
+  departure_kind: null
+  bio: Came up on aluminum aerostructures. Owns the DMU 50 and most 5-axis workholding.
+  aliases: [Marv Tollefson, Tollefson, Marv]
+- id: PER-03
+  full_name: Linda Marchetti
+  display_name: Linda
+  job_title: Quality Manager
+  department: quality
+  app_role: machinist
+  cohort: veteran
+  hire_date: "2004-03-01"
+  prior_experience_years: 4
+  planned_departure_date: "2029-11-15"
+  departure_kind: retirement
+  bio: Owns first article inspection, the CMM and the customer quality relationships.
+  aliases: [Linda Marchetti, Marchetti, Linda]
+- id: PER-04
+  full_name: Tomás Ibarra
+  display_name: Tomás
+  job_title: Lathe Lead
+  department: machining
+  app_role: machinist
+  cohort: veteran
+  hire_date: "1999-01-11"
+  prior_experience_years: 5
+  planned_departure_date: "2031-01-15"
+  departure_kind: retirement
+  bio: Swiss, mill-turn and the Inconel rings. Quotes most of the turned work.
+  aliases: [Tomás Ibarra, Tomas Ibarra, Ibarra, Tomás, Tomas]
+- id: PER-05
+  full_name: Maya Chen
+  display_name: Maya
+  job_title: Quoter
+  department: quoting
+  app_role: quoter
+  cohort: new_hire
+  hire_date: "2026-01-12"
+  prior_experience_years: 2
+  planned_departure_date: null
+  departure_kind: null
+  bio: Joined from a sheet-metal job shop. Learning machined-part quoting from Ray.
+  aliases: [Maya Chen, Chen, Maya]
+- id: PER-06
+  full_name: Devin Okafor
+  display_name: Devin
+  job_title: Setup Machinist
+  department: machining
+  app_role: trainee
+  cohort: new_hire
+  hire_date: "2026-03-09"
+  prior_experience_years: 1
+  planned_departure_date: null
+  departure_kind: null
+  bio: Community-college machining program graduate. Setting up on the Haas mills and learning the DMU.
+  aliases: [Devin Okafor, Okafor, Devin]
+- id: PER-07
+  full_name: Priya Raman
+  display_name: Priya
+  job_title: CMM Inspector
+  department: quality
+  app_role: trainee
+  cohort: new_hire
+  hire_date: "2025-10-13"
+  prior_experience_years: 0
+  planned_departure_date: null
+  departure_kind: null
+  bio: Mechanical engineering technology graduate. Programs and runs the CMM under Linda.
+  aliases: [Priya Raman, Raman, Priya]
+- id: PER-08
+  full_name: Jonah Pruitt
+  display_name: Jonah
+  job_title: CAM Programmer
+  department: programming
+  app_role: machinist
+  cohort: new_hire
+  hire_date: "2025-07-14"
+  prior_experience_years: 4
+  planned_departure_date: null
+  departure_kind: null
+  bio: Four years at a Swiss-turning shop before Ridgeline. Programs the mills, the Integrex and the Swiss.
+  aliases: [Jonah Pruitt, Pruitt, Jonah]
