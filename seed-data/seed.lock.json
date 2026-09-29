@@ -1,6 +1,6 @@
 {
   "comment": "Written by npm run seed:lock. Commit it with any intentional seed-data edit.",
-  "hash": "bade4ddb16b377289ce9f6e11d179d7555c66692bf982bde329c41098004fabf",
+  "hash": "d438e26013dce56bc9d854b40da038c4f9501602b65774a8150bf1caed68980a",
   "demoToday": "2026-09-15",
   "seed": 20260915,
   "rows": {
@@ -28,8 +28,8 @@
     "cardTopics": 191,
     "cardTags": 248,
     "cardEvidence": 167,
-    "documents": 1,
-    "documentCards": 2,
+    "documents": 25,
+    "documentCards": 79,
     "coverageSnapshots": 156
   }
 }
