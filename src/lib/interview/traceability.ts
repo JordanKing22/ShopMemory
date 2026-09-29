@@ -416,18 +416,13 @@ export function checkCard(card: TraceCard, ctx: TraceContext): TraceResult {
 // Link rules (PLAN.md §7.3)
 // ---------------------------------------------------------------------------------------------
 
-const NEEDS_JOB_OR_QUOTE: ReadonlySet<CardType> = new Set<CardType>([
-  "quoting_rule",
-  "setup_tip",
-  "failure_story",
-  "inspection_gotcha",
-]);
+const NEEDS_JOB_OR_QUOTE: ReadonlySet<CardType> = new Set<CardType>(["quoting_rule", "failure_story"]);
 const NEEDS_MACHINE: ReadonlySet<CardType> = new Set<CardType>(["setup_tip", "machine_quirk"]);
 
 /**
  * Card link rules (PLAN.md §7.3), applied to seeded cards and the expected scripted cards:
- * quoting_rule, setup_tip, failure_story and inspection_gotcha link at least one job or quote;
- * setup_tip and machine_quirk link a machine; customer_quirk links a customer.
+ * quoting_rule and failure_story link at least one job or quote; inspection_gotcha links a job, quote or
+ * machine; setup_tip and machine_quirk link a machine; customer_quirk links a customer.
  * Returns one plain-English message per broken rule (empty when the card is fine).
  */
 export function checkLinkRules(card: { id?: string; type: CardType; links: readonly { kind: LinkKind }[] }): string[] {
@@ -436,6 +431,9 @@ export function checkLinkRules(card: { id?: string; type: CardType; links: reado
   const name = card.id ? `Card ${card.id}` : "Card";
   if (NEEDS_JOB_OR_QUOTE.has(card.type) && !has("job") && !has("quote")) {
     out.push(`${name} (${card.type}) must link at least one job or quote.`);
+  }
+  if (card.type === "inspection_gotcha" && !has("job") && !has("quote") && !has("machine")) {
+    out.push(`${name} (inspection_gotcha) must link a job, a quote or a machine.`);
   }
   if (NEEDS_MACHINE.has(card.type) && !has("machine")) {
     out.push(`${name} (${card.type}) must link a machine.`);

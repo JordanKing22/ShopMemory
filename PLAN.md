@@ -649,7 +649,7 @@ Every fictional name and prefix is recorded in `seed-data/NAMES.yaml` with its c
 | Setup sheets | 25 (approved 20, expert_review 3, draft 2) | 0 / 10 / 10 / **5** |
 | Interview transcripts | 8 (Ray ×2, Marv ×2, Linda ×2, Tomás ×2; ~32 cards carry real evidence spans) | 0 / 3 / 3 / **2** |
 
-- Card link rules (`seed:check`, applied to seeded cards **and** to the expected scripted cards in `ray-live-interview.yaml`): every quoting_rule, setup_tip, failure_story and inspection_gotcha links at least one job or quote; every setup_tip and machine_quirk links a machine; every customer_quirk links a customer. Generic cards without a job are allowed only for customer_quirk and machine_quirk (*ASSUMPTION*).
+- Card link rules (`seed:check`, applied to seeded cards **and** to the expected scripted cards in `ray-live-interview.yaml`): every quoting_rule and failure_story links at least one job or quote; every inspection_gotcha links a job, a quote or a machine; every setup_tip and machine_quirk links a machine; every customer_quirk links a customer. Setup tips, inspection gotchas and quirks may be generic shop practice without a job (*ASSUMPTION*; revised in Phase 1b so shop-practice cards can stay `internal`, since only 4 jobs are internal).
 - Ray deliberately has **no** titanium or thin-wall interview yet — his Ti cards come from "the binder" (hand-entered). That's what makes the live interview meaningful.
 - The 2 non-export-controlled Graymoor quotes both belong to PRT-A09 (pinned).
 

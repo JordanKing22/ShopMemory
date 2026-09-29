@@ -371,19 +371,27 @@ describe("checkCard — several errors at once", () => {
 });
 
 describe("checkLinkRules (PLAN.md §7.3)", () => {
-  it("requires a job or quote on rules, setup tips, failure stories and inspection gotchas", () => {
-    for (const type of ["quoting_rule", "failure_story", "inspection_gotcha"] as const) {
+  it("requires a job or quote on quoting rules and failure stories", () => {
+    for (const type of ["quoting_rule", "failure_story"] as const) {
       expect(checkLinkRules({ type, links: [{ kind: "customer" }] })).toEqual([`Card (${type}) must link at least one job or quote.`]);
       expect(checkLinkRules({ type, links: [{ kind: "job" }] })).toEqual([]);
       expect(checkLinkRules({ type, links: [{ kind: "quote" }] })).toEqual([]);
     }
   });
 
-  it("requires a machine on setup tips and machine quirks", () => {
+  it("requires a job, quote or machine on inspection gotchas", () => {
+    expect(checkLinkRules({ type: "inspection_gotcha", links: [{ kind: "customer" }] })).toEqual([
+      "Card (inspection_gotcha) must link a job, a quote or a machine.",
+    ]);
+    for (const kind of ["job", "quote", "machine"] as const) expect(checkLinkRules({ type: "inspection_gotcha", links: [{ kind }] })).toEqual([]);
+  });
+
+  it("requires a machine on setup tips and machine quirks (a setup tip needs no job)", () => {
     expect(checkLinkRules({ id: "KC-200", type: "setup_tip", links: [{ kind: "job" }] })).toEqual([
       "Card KC-200 (setup_tip) must link a machine.",
     ]);
-    expect(checkLinkRules({ type: "setup_tip", links: [] })).toHaveLength(2);
+    expect(checkLinkRules({ type: "setup_tip", links: [] })).toHaveLength(1);
+    expect(checkLinkRules({ type: "setup_tip", links: [{ kind: "machine" }] })).toEqual([]);
     expect(checkLinkRules({ type: "machine_quirk", links: [] })).toEqual(["Card (machine_quirk) must link a machine."]);
     expect(checkLinkRules({ type: "machine_quirk", links: [{ kind: "machine" }] })).toEqual([]);
   });
