@@ -33,9 +33,11 @@ function offenders(files: string[], pattern: RegExp, allowed: (f: string) => boo
 }
 
 describe("architecture rules", () => {
-  it("only src/lib/env.ts reads process.env (scripts/lib/telemetry-off.mts only sets telemetry off)", () => {
-    expect(offenders(APP, /process\.env/, (f) => f === "src/lib/env.ts" || f === "scripts/lib/telemetry-off.mts")).toEqual([]);
+  it("only src/lib/env.ts reads process.env (telemetry-off.mts only sets telemetry off; child-env.mts only copies it for child processes)", () => {
+    const allowed = ["src/lib/env.ts", "scripts/lib/telemetry-off.mts", "scripts/lib/child-env.mts"];
+    expect(offenders(APP, /process\.env/, (f) => allowed.includes(f))).toEqual([]);
     expect(code("scripts/lib/telemetry-off.mts").match(/process\.env\.[A-Z_]+/g)).toEqual(["process.env.NEXT_TELEMETRY_DISABLED"]);
+    expect(code("scripts/lib/child-env.mts").match(/process\.env\S*/g)).toEqual(["process.env,"]);
   });
 
   it("every npm script that runs Next.js goes through the telemetry-off wrapper", () => {
@@ -103,6 +105,44 @@ describe("architecture rules", () => {
     for (const [name, v] of Object.entries({ ...pkg.dependencies, ...pkg.devDependencies })) expect(v, name).toMatch(/^\d+\.\d+\.\d+$/);
     expect(pkg.dependencies["better-sqlite3"]).toMatch(/^12\./);
     for (const s of Object.values(pkg.scripts)) expect(s).not.toMatch(/drizzle-kit push/);
+  });
+
+  it("the dev and start servers bind to 127.0.0.1 (LAN access only through serve-https with DEMO_PIN)", () => {
+    const pkg = JSON.parse(read("package.json")) as { scripts: Record<string, string> };
+    // Next's CLI defaults to 0.0.0.0 (every interface) when -H is missing.
+    for (const name of ["dev", "start"]) expect(pkg.scripts[name], name).toMatch(/\s-H 127\.0\.0\.1(\s|$)/);
+    expect(code("scripts/e2e-server.mts")).toMatch(/"-H", "127\.0\.0\.1"/);
+  });
+
+  it("error boundaries exist above the app layout and never show or log error.message", () => {
+    const boundaries = ["src/app/error.tsx", "src/app/global-error.tsx", "src/app/(app)/error.tsx"];
+    for (const f of boundaries) {
+      expect(fs.existsSync(path.join(ROOT, f)), f).toBe(true);
+      expect(read(f).trimStart(), f).toMatch(/^"use client";/);
+      expect(code(f), f).not.toMatch(/\.message\b/);
+      expect(code(f), f).not.toMatch(/\bconsole\./);
+    }
+    // (app)/error.tsx doesn't wrap (app)/layout.tsx: the root boundaries render outside the shell, so they
+    // carry the fictional banner themselves (hard rule 10).
+    for (const f of ["src/app/error.tsx", "src/app/global-error.tsx"]) expect(code(f), f).toMatch(/<FictionalBanner\b/);
+    // global-error replaces the root layout: it brings its own document, styles and light theme.
+    const g = code("src/app/global-error.tsx");
+    expect(g).toMatch(/<html lang="en"/);
+    expect(g).toMatch(/<body\b/);
+    expect(g).toMatch(/import "\.\/globals\.css"/);
+    expect(g).toMatch(/colorScheme: "light"/);
+    expect(code("src/components/app/error-fallback.tsx")).not.toMatch(/\.message\b|\bconsole\./);
+  });
+
+  it("notFound() in app pages renders inside the shell (no DB reads, no second banner)", () => {
+    const f = "src/app/(app)/not-found.tsx";
+    expect(fs.existsSync(path.join(ROOT, f))).toBe(true);
+    expect(code(f)).not.toMatch(/from\s+["']@\/(db|server|lib\/data)(\/|["'])/);
+    expect(code(f)).not.toMatch(/FictionalBanner/);
+    expect(code(f)).toMatch(/Record not found/);
+    // The root 404 is for unmatched URLs only and keeps its own banner.
+    expect(code("src/app/not-found.tsx")).toMatch(/<FictionalBanner\b/);
+    expect(code("src/app/not-found.tsx")).not.toMatch(/record it points to/);
   });
 
   it("npm scripts run under cmd.exe (no inline env vars, rm -rf or single quotes)", () => {

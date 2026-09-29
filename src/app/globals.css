@@ -1,18 +1,318 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-/* Placeholder tokens; the full Floorwise theme (paper, ink, blue, signal orange) lands in Phase 2. */
+/*
+ * Floorwise theme (PLAN.md §10, CLAUDE.md "UI conventions"). Light theme only.
+ * Contrast (WCAG): ink on paper 17.0:1 · muted on paper 7.5:1 · white on primary 6.7:1 ·
+ * ink on signal 5.8:1 (white on signal fails at 3.05:1, so it is never used) · signal-strong on paper 5.2:1 ·
+ * input border on paper 3.3:1 (WCAG 1.4.11) · white on export-controlled red 6.6:1.
+ */
+
+/* Light only: shadcn components carry `dark:` classes; bind them to a class that is never set so an OS dark
+   preference can't restyle anything. */
+@custom-variant dark (&:is(.dark *));
+/* Coarse pointers (tablets, phones): bigger text and tap targets. Usage: `coarse:min-h-12`. */
+@custom-variant coarse (@media (pointer: coarse));
+
 :root {
-  --background: #fafaf7;
-  --foreground: #16181c;
+  /* Brand tokens */
+  --paper: #fafaf7;
+  --ink: #16181c;
+  --primary-blue: #1d4ed8;
+  --signal: #f26b1d; /* fills only, always with ink text */
+  --signal-strong: #b4480e; /* orange strokes, icons and text on paper */
+  --signal-tint: #fdebdd; /* soft orange fill, ink text */
+  --muted-text: #4b5260;
+  --input-border: #868b94;
+  --hairline: #dcdad2; /* decorative dividers only (not control borders) */
+  --surface: #ffffff;
+  --surface-sunken: #f1f0eb;
+
+  /* Classification (always with icon + word + shape, never color alone) */
+  --cls-general-bg: #eeede7;
+  --cls-general-fg: #16181c;
+  --cls-internal-bg: #e4ecfb;
+  --cls-internal-fg: #1e3a8a;
+  --cls-cc-bg: #efe6fa;
+  --cls-cc-fg: #5b21b6;
+  --cls-ec-bg: #b42318;
+  --cls-ec-fg: #ffffff;
+
+  /* shadcn/ui variables mapped onto the tokens above */
+  --radius: 0.5rem;
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--primary-blue);
+  --primary-foreground: #ffffff;
+  --secondary: #eeede7;
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface-sunken);
+  --muted-foreground: var(--muted-text);
+  --accent: #e8eefb;
+  --accent-foreground: var(--ink);
+  --destructive: #b42318;
+  --destructive-foreground: #ffffff;
+  --border: var(--hairline);
+  --input: var(--input-border);
+  --ring: var(--primary-blue);
+  --chart-1: #1d4ed8;
+  --chart-2: #b4480e;
+  --chart-3: #5b21b6;
+  --chart-4: #4b5260;
+  --chart-5: #16181c;
+  --sidebar: #f4f3ee;
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--primary-blue);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e8eefb;
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--hairline);
+  --sidebar-ring: var(--primary-blue);
+
+  /* Shell metrics */
+  --app-header-h: 4rem;
+  --app-tabbar-h: 4rem;
+  --tap: 2.75rem; /* 44 px */
+
+  color-scheme: light;
+}
+
+@media (pointer: coarse) {
+  :root {
+    --tap: 3rem; /* 48 px */
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Floorwise names (use these in app code: bg-paper, text-ink, bg-signal text-ink, text-signal-strong …) */
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-signal: var(--signal);
+  --color-signal-strong: var(--signal-strong);
+  --color-signal-tint: var(--signal-tint);
+  --color-muted-text: var(--muted-text);
+  --color-input-border: var(--input-border);
+  --color-hairline: var(--hairline);
+  --color-surface: var(--surface);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-cls-general: var(--cls-general-bg);
+  --color-cls-general-fg: var(--cls-general-fg);
+  --color-cls-internal: var(--cls-internal-bg);
+  --color-cls-internal-fg: var(--cls-internal-fg);
+  --color-cls-cc: var(--cls-cc-bg);
+  --color-cls-cc-fg: var(--cls-cc-fg);
+  --color-cls-ec: var(--cls-ec-bg);
+  --color-cls-ec-fg: var(--cls-ec-fg);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --spacing-tap: var(--tap);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: ui-sans-serif, system-ui, sans-serif;
+@theme {
+  /* `wide:` = 1200 px, where the icon rail becomes the full sidebar (PLAN.md §9). In rem so it sorts correctly
+     between lg (64rem) and xl (80rem); a px arbitrary variant would sort before the rem breakpoints. */
+  --breakpoint-wide: 75rem;
+
+  /* Nothing under 14 px on screen (PLAN.md §10): `text-xs` (used inside shadcn components) is raised to 14 px. */
+  --text-xs: 0.875rem;
+  --text-xs--line-height: 1.25rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-size: 1rem; /* 16 px body */
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums; /* every number lines up */
+    font-feature-settings: "tnum" 1;
+  }
+
+  @media (pointer: coarse) {
+    body {
+      font-size: 1.125rem; /* 18 px body on touch screens */
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  a {
+    text-underline-offset: 0.2em;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  /* Tap targets: 44 px (48 px on coarse pointers) for the shadcn primitives in src/components/ui.
+     min-height and min-width win over the primitives' fixed height / width / size utilities (a different
+     property) without editing them. They do NOT win over a min-h-* / min-w-* utility on the same element: a
+     utility beats a base-layer rule on the same property, so primitives that set min-h-* / min-w-* themselves
+     must be edited (toggle.tsx and toggle-group.tsx were). A component that deliberately draws a smaller visual
+     (with an enlarged hit area sized from --tap, e.g. the classification badge) can opt out with min-h-0. */
+  [data-slot="button"],
+  [data-slot="input"],
+  [data-slot="select-trigger"],
+  [data-slot="toggle"],
+  [data-slot="toggle-group-item"],
+  [data-slot="tabs-trigger"],
+  [data-slot="dropdown-menu-item"],
+  [data-slot="dropdown-menu-radio-item"],
+  [data-slot="dropdown-menu-checkbox-item"],
+  [data-slot="dropdown-menu-sub-trigger"],
+  [data-slot="select-item"],
+  [data-slot="popover-trigger"],
+  [data-slot="tooltip-trigger"]:is(button),
+  [data-slot="sheet-trigger"],
+  [data-slot="dialog-trigger"] {
+    min-height: var(--tap);
+  }
+
+  [data-slot="button"][data-size^="icon"],
+  [data-slot="toggle"],
+  [data-slot="toggle-group-item"] {
+    min-width: var(--tap);
+  }
+
+  [data-slot="tabs-list"] {
+    min-height: calc(var(--tap) + 6px);
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: max(1rem, 16px); /* also stops iOS zooming into focused fields */
+  }
+}
+
+/*
+ * Unlayered on purpose: these beat the primitives' layered utilities (outline-none / outline-hidden, top-4 …).
+ * Focus: a visible 2 px primary ring on every keyboard-focused element.
+ */
+:where(*):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* The skip-link target is focused programmatically; outlining the whole content area adds nothing. */
+#main:focus-visible {
+  outline: none;
+}
+
+/* Items inside scrolling menus/lists: draw the ring inside so overflow can't clip it. */
+:where([role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"], [role="option"], [role="tab"]):focus-visible {
+  outline-offset: -2px;
+}
+
+/* Close buttons of dialogs and sheets are 16 px icons in the primitives: give them a full tap target. */
+[data-slot="dialog-close"],
+[data-slot="sheet-content"] > button.absolute {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap);
+  min-height: var(--tap);
+  top: 0.5rem;
+  right: 0.5rem;
+  opacity: 1;
+}
+
+/*
+ * Toasts (sonner). Sonner injects its own UNLAYERED stylesheet at runtime (13 px text, 24 px tall / 12 px action
+ * buttons), usually after this file, so it beats every layered Tailwind utility (className, toastOptions.classNames)
+ * and wins ties. These rules are unlayered too and one attribute more specific, so toasts keep the 14 px minimum and
+ * 44 / 48 px action buttons (PLAN.md §10). The close button isn't enabled; give it a tap target before enabling it.
+ */
+[data-sonner-toaster] [data-sonner-toast][data-styled="true"] {
+  font-size: 0.875rem;
+}
+
+[data-sonner-toaster] [data-sonner-toast][data-styled="true"] [data-button],
+[data-sonner-toaster] [data-sonner-toast][data-styled="true"] [data-cancel] {
+  min-height: var(--tap);
+  height: auto;
+  font-size: 0.875rem;
+  padding-inline: 0.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print (PLAN.md §10): global half-inch margins; app chrome carries `print:hidden`. */
+@page {
+  margin: 0.5in;
+}
+
+@media print {
+  body {
+    background: #ffffff;
+    font-size: 11pt;
+  }
 }

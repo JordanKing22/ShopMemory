@@ -1,0 +1,42 @@
+/** A hermetic env equal to the parsed defaults of src/lib/env.ts (never read from process.env in tests). */
+import type { Env } from "@/lib/env";
+
+export function env(overrides: Partial<Env> = {}): Env {
+  return {
+    LLM_PROVIDER: "anthropic",
+    AI_MODE: undefined,
+    HYBRID_CLOUD_PROVIDER: "anthropic",
+    HYBRID_EC_TARGET: "local",
+    AI_SETTINGS_LOCKED: false,
+    CUSTOMER_CONFIDENTIAL_CLOUD: "allow",
+    CUSTOMER_CONFIDENTIAL_GLOBAL_PROFILE: "allow",
+    COVERED_MODEL_EC: "deny",
+    VOICE_VENDOR_CLOUD: "off",
+    DEMO_MODE: true,
+    DEMO_OPEN_CONTROLS: true,
+    DEMO_MISS: "offline",
+    DEMO_REPLAY_SPEED: "realistic",
+    DEMO_LIVE_LOCAL: false,
+    DEMO_PIN: undefined,
+    ANTHROPIC_API_KEY: undefined,
+    ANTHROPIC_MODEL: "claude-sonnet-5-5",
+    AWS_REGION: undefined,
+    BEDROCK_ENDPOINT: "runtime",
+    BEDROCK_MODEL_ID: undefined,
+    BEDROCK_BASE_URL: undefined,
+    GOVCLOUD_ENDPOINT_ALLOWLIST: [],
+    OLLAMA_BASE_URL: "http://127.0.0.1:11434",
+    OLLAMA_MODEL: "qwen3.5:4b",
+    OLLAMA_NUM_CTX: 8192,
+    OLLAMA_HOST_ALLOWLIST: [],
+    OLLAMA_ALLOW_PLAINTEXT_LAN: false,
+    PUBLIC_BASE_URL: "http://localhost:3000",
+    FLOORWISE_DB: "main",
+    AUTH_MODE: "demo",
+    AI_TIMEOUT_MS: 60000,
+    ANTHROPIC_BASE_URL: undefined,
+    ANTHROPIC_BEDROCK_BASE_URL: undefined,
+    ANTHROPIC_BEDROCK_MANTLE_BASE_URL: undefined,
+    ...overrides,
+  };
+}
