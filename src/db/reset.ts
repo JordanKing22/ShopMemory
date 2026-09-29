@@ -60,6 +60,13 @@ const DELETE_ORDER: Table[] = [
 ];
 
 const CHUNK = 200;
+
+export class ResetError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ResetError";
+  }
+}
 export const EPOCH_KEY = "demo.epoch";
 
 export interface ResetOptions {
@@ -67,7 +74,8 @@ export interface ResetOptions {
   nowIso: string;
   /**
    * Receives the redacted `transport='live'` audit rows before they are deleted (the caller writes them to
-   * data/audit-archive/). Runs inside the transaction: if it throws, nothing is changed.
+   * data/audit-archive/). Required whenever live rows exist. Runs inside the transaction: if it throws, nothing is
+   * changed.
    */
   archiveLiveAudit?: (rows: Record<string, unknown>[]) => void;
   actor?: { personId: string | null; personaId: string | null; role: (typeof s.ROLES)[number] | null };
@@ -84,7 +92,12 @@ export function resetDatabase(sqlite: Database.Database, bundle: SeedBundle, opt
   const db = drizzle({ client: sqlite, schema: s });
   const run = sqlite.transaction((): ResetResult => {
     const live = db.select().from(s.aiAuditLog).where(eq(s.aiAuditLog.transport, "live")).all();
-    if (live.length > 0) opts.archiveLiveAudit?.(live as unknown as Record<string, unknown>[]);
+    if (live.length > 0) {
+      // Never delete a real call's audit trail unarchived (PLAN.md §4.7). If a later step rolls back, a retry
+      // archives the same rows again: a duplicate archive file, never a lost one.
+      if (!opts.archiveLiveAudit) throw new ResetError(`${live.length} live-call audit rows must be archived before a reset.`);
+      opts.archiveLiveAudit(live as unknown as Record<string, unknown>[]);
+    }
 
     const prevEpochRow = db.select().from(s.appSettings).where(eq(s.appSettings.key, EPOCH_KEY)).get();
     const prevEpoch = typeof prevEpochRow?.value === "number" ? prevEpochRow.value : 0;

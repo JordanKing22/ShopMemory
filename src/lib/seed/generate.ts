@@ -264,7 +264,10 @@ export function generateCommerce(input: GeneratorInput): GeneratorOutput {
         .filter(([pid, w]) => w > 0 && (hireDate.get(pid) ?? "9999") <= quotedOn)
         .filter(([pid]) => !(onLeave && pid === input.rayPersonId))
         .filter(([pid]) => turned || !turnedOnly.has(pid));
-      const quotedBy = eligible.length > 0 ? pickWeighted(rng(key, "quoter"), eligible.map(([value, weight]) => ({ value, weight }))) : input.rayPersonId;
+      if (eligible.length === 0) {
+        throw new GeneratorError(`Nobody in quote-model.yaml's quoters can quote a ${gp.part.family} on ${quotedOn} (hire dates, Ray's leave, turned-only quoters).`);
+      }
+      const quotedBy = pickWeighted(rng(key, "quoter"), eligible.map(([value, weight]) => ({ value, weight })));
       const qty = logUniformInt(rng(key, "qty"), model.qty.min, model.qty.max);
       const setup = need0(model.setup_hours_by_machine_kind[kind], `setup_hours_by_machine_kind.${kind}`);
       const cycle =
@@ -299,7 +302,7 @@ export function generateCommerce(input: GeneratorInput): GeneratorOutput {
     pending: t.pendingTotal - anchorCount("pending"),
   };
   if (Object.values(gen).some((n) => n < 0)) throw new GeneratorError("The anchor quotes already exceed an outcome target.");
-  const byRecency = [...quotes].sort((a, b) => b.quotedOn.localeCompare(a.quotedOn) || a.key.localeCompare(b.key));
+  const byRecency = [...quotes].sort((a, b) => cmp(b.quotedOn, a.quotedOn) || cmp(a.key, b.key));
   byRecency.slice(0, gen.pending).forEach((q) => (q.outcome = "pending"));
   const open = quotes.filter((q) => !q.outcome);
   const winScore = (q: GenQuote) => {
@@ -311,10 +314,10 @@ export function generateCommerce(input: GeneratorInput): GeneratorOutput {
       (q.quotedBy === input.rayPersonId && q.drivers.some((d) => JUDGMENT_HEAVY.has(d)) ? odds.ray_judgment_job : 0);
     return rng(q.key, "outcome")() - p;
   };
-  const scored = open.map((q) => ({ q, s: winScore(q) })).sort((a, b) => a.s - b.s || a.q.key.localeCompare(b.q.key));
+  const scored = open.map((q) => ({ q, s: winScore(q) })).sort((a, b) => a.s - b.s || cmp(a.q.key, b.q.key));
   scored.slice(0, gen.won).forEach(({ q }) => (q.outcome = "won"));
   const rest = scored.slice(gen.won).map((x) => x.q);
-  const noBidOrder = rest.map((q) => ({ q, r: rng(q.key, "nobid")() })).sort((a, b) => a.r - b.r || a.q.key.localeCompare(b.q.key));
+  const noBidOrder = rest.map((q) => ({ q, r: rng(q.key, "nobid")() })).sort((a, b) => a.r - b.r || cmp(a.q.key, b.q.key));
   noBidOrder.forEach(({ q }, i) => {
     q.outcome = i < gen.no_bid ? "no_bid" : "lost";
     if (q.outcome === "lost") q.lostReason = pickWeighted(rng(q.key, "lost_reason"), LOST_REASONS);
@@ -327,20 +330,23 @@ export function generateCommerce(input: GeneratorInput): GeneratorOutput {
   const inProcess = new Set(
     quotes
       .filter((q) => q.outcome === "won")
-      .sort((a, b) => b.quotedOn.localeCompare(a.quotedOn) || a.key.localeCompare(b.key))
+      .sort((a, b) => cmp(b.quotedOn, a.quotedOn) || cmp(a.key, b.key))
       .slice(0, genInProcess)
       .map((q) => q.key),
   );
 
-  const usedQuoteNumbers = new Set(input.anchorQuotes.map((q) => q.quote_number));
-  const usedJobNumbers = new Set(input.anchorQuotes.flatMap((q) => (q.job ? [q.job.job_number] : [])));
+  // Quote and job numbers share one digit space ("RQ-26-0310" and "RJ-26-0310" never both exist), so every job keeps
+  // unique digits the suspicion check can recognize.
+  const usedNumberDigits = new Set(
+    input.anchorQuotes.flatMap((q) => [q.quote_number, ...(q.job ? [q.job.job_number] : [])]).map((n) => n.slice(3)),
+  );
   const stats: Record<VarianceGroupStat["group"], number[]> = { routine: [], judgment_ray: [], judgment_non_ray: [], other: [] };
   const driverMean = (d: string) => model.variance.drivers[d]?.mean ?? 0;
 
   const out: QuoteSeedT[] = quotes.map((q, i) => {
     const n = String(i + 1).padStart(3, "0");
     const id = `Q-G${n}`;
-    const quoteNumber = sequenceNumber("RQ", q.quotedOn, usedQuoteNumbers);
+    const quoteNumber = sequenceNumber("RQ", q.quotedOn, usedNumberDigits);
     const rate = need0(model.shop_rate_usd_per_hr[q.machineKind], `shop_rate_usd_per_hr.${q.machineKind}`);
     const materialCost = round2(need0(model.material_cost_per_part_usd[q.part.part.material], `material_cost_per_part_usd.${q.part.part.material}`) * q.qty);
     const heavy = q.drivers.some((d) => JUDGMENT_HEAVY.has(d));
@@ -356,7 +362,7 @@ export function generateCommerce(input: GeneratorInput): GeneratorOutput {
         const started = minDate(addDays(q.quotedOn, intBetween(rng(q.key, "start"), 3, 10)), addDays(demoToday, -1));
         job = {
           id: `J-G${n}`,
-          job_number: sequenceNumber("RJ", started, usedJobNumbers),
+          job_number: sequenceNumber("RJ", started, usedNumberDigits),
           status: "in_process",
           started_on: started,
           shipped_on: null,
@@ -402,11 +408,11 @@ export function generateCommerce(input: GeneratorInput): GeneratorOutput {
         if (shipped > cap) shipped = cap;
         if (started > shipped) started = maxDate(q.quotedOn, shipped);
         if (shipped < started) shipped = started;
-        const topDriver = [...q.drivers].sort((a, b) => driverMean(b) - driverMean(a) || a.localeCompare(b))[0];
+        const topDriver = [...q.drivers].sort((a, b) => driverMean(b) - driverMean(a) || cmp(a, b))[0];
         const pool = Math.abs(realized) >= 0.05 && topDriver && model.debriefs[topDriver] ? model.debriefs[topDriver] : (model.debriefs.routine ?? [""]);
         job = {
           id: `J-G${n}`,
-          job_number: sequenceNumber("RJ", started, usedJobNumbers),
+          job_number: sequenceNumber("RJ", started, usedNumberDigits),
           status: "complete",
           started_on: started,
           shipped_on: shipped,
@@ -482,18 +488,19 @@ function longGroups(partNumber: string): string[] {
   return (partNumber.match(/\d+/g) ?? []).filter((g) => g.length >= 4);
 }
 
-/** "RQ-26-0911" style numbers from a date (yy + MMDD), bumped until unused. */
-function sequenceNumber(prefix: "RQ" | "RJ", date: string, used: Set<string>): string {
+/** "RQ-26-0911" style numbers from a date (yy + MMDD), bumped until their "yy-nnnn" digits are unused. */
+function sequenceNumber(prefix: "RQ" | "RJ", date: string, usedDigits: Set<string>): string {
   const yy = date.slice(2, 4);
   let n = Number(date.slice(5, 7) + date.slice(8, 10));
-  for (;;) {
-    const s = `${prefix}-${yy}-${String(n).padStart(4, "0")}`;
-    if (!used.has(s)) {
-      used.add(s);
-      return s;
+  for (let tries = 0; tries < 9000; tries++) {
+    const digits = `${yy}-${String(n).padStart(4, "0")}`;
+    if (!usedDigits.has(digits)) {
+      usedDigits.add(digits);
+      return `${prefix}-${digits}`;
     }
     n = (n + 1) % 9000; // 9xxx is reserved for internal work orders
   }
+  throw new GeneratorError(`No free ${prefix} numbers left for 20${yy}.`);
 }
 
 function need0(v: number | undefined, what: string): number {
@@ -501,5 +508,7 @@ function need0(v: number | undefined, what: string): number {
   return v;
 }
 
+/** Code-point order (never locale-dependent). */
+const cmp = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
 const maxDate = (a: string, b: string) => (a > b ? a : b);
 const minDate = (a: string, b: string) => (a < b ? a : b);

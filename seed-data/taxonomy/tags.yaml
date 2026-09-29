@@ -1,26 +1,26 @@
-# Controlled tag vocabulary. `topic` maps a tag to a heat-map row; `synonyms` are words that support the tag
-# (also used by search and by the traceability check for process topics).
-- { id: thin-wall, label: Thin wall, topic: t-thin-wall, synonyms: [thin, thin-wall, thin wall, thin walls, walls, wall, low rigidity] }
-- { id: quoting, label: Quoting, topic: t-quoting, synonyms: [quote, quoting, estimate, hours, price, priced] }
-- { id: workholding, label: Workholding, topic: t-5ax-workholding, synonyms: [workholding, fixture, vise, soft jaws, clamp, clamping, 5-axis] }
-- { id: tight-tolerance, label: Tight tolerance, topic: t-tight-tol, synonyms: [tolerance, tenths, bore, thermal, warm-up, size] }
-- { id: first-article, label: First article, topic: t-fai-cmm, synonyms: [first article, FAI, AS9102, balloon, CMM] }
-- { id: outside-processing, label: Outside processing, topic: t-outside-proc, synonyms: [heat treat, passivation, anodize, plating, outside processing, vendor] }
-- { id: cam, label: CAM, topic: t-cam, synonyms: [CAM, toolpath, program, post, stepover] }
-- { id: finishing, label: Finishing passes, topic: t-thin-wall, synonyms: [finish pass, finishing, light passes] }
+# Controlled tag vocabulary. `topic` maps a tag to a heat-map row; `synonyms` feed search. `evidence_words` are the
+# stricter words that let a card be filed under a process topic (traceability); without them only the label and ID count.
+- { id: thin-wall, label: Thin wall, topic: t-thin-wall, synonyms: [thin, thin-wall, thin wall, thin walls, walls, wall, low rigidity], evidence_words: [thin, thin-wall, thin wall, thin walls, thin-walled, low rigidity] }
+- { id: quoting, label: Quoting, topic: t-quoting, synonyms: [quote, quoting, estimate, hours, price, priced], evidence_words: [quote, quoted, quoting, estimate, estimating, priced, price in, pricing] }
+- { id: workholding, label: Workholding, topic: t-5ax-workholding, synonyms: [workholding, fixture, vise, soft jaws, clamp, clamping, 5-axis], evidence_words: [workholding, fixture, vise, soft jaws, clamp, clamping, clamped, 5-axis] }
+- { id: tight-tolerance, label: Tight tolerance, topic: t-tight-tol, synonyms: [tolerance, tenths, bore, thermal, warm-up, size], evidence_words: [tolerance, tight tolerance, tenths, thermal, warm-up] }
+- { id: first-article, label: First article, topic: t-fai-cmm, synonyms: [first article, FAI, AS9102, balloon, CMM], evidence_words: [first article, FAI, AS9102, balloon, CMM] }
+- { id: outside-processing, label: Outside processing, topic: t-outside-proc, synonyms: [heat treat, passivation, anodize, plating, outside processing, vendor], evidence_words: [heat treat, heat-treated, heat treated, passivation, anodize, plating, outside processing] }
+- { id: cam, label: CAM, topic: t-cam, synonyms: [CAM, toolpath, program, post, stepover], evidence_words: [CAM, toolpath, stepover, CAM program] }
+- { id: finishing, label: Finishing passes, topic: t-thin-wall, synonyms: [finish pass, finishing, light passes], evidence_words: [] }
 - { id: titanium, label: Titanium, topic: t-mat-ti64, synonyms: [Ti, titanium, Ti-6Al-4V] }
 - { id: inconel, label: Inconel, topic: t-mat-in718, synonyms: [Inconel, "718"] }
 - { id: stainless, label: Stainless, topic: null, synonyms: [stainless, "17-4", "316"] }
 - { id: aluminum, label: Aluminum, topic: null, synonyms: [aluminum, "6061", "7075"] }
 - { id: peek, label: PEEK, topic: t-mat-peek, synonyms: [PEEK] }
-- { id: springback, label: Walls moving after unclamping, topic: t-thin-wall, synonyms: [sprang, spring, moved, unclamp, unclamped, distortion] }
+- { id: springback, label: Walls moving after unclamping, topic: t-thin-wall, synonyms: [sprang, spring, moved, unclamp, unclamped, distortion], evidence_words: [sprang, springback, unclamped, unclamping] }
 - { id: scrap, label: Scrap, topic: null, synonyms: [scrap, scrapped, reject] }
 - { id: rework, label: Rework, topic: null, synonyms: [rework, MRB] }
-- { id: heat-treat, label: Heat treat, topic: t-outside-proc, synonyms: [heat treat, H1025, H1150, aging] }
+- { id: heat-treat, label: Heat treat, topic: t-outside-proc, synonyms: [heat treat, H1025, H1150, aging], evidence_words: [heat treat, heat-treated, heat treated, H1025, H1150] }
 - { id: cleanliness, label: Cleanliness, topic: null, synonyms: [clean, bagging, particulate] }
 - { id: chatter, label: Chatter, topic: null, synonyms: [chatter, vibration] }
 - { id: tool-wear, label: Tool wear, topic: null, synonyms: [tool wear, worn, insert] }
-- { id: warm-up, label: Warm-up, topic: t-tight-tol, synonyms: [warm-up, warm up, thermal growth] }
+- { id: warm-up, label: Warm-up, topic: t-tight-tol, synonyms: [warm-up, warm up, thermal growth], evidence_words: [warm-up, warm up, thermal growth] }
 - { id: probing, label: Probing, topic: null, synonyms: [probe, probing] }
 - { id: deburr, label: Deburr, topic: null, synonyms: [deburr, burr, burrs] }
 - { id: new-customer, label: New customer, topic: null, synonyms: [new customer, first lot, pilot] }

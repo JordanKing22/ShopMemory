@@ -32,6 +32,7 @@ golden:
     "deep:PER-01": 32.2
     "top:PER-01": 46
   spof: ["PER-01|t-mat-ti64", "PER-01|t-thin-wall"]
+  top_topic: { PER-01: t-mat-in718 }   # step 5: "Suggested next interview" is Ray on Inconel 718
 
 # Values the demo script, the talk track and the cached AI responses depend on ("RECORD-ID.field": value, using
 # the field names from the seed files). Changing one of these records means re-recording the demo cassettes.

@@ -189,8 +189,8 @@ describe("part, job and quote numbers", () => {
     expect(mentions[0]).toMatchObject({ kind: "part", id: "PRT-A01", surface: text });
   });
 
-  it.each(["AV-2231-07Cx", "AV-2231-071", "XAV-2231-07", "AV-2231-0", "AV--2231-07", "1AV-2231-07"])(
-    "%s does not match (boundaries, one separator, one revision letter)",
+  it.each(["AV-2231-07Cxy", "AV-2231-071", "XAV-2231-07", "AV-2231-0", "AV--2231-07", "1AV-2231-07"])(
+    "%s does not match (boundaries, one separator, at most two revision letters)",
     (text) => {
       expect(ids(text)).toEqual([]);
     },
@@ -351,36 +351,38 @@ describe("numeric-core suspicion", () => {
     expect(analyzeText("GDS-4410-120 and the 4410 manifold", DICT).signals.map((s) => s.start)).toEqual([21]);
   });
 
-  it("requires ≥ 4 digits, uniqueness across all numbered records, and no stoplist hit", () => {
+  it("requires ≥ 4 digits and no stoplist hit; a core shared with other records stays watched (fail closed)", () => {
     const d = buildDictionary({
       ...INPUT,
       parts: [
         ...INPUT.parts,
-        // shares "4410" with PRT-A10, so neither owns it any more
+        // shares "4410" with export-controlled PRT-A10: the core is still watched, for PRT-A10
         { id: "PRT-A20", partNumber: "AV-4410-01", classification: "customer_confidential" },
         // export-controlled, but 7075 is stoplisted and 120 is too short
         { id: "PRT-A21", partNumber: "GDS-7075-120", classification: "export_controlled" },
       ],
     });
-    expect(d.numericCores.has("4410")).toBe(false);
+    expect(d.numericCores.get("4410")).toMatchObject({ recordId: "PRT-A10" });
     expect(d.numericCores.has("4410120")).toBe(true);
     expect(d.numericCores.has("7075")).toBe(false);
     expect(d.numericCores.has("120")).toBe(false);
     expect(d.numericCores.get("7075120")).toMatchObject({ recordId: "PRT-A21" });
-    expect(suspicionSignals("the 4410 manifold", d)).toEqual([]);
+    expect(suspicionSignals("the 4410 manifold", d).map((x) => x.recordId)).toEqual(["PRT-A10"]);
     expect(suspicionSignals("7075 housing", d)).toEqual([]);
   });
 
-  it("quotes never contribute cores but do break uniqueness", () => {
+  it("quotes never own cores, and a quote sharing a job's digits doesn't hide the job", () => {
     const d = buildDictionary({
       ...INPUT,
       quotes: [
         ...INPUT.quotes,
         { id: "Q-A30", quoteNumber: "RQ-26-0310", classification: "export_controlled" },
+        { id: "Q-A31", quoteNumber: "RQ-26-5555", classification: "export_controlled" },
       ],
     });
-    expect(d.numericCores.has("0310")).toBe(false);
-    expect(d.numericCores.has("260310")).toBe(false);
+    expect(d.numericCores.get("0310")).toMatchObject({ recordId: "J-A10", recordKind: "job" });
+    expect(d.numericCores.get("260310")).toMatchObject({ recordId: "J-A10" });
+    expect(d.numericCores.has("5555")).toBe(false);
     expect([...d.numericCores.values()].every((c) => c.recordKind !== ("quote" as string))).toBe(true);
   });
 
@@ -549,5 +551,42 @@ describe("scale", () => {
     expect(suspicionSignals("the 1008 run", d).map((s) => s.recordId)).toEqual(["J-G08"]);
     expect(suspicionSignals("the 1009 run", d)).toEqual([]); // customer_confidential job
     expect(suspicionSignals(MAYA_QUESTION, d)).toEqual([]);
+  });
+});
+
+describe("review fixes (Phase 1a)", () => {
+  // A generated quote that happens to share J-A10's digits must not hide the job's numeric cores.
+  const SHARED = buildDictionary({
+    ...INPUT,
+    quotes: [...INPUT.quotes, { id: "Q-G029", quoteNumber: "RQ-26-0310", classification: "customer_confidential" }],
+    parts: [...INPUT.parts, { id: "PRT-A06", partNumber: "VLM-40215", classification: "export_controlled" }],
+    nearMissIgnore: ["Vermont", "Belmont"],
+  });
+
+  it("keeps a shared numeric core when an export-controlled job holds it (fail closed)", () => {
+    for (const q of ["What went wrong on job 0310?", "the 26-0310 job"]) {
+      expect(suspicionSignals(q, SHARED).map((s) => s.recordId), q).toEqual(["J-A10"]);
+    }
+  });
+
+  it("matches numbers written with spaced, slashed or underscored separators", () => {
+    expect(floorFromText("RJ - 26 - 0310", SHARED).floor).toBe("export_controlled");
+    expect(floorFromText("GDS/4410/120", SHARED).floor).toBe("export_controlled");
+    expect(floorFromText("GDS_4410_120", SHARED).floor).toBe("export_controlled");
+  });
+
+  it("accepts a two-letter revision on a part number", () => {
+    expect(detectEntities("VLM-40215AB", SHARED).map((m) => m.id)).toEqual(["PRT-A06"]);
+  });
+
+  it("ignores ordinary words one letter from a watched customer name", () => {
+    expect(suspicionSignals("our Vermont supplier", SHARED)).toEqual([]);
+    expect(suspicionSignals("the Belmont order", SHARED)).toEqual([]);
+    expect(suspicionSignals("Velmnt housing", SHARED).map((s) => s.kind)).toEqual(["near_miss_customer"]);
+  });
+
+  it("the demo question and Ray's scripted words still raise nothing", () => {
+    expect(analyzeText(MAYA_QUESTION, SHARED).signals).toEqual([]);
+    expect(analyzeText(RAY_R4_EXCERPT, SHARED).signals).toEqual([]);
   });
 });

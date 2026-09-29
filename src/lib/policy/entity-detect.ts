@@ -21,8 +21,9 @@
  *   capitalized form only ("Ray" yes, "ask ray" no).
  * - A small stoplist of compounds ("X-Ray", "Gamma Ray") is consumed before person names can match inside it.
  * - Part, job and quote numbers are case-insensitive with optional separators between their letter/digit
- *   groups (hyphen, dash, dot, space or none); part numbers also accept one trailing revision letter:
- *   "AV-2231-07", "AV223107", "av 2231 07" and "AV-2231-07C" all match `AV-2231-07`.
+ *   groups (one hyphen/dash, dot, slash or underscore with optional spaces around it, spaces alone, or none);
+ *   part numbers also accept a trailing revision of one or two letters: "AV-2231-07", "AV223107",
+ *   "av 2231 07", "AV / 2231 / 07", "AV-2231-07C" and "AV-2231-07AB" all match `AV-2231-07`.
  * - Input text is NFC-normalized before matching. Offsets (`start`/`end`) index the NFC form, which is
  *   identical to the input for NFC input (the seed loader and the app normalize everything to NFC).
  *
@@ -123,7 +124,11 @@ export interface DictionarySurface {
   classification: Classification;
 }
 
-/** A distinctive digit sequence that identifies exactly one export-controlled part or job. */
+/**
+ * A distinctive digit sequence of an export-controlled part or job. Cores shared with other records (another
+ * part, a job, a quote with the same digits) stay watched for the first export-controlled part/job holding them:
+ * the check fails closed, since a spurious "held" notice is cheap and a missed one is not.
+ */
 export interface NumericCore {
   core: string;
   recordKind: "part" | "job";
@@ -205,10 +210,14 @@ export const PERSON_CLASSIFICATION: Classification = "internal";
 
 const BOUNDARY_BEFORE = "(?<![\\p{L}\\p{N}])";
 const BOUNDARY_AFTER = "(?![\\p{L}\\p{N}])";
-/** Optional separator between the letter/digit groups of a part, job or quote number. */
-const NUMBER_SEP = "[\\-\\u2010-\\u2015.\\u0020\\u00A0]?";
-/** Optional trailing revision letter on a part number ("AV-2231-07C", "AV-2231-07-C"). */
-const REVISION_SUFFIX = "(?:[\\-\\u2010-\\u2015]?[A-Za-z])?";
+/**
+ * Optional separator between the letter/digit groups of a part, job or quote number: one hyphen/dash, dot, slash or
+ * underscore, with optional spaces around it, or just spaces ("RJ-26-0310", "RJ 26 0310", "RJ - 26 - 0310",
+ * "GDS/4410/120", "GDS_4410_120", "gds4410120").
+ */
+const NUMBER_SEP = "[\\u0020\\u00A0\\t]*[\\-\\u2010-\\u2015./_]?[\\u0020\\u00A0\\t]*";
+/** Optional trailing revision (one or two letters) on a part number ("AV-2231-07C", "AV-2231-07-C", "VLM-40215AB"). */
+const REVISION_SUFFIX = "(?:[\\-\\u2010-\\u2015]?[A-Za-z]{1,2})?";
 /** Separators allowed between the words of a stoplisted compound ("X-Ray", "X Ray", "Gamma-Ray"). */
 const COMPOUND_SEP = "[\\s\\-\\u2010-\\u2015]+";
 
@@ -397,11 +406,15 @@ function buildNumericCores(input: DictionaryInput): Map<string, NumericCore> {
   for (const r of input.quotes)
     register({ key: `quote:${r.id}`, kind: "quote", id: r.id, classification: r.classification }, r.quoteNumber);
 
+  // Fail closed: a core shared with other records (e.g. a quote number with the same digits) is still watched
+  // when any export-controlled part or job holds it. A false "held" notice is cheap; a missed one is not.
   const cores = new Map<string, NumericCore>();
   for (const [core, set] of holders) {
-    if (set.size !== 1 || stop.has(core)) continue;
-    const rec = records.get([...set][0])!;
-    if (rec.kind === "quote" || rec.classification !== "export_controlled") continue;
+    if (stop.has(core)) continue;
+    const rec = [...set]
+      .map((k) => records.get(k)!)
+      .find((r) => r.kind !== "quote" && r.classification === "export_controlled");
+    if (!rec || rec.kind === "quote") continue;
     cores.set(core, { core, recordKind: rec.kind, recordId: rec.id, classification: rec.classification });
   }
   return cores;

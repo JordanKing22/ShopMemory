@@ -5,7 +5,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import { openDb, type Db } from "@/db/client";
 import { aiAuditLog } from "@/db/schema";
-import { countSeededRows, resetDatabase } from "@/db/reset";
+import { countSeededRows, resetDatabase, ResetError } from "@/db/reset";
 import { bundleRowCounts, type SeedBundle } from "@/lib/seed/bundle";
 import { buildSeedBundle, RESERVED, type BuildResult } from "@/lib/seed/build";
 import { LOCK_FILE, readSeedSources } from "@/lib/seed/files";
@@ -95,6 +95,14 @@ describe("seed bundle", () => {
     expect(con).toMatchObject({ targetClass: "ollama_local", endpointHost: "127.0.0.1" });
   });
 
+  it("carries PRT-A09's logged override down to its quotes and job", () => {
+    const t = bundle.tables;
+    for (const row of [...t.quotes.filter((q) => q.partId === "PRT-A09"), ...t.jobs.filter((j) => j.partId === "PRT-A09")]) {
+      expect(row, row.id).toMatchObject({ classification: "customer_confidential", classificationSource: "override_down" });
+      expect(row.classificationReason).toMatch(/PRT-A09/);
+    }
+  });
+
   it("keeps prices out of search columns", () => {
     for (const q of bundle.tables.quotes) expect(`${q.searchTitle} ${q.searchText} ${q.searchTags}`).not.toMatch(/\$|\bUSD\b/);
     for (const c of bundle.tables.knowledgeCards) expect(`${c.searchText} ${c.searchTags}`).not.toMatch(/\$\s?\d/);
@@ -113,6 +121,27 @@ describe("seed:check catches broken edits", () => {
   it("rejects a number the expert never said", () => {
     const r = buildSeedBundle(withFile("cards/PER-03-linda-marchetti.yaml", (t) => t.replace("sit unclamped for an hour before", "sit unclamped for 2 hours before")));
     expect(errorsOf(r).some((i) => i.code === "traceability:number_unsupported")).toBe(true);
+  });
+
+  it("rejects an invented number even when it looks like a material number", () => {
+    const r = buildSeedBundle(withFile("demo/ray-live-interview.yaml", (t) => t.replace('actions: ["add thirty-five percent to finishing",', 'actions: ["budget 718 hours for finishing", "add thirty-five percent to finishing",')));
+    expect(errorsOf(r).some((i) => i.code === "traceability:number_unsupported")).toBe(true);
+  });
+
+  it("raises a job whose debrief names an export-controlled job", () => {
+    const r = buildSeedBundle(withFile("quotes/anchors.yaml", (t) => t.replace("debrief: Ran close to quote. Finisher changed on a schedule; walls held size.", "debrief: Ran close to quote, same fixture as RJ-26-0310.")));
+    expect(errorsOf(r)).toEqual([]);
+    expect(r.bundle!.tables.jobs.find((j) => j.id === "J-A02")).toMatchObject({ classification: "export_controlled" });
+  });
+
+  it("warns about a seed file the loader doesn't read", () => {
+    const r = buildSeedBundle({ ...sources, "cards/PER-04-tomas-ibarra.yml": "[]\n" });
+    expect(r.issues.some((i) => i.code === "unused_file" && i.file === "cards/PER-04-tomas-ibarra.yml")).toBe(true);
+  });
+
+  it("rejects an expertise edit that moves Ray's suggested next interview", () => {
+    const r = buildSeedBundle(withFile("demo/anchors.yaml", (t) => t.replace("top_topic: { PER-01: t-mat-in718 }", "top_topic: { PER-01: t-cus-01 }")));
+    expect(errorsOf(r).some((i) => i.code === "demo_invariant" && i.message.includes("top risk"))).toBe(true);
   });
 
   it("rejects a reserved card ID", () => {
@@ -193,6 +222,31 @@ describe("resetDatabase", () => {
     resetDatabase(db.$client, bundle, { nowIso: "2026-09-29T00:02:00Z", archiveLiveAudit: (rows) => archived.push(...rows) });
     expect(archived).toHaveLength(1);
     expect(db.select().from(aiAuditLog).all()).toHaveLength(0);
+  });
+
+  it("refuses to delete live-call audit rows without an archiver", () => {
+    db.insert(aiAuditLog)
+      .values({
+        createdAt: "2026-09-29T00:00:00Z",
+        requestId: "req-2",
+        actorRole: "quoter",
+        feature: "ask",
+        task: "ask",
+        mode: "cloud",
+        decision: "allow",
+        transport: "live",
+        classificationsIncluded: [],
+        recordsSent: [],
+        recordsWithheld: [],
+        tokensUsed: [],
+        outcome: "ok",
+        policyVersion: "test",
+        appVersion: "test",
+      })
+      .run();
+    expect(() => resetDatabase(db.$client, bundle, { nowIso: "2026-09-29T00:03:00Z" })).toThrow(ResetError);
+    expect(db.select().from(aiAuditLog).all()).toHaveLength(1);
+    resetDatabase(db.$client, bundle, { nowIso: "2026-09-29T00:04:00Z", archiveLiveAudit: () => {} });
   });
 
   it("rebuilds full-text search so the demo question finds Ray's cards and quotes", () => {

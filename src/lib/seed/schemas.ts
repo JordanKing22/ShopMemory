@@ -146,6 +146,7 @@ export const CustomersFile = z.array(
     quality_requirements: z.string().default(""),
     aliases: z.array(term).default([]),
     part_number_pattern: z.string().min(1), // regex source, e.g. ^AV-\d{4}-\d{2}$
+    near_miss_ignore: z.array(term).default([]), // ordinary words one letter from the name (not a misspelling of it)
     account: z.object({
       contact_name: z.string(),
       contact_email: z.string().regex(/@([a-z0-9-]+\.)*example\.com$/, "contact emails must end in example.com"),
@@ -185,6 +186,9 @@ export const TagsFile = z.array(
     label: z.string().min(1),
     topic: TopicId.nullable().default(null),
     synonyms: z.array(term).default([]),
+    // Words that show a card really is about this tag's topic (traceability). Stricter than search synonyms;
+    // when omitted, only the tag's label and ID count.
+    evidence_words: z.array(term).optional(),
   }),
 );
 
@@ -484,6 +488,7 @@ export const AnchorsFile = z.object({
     before: z.record(z.string(), z.number()),
     after: z.record(z.string(), z.number()),
     spof: z.array(z.string()),
+    top_topic: z.record(PersonId, TopicId).default({}), // after the interview: person → topic of their top risk
   }),
   // Values the demo script and cassettes depend on, as "RECORD-ID.field": value (seed-file field names).
   pinned: z.record(z.string().regex(/^[A-Za-z0-9-]+\.[a-z_]+$/, 'keys look like "Q-A01.quoted_hours"'), z.union([z.string(), z.number(), z.boolean(), z.null()])).default({}),

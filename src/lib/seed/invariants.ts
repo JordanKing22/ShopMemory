@@ -97,6 +97,12 @@ export function runInvariants(input: InvariantInput): { report: InvariantReport;
         }
       }
     }
+    for (const [personId, topicId] of Object.entries(input.anchors.golden.top_topic)) {
+      const actual = after.people.find((pr) => pr.personId === personId)?.maxRiskTopicId ?? null;
+      if (actual !== topicId) {
+        issues.error(FILE, `Demo invariant: after the live interview, ${personId}'s top risk must be ${topicId} (the "Suggested next interview"); it is ${actual ?? "missing"}.`, "demo_invariant");
+      }
+    }
     report.spofBefore = spofSet(before);
     report.spofAfter = spofSet(after);
     const expectedSpof = [...input.anchors.golden.spof].sort();
@@ -131,10 +137,10 @@ export function runInvariants(input: InvariantInput): { report: InvariantReport;
   report.similarJobs = ranked.map((r) => ({ id: r.job.id, score: r.score }));
   const top3 = ranked.slice(0, 3).map((r) => r.job.id).sort();
   if (top3.join() !== [...sj.expected_top3].sort().join()) {
-    issues.error(FILE, `Demo invariant: for "${sj.query}" the top 3 similar jobs must be ${sj.expected_top3.join(", ")} (found ${top3.join(", ") || "none"}).`, "demo_invariant");
+    issues.error(FILE, `Demo invariant: for the demo question in similar_jobs.query, the top 3 similar jobs must be ${sj.expected_top3.join(", ")} (found ${top3.join(", ") || "none"}).`, "demo_invariant");
   }
   if (ranked[3]?.job.id !== sj.expected_rank4) {
-    issues.error(FILE, `Demo invariant: for "${sj.query}" job ${sj.expected_rank4} must rank 4th (found ${ranked[3]?.job.id ?? "none"}).`, "demo_invariant");
+    issues.error(FILE, `Demo invariant: for the demo question in similar_jobs.query, job ${sj.expected_rank4} must rank 4th (found ${ranked[3]?.job.id ?? "none"}).`, "demo_invariant");
   }
 
   // ------------------------------------------------------------------ variance clustering

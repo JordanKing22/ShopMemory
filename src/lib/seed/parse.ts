@@ -201,10 +201,14 @@ export function parseSeedSources(sources: SeedSources, issues: IssueList): Parse
     anchors: single(FILES.anchors, AnchorsFile),
   };
 
-  const filesIn = (dir: string, ext: string) =>
-    Object.keys(sources)
+  const consumed = new Set<string>(Object.values(FILES));
+  const filesIn = (dir: string, ext: string) => {
+    const list = Object.keys(sources)
       .filter((f) => f.startsWith(dir) && f.endsWith(ext) && !f.slice(dir.length).includes("/"))
       .sort();
+    for (const f of list) consumed.add(f);
+    return list;
+  };
 
   for (const file of filesIn(OPTIONAL_DIRS.cards, ".yaml")) {
     const m = /^cards\/(PER-\d{2})-[a-z0-9-]+\.yaml$/.exec(file);
@@ -255,5 +259,10 @@ export function parseSeedSources(sources: SeedSources, issues: IssueList): Parse
     });
   }
 
+  for (const f of Object.keys(sources).sort()) {
+    if (!consumed.has(f)) {
+      issues.warn(f, "This file isn't read by the loader. Check its folder and extension (.yaml, .md or .csv, lower case).", "unused_file");
+    }
+  }
   return parsed;
 }

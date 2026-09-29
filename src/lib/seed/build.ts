@@ -6,7 +6,7 @@
  * data/seed-bundle.json on success; `npm run seed` and Reset demo replay that bundle.
  */
 import type { Classification, JudgmentDriver } from "@/db/schema/enums";
-import { CARD_TYPES, DOC_SECTIONS, MOVES, maxClass } from "@/db/schema/enums";
+import { CARD_TYPES, CLASS_RANK, DOC_SECTIONS, MOVES, maxClass } from "@/db/schema/enums";
 import type { DocBody, DocSectionKey } from "@/db/schema/documents";
 import type { Threshold } from "@/db/schema/cards";
 import {
@@ -37,6 +37,9 @@ import { sealBundle, type BundleTables, type SeedBundle } from "./bundle";
 import { parseSeedSources, FILES, type CardSeedT, type Located, type PartSeedT, type QuoteSeedT, type ParsedSeed } from "./parse";
 import { IssueList, pad3, type SeedIssue, type SeedSources } from "./source";
 import { RAY_ID, runInvariants, type InvariantReport } from "./invariants";
+
+/** Seeded card IDs run KC-001…KC-090; KC-091…094 are the scripted demo's, KC-101+ the app's. */
+export const SEEDED_CARD_MAX = 90;
 
 export const RESERVED = {
   cards: ["KC-091", "KC-092", "KC-093", "KC-094"],
@@ -137,6 +140,9 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
 
   const partPatterns = new Map<string, RegExp>();
   for (const { file, line, value: c } of p.customers) {
+    if (CLASS_RANK[c.classification] < CLASS_RANK.customer_confidential) {
+      issues.error(file, `${c.id}: a customer is at least customer_confidential (every mention of it takes this level).`, "classification", line);
+    }
     try {
       partPatterns.set(c.id, new RegExp(c.part_number_pattern));
     } catch {
@@ -176,6 +182,18 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
     for (const id of topics.keys()) if (!seen.has(id)) issues.error(FILES.matrix, `Topic ${id} has no row.`, "matrix");
   }
 
+  // Material, machine and spec numbers ("718", "DMU 50", "AS9102") are never record-number digits.
+  const detectorStoplist = [
+    ...p.materials.flatMap(({ value: m }) => [m.name, m.short_name, ...m.aliases]),
+    ...p.machines.flatMap(({ value: m }) => [m.model, m.name]),
+    ...shop.certifications,
+    "AS9102",
+  ];
+  const stoplistDigits = [...new Set(detectorStoplist.flatMap((s) => {
+    const g = s.match(/\d+/g) ?? [];
+    return g.length > 1 ? [...g, g.join("")] : g;
+  }))].sort();
+
   // ---------------------------------------------------------------------------------------------
   // Commerce: anchors + generated + internal
   // ---------------------------------------------------------------------------------------------
@@ -192,6 +210,7 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
     machines: p.machines.map(({ value: m }) => ({ id: m.id, kind: m.kind })),
     materials: p.materials.map(({ value: m }) => ({ id: m.id, family: m.family })),
     rayPersonId: RAY_ID,
+    stoplistNumbers: stoplistDigits,
     families: p.families,
     model: p.quoteModel,
     anchorParts: p.anchorParts.map((x) => x.value),
@@ -275,53 +294,98 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
     if (q && j.started_on && j.started_on < q.quoted_on) issues.error(file, `${j.id}: started before its quote.`, "date", line);
   }
 
-  // Classification: parts → quotes → jobs.
-  const partClass = new Map<string, Classification>();
-  const partClassMeta = new Map<string, { source: "derived" | "override_up" | "override_down"; reason: string | null }>();
+  // Classification: parts → quotes → jobs, then raised by the entities their own text mentions (part description and
+  // notes, quote notes, job debrief). Raising can change the dictionary, so repeat until nothing moves.
+  type ClassMeta = { cls: Classification; source: "derived" | "override_up" | "override_down"; reason: string | null };
+  const partMeta = new Map<string, ClassMeta>();
   for (const { file, line, value: pt } of allPartsL) {
     const cust = pt.customer ? customers.get(pt.customer)?.value : null;
     const floor = derivePartFloor({ exportControl: pt.export_control }, cust ? { partClassificationFloor: cust.part_classification_floor } : null);
     const res = resolveClassification({ floor, defaultClass: floor, declared: pt.classification, override: pt.classification_override, subject: "part" });
     if (res.error) issues.error(file, `${pt.id}: ${res.error}`, "classification", line);
     if (res.warning) issues.warn(file, `${pt.id}: ${res.warning}`, "classification", line);
-    partClass.set(pt.id, res.classification);
-    partClassMeta.set(pt.id, { source: res.source, reason: res.reason });
+    partMeta.set(pt.id, { cls: res.classification, source: res.source, reason: res.reason });
   }
+  const quoteMeta = new Map<string, ClassMeta>();
+  const jobMeta = new Map<string, ClassMeta>();
+  const follow = (parentId: string, parent: ClassMeta | undefined, derive: (c: Classification) => Classification): ClassMeta => {
+    const cls = derive(parent?.cls ?? "export_controlled");
+    return parent?.source === "override_down" && cls === parent.cls
+      ? { cls, source: "override_down", reason: `Follows ${parentId}: ${parent.reason}` }
+      : { cls, source: "derived", reason: null };
+  };
+  const raise = (m: ClassMeta, floor: Classification, mentions: { id: string }[]): ClassMeta =>
+    CLASS_RANK[floor] > CLASS_RANK[m.cls]
+      ? { cls: floor, source: "derived", reason: `Raised because its text mentions ${[...new Set(mentions.map((x) => x.id))].join(", ")}` }
+      : m;
+  const partClass = new Map<string, Classification>();
   const quoteClass = new Map<string, Classification>();
-  for (const { value: q } of allQuotesL) quoteClass.set(q.id, deriveQuoteFloor(partClass.get(q.part) ?? "export_controlled"));
   const jobClass = new Map<string, Classification>();
-  for (const { value: j } of jobsL) {
-    jobClass.set(j.id, deriveJobFloor(j.quoteId ? (quoteClass.get(j.quoteId) ?? "export_controlled") : (partClass.get(j.partId) ?? "export_controlled")));
-  }
-
-  // ---------------------------------------------------------------------------------------------
-  // Entity dictionary (the same detector the gateway uses) and traceability facts
-  // ---------------------------------------------------------------------------------------------
+  const basePartMeta = new Map(partMeta);
   const owner = p.personas.find((x) => x.value.role === "owner")?.value;
-  const dict: EntityDictionary = buildDictionary({
-    customers: p.customers.map(({ value: c }) => ({
-      id: c.id,
-      name: c.name,
-      aliases: c.aliases,
-      classification: c.classification,
-      partClassificationFloor: c.part_classification_floor,
-    })),
-    people: [
-      ...p.people.map(({ value: pe }) => ({ id: pe.id, fullName: pe.full_name, aliases: pe.aliases })),
-      ...(owner ? [{ id: owner.id, fullName: owner.aliases[0] ?? owner.label, aliases: owner.aliases }] : []),
-    ],
-    parts: allPartsL.map(({ value: pt }) => ({ id: pt.id, partNumber: pt.part_number, classification: partClass.get(pt.id)! })),
-    jobs: jobsL.map(({ value: j }) => ({ id: j.id, jobNumber: j.job_number, classification: jobClass.get(j.id)! })),
-    quotes: allQuotesL.map(({ value: q }) => ({ id: q.id, quoteNumber: q.quote_number, classification: quoteClass.get(q.id)! })),
-    stoplistNumbers: [
-      ...p.materials.flatMap(({ value: m }) => [m.name, m.short_name, ...m.aliases]),
-      ...p.machines.flatMap(({ value: m }) => [m.model, m.name]),
-      ...shop.certifications,
-      "AS9102",
-    ],
-  });
+  const makeDictionary = () =>
+    buildDictionary({
+      customers: p.customers.map(({ value: c }) => ({
+        id: c.id,
+        name: c.name,
+        aliases: c.aliases,
+        classification: c.classification,
+        partClassificationFloor: c.part_classification_floor,
+      })),
+      people: [
+        ...p.people.map(({ value: pe }) => ({ id: pe.id, fullName: pe.full_name, aliases: pe.aliases })),
+        ...(owner ? [{ id: owner.id, fullName: owner.aliases[0] ?? owner.label, aliases: owner.aliases }] : []),
+      ],
+      parts: allPartsL.map(({ value: pt }) => ({ id: pt.id, partNumber: pt.part_number, classification: partClass.get(pt.id) ?? "export_controlled" })),
+      jobs: jobsL.map(({ value: j }) => ({ id: j.id, jobNumber: j.job_number, classification: jobClass.get(j.id) ?? "export_controlled" })),
+      quotes: allQuotesL.map(({ value: q }) => ({ id: q.id, quoteNumber: q.quote_number, classification: quoteClass.get(q.id) ?? "export_controlled" })),
+      stoplistNumbers: detectorStoplist,
+      nearMissIgnore: p.customers.flatMap(({ value: c }) => c.near_miss_ignore),
+    });
+  let dict: EntityDictionary | null = null;
+  const scan = (...texts: (string | null | undefined)[]) =>
+    dict ? floorFromText(texts.filter((t): t is string => !!t).join("\n"), dict) : { floor: "general" as Classification, mentions: [] };
+  for (let pass = 0; pass < 5; pass++) {
+    let changed = false;
+    const set = (map: Map<string, ClassMeta>, cls: Map<string, Classification>, id: string, m: ClassMeta) => {
+      if (cls.get(id) !== m.cls) changed = true;
+      map.set(id, m);
+      cls.set(id, m.cls);
+    };
+    for (const { value: pt } of allPartsL) {
+      const t = scan(pt.description, pt.notes);
+      set(partMeta, partClass, pt.id, raise(basePartMeta.get(pt.id)!, t.floor, t.mentions));
+    }
+    for (const { value: q } of allQuotesL) {
+      const t = scan(q.notes);
+      set(quoteMeta, quoteClass, q.id, raise(follow(q.part, partMeta.get(q.part), deriveQuoteFloor), t.floor, t.mentions));
+    }
+    for (const { value: j } of jobsL) {
+      const parentId = j.quoteId ?? j.partId;
+      const parent = j.quoteId ? quoteMeta.get(j.quoteId) : partMeta.get(j.partId);
+      const t = scan(j.debrief);
+      set(jobMeta, jobClass, j.id, raise(follow(parentId, parent, deriveJobFloor), t.floor, t.mentions));
+    }
+    dict = makeDictionary();
+    if (!changed && pass > 0) break;
+  }
+  if (!dict) throw new Error("unreachable");
+  const finalDict: EntityDictionary = dict;
   const textFloor = (...texts: (string | null | undefined)[]) =>
-    floorFromText(texts.filter((t): t is string => !!t).join("\n"), dict);
+    floorFromText(texts.filter((t): t is string => !!t).join("\n"), finalDict);
+
+  // The suspicion check must be able to recognize every export-controlled part and job from its digits alone.
+  const coreHolders = new Set([...finalDict.numericCores.values()].map((c) => c.recordId));
+  for (const { file, line, value: pt } of allPartsL) {
+    if (partClass.get(pt.id) === "export_controlled" && !coreHolders.has(pt.id)) {
+      issues.error(file, `${pt.id}: part number ${pt.part_number} has no digits unique enough to flag "the ${pt.part_number.replace(/\D+/g, " ").trim()} part" as export-controlled.`, "demo_invariant", line);
+    }
+  }
+  for (const { file, line, value: j } of jobsL) {
+    if (jobClass.get(j.id) === "export_controlled" && !coreHolders.has(j.id)) {
+      issues.error(file, `${j.id}: job number ${j.job_number} has no digits unique enough for the suspicion check.`, "demo_invariant", line);
+    }
+  }
 
   const materialOfRecord: Record<string, string> = {};
   for (const { value: pt } of allPartsL) materialOfRecord[pt.id] = pt.material;
@@ -335,6 +399,7 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
     materialAliases: Object.fromEntries(p.materials.map(({ value: m }) => [m.id, [m.name, m.short_name, ...m.aliases]])),
     processTopicTags: processTopicWords(p),
   };
+  // Pure-digit aliases ("718", "6061") are NOT protected: otherwise an invented "718 hours" would slip past the gate.
   const protectedTerms = [
     ...p.customers.flatMap(({ value: c }) => [c.name, ...c.aliases]),
     ...p.people.flatMap(({ value: pe }) => [pe.full_name, ...pe.aliases]),
@@ -347,7 +412,7 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
     ...allQuotesL.map(({ value: q }) => q.quote_number),
     ...shop.certifications,
     "AS9102",
-  ];
+  ].filter((t) => !/^\d+$/.test(t.trim()));
   const idPattern = /\b(?:PER|CUS|PRT|KC|INT|DOC|QRL|ME|J|Q)-[A-Z0-9-]+\b|\b(?:m|mat|t)-[a-z0-9-]+\b/g;
   const traceContext = (turns: TraceTurn[], sessionContext: TraceSessionContext, candidates: TraceCandidate[], allowSeedBasis: boolean, extraTexts: string[]): TraceContext => {
     const ids = new Set<string>();
@@ -577,6 +642,10 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
         issues.error(file, `${c.id} is reserved for the scripted demo interview; use another ID.`, "reserved", line);
         continue;
       }
+      if (Number(c.id.slice(3)) > SEEDED_CARD_MAX) {
+        issues.error(file, `${c.id}: seeded cards use KC-001 to KC-0${SEEDED_CARD_MAX} (KC-091 and up are created by the app).`, "reserved", line);
+        continue;
+      }
       if (cards.has(c.id)) {
         issues.error(file, `${c.id} is already defined in ${cards.get(c.id)!.file}.`, "unique", line);
         continue;
@@ -626,7 +695,7 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
       const linkClasses = linkList(c)
         .map((l) => ({ kind: l.kind, classification: linkClass(l.kind, l.id) }))
         .filter((l): l is { kind: TraceLink["kind"]; classification: Classification } => l.classification !== null);
-      const scanned = textFloor(...cardText(c), c.source.kind === "interview" ? null : c.source.text);
+      const scanned = textFloor(...cardText(c), c.source.kind === "interview" ? null : c.source.text, ...c.open_questions, c.review_notes);
       const floor = deriveCardFloor({
         sourceInterviewClass,
         isManualEntrySource: c.source.kind !== "interview",
@@ -712,6 +781,7 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
     if (docIds.has(fm.id)) issues.error(file, `${fm.id} is defined twice.`, "unique", 2);
     docIds.add(fm.id);
     if ((RESERVED.documents as readonly string[]).includes(fm.id)) issues.error(file, `${fm.id} is reserved for the scripted demo.`, "reserved", 2);
+    else if (!/^DOC-SS-\d{2}$/.test(fm.id)) issues.error(file, `${fm.id}: seeded setup sheets use IDs DOC-SS-01, DOC-SS-02, … (DOC-101 and up are created by the app).`, "reserved", 2);
     if (!machines.has(fm.machine)) issues.error(file, `${fm.id}: machine ${fm.machine} doesn't exist.`, "fk", 2);
     if (fm.part && !parts.has(fm.part)) issues.error(file, `${fm.id}: part ${fm.part} doesn't exist.`, "fk", 2);
     if (fm.job && !jobs.has(fm.job)) issues.error(file, `${fm.id}: job ${fm.job} doesn't exist.`, "fk", 2);
@@ -749,6 +819,7 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
     const floor = deriveDocumentFloor(srcClasses, { linkedRecordClasses: linked, textMentions: textFloor(fm.title, sh.body).mentions });
     const res = resolveClassification({ floor, defaultClass: maxClass(floor, "internal"), declared: fm.classification, subject: "document" });
     if (res.error) issues.error(file, `${fm.id}: ${res.error}`, "classification", 2);
+    if (res.warning) issues.warn(file, `${fm.id}: ${res.warning}`, "classification", 2);
     const body: DocBody = { header: { partId: fm.part ?? undefined, machineId: fm.machine, programRefs: fm.program_refs }, sections };
     docRows.push({
       id: fm.id,
@@ -1071,9 +1142,9 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
       exportControl: pt.export_control,
       isAnchor: pt.id.startsWith("PRT-A"),
       notesMd: pt.notes || null,
-      classification: partClass.get(pt.id)!,
-      classificationSource: partClassMeta.get(pt.id)!.source,
-      classificationReason: partClassMeta.get(pt.id)!.reason,
+      classification: partMeta.get(pt.id)!.cls,
+      classificationSource: partMeta.get(pt.id)!.source,
+      classificationReason: partMeta.get(pt.id)!.reason,
     })),
     quotes: allQuotesL.map(({ value: q }) => {
       const pt = parts.get(q.part)!.value;
@@ -1102,9 +1173,9 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
         searchTitle: `${pt.part_number} ${pt.description}`,
         searchText: [pt.description, cust?.name, mat?.name, mat?.short_name, ...pt.features.map(humanize), q.notes].filter(Boolean).join(" · "),
         searchTags: [pt.family, ...pt.features, ...drivers, pt.material].join(" "),
-        classification: quoteClass.get(q.id)!,
-        classificationSource: "derived" as const,
-        classificationReason: null,
+        classification: quoteMeta.get(q.id)!.cls,
+        classificationSource: quoteMeta.get(q.id)!.source,
+        classificationReason: quoteMeta.get(q.id)!.reason,
       };
     }),
     quoteFinancials: allQuotesL.map(({ value: q }) => ({
@@ -1141,9 +1212,9 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
         onTime: j.on_time,
         debriefMd: j.debrief || null,
         isAnchor: j.id.startsWith("J-A"),
-        classification: jobClass.get(j.id)!,
-        classificationSource: "derived" as const,
-        classificationReason: null,
+        classification: jobMeta.get(j.id)!.cls,
+        classificationSource: jobMeta.get(j.id)!.source,
+        classificationReason: jobMeta.get(j.id)!.reason,
       };
     }),
     machineEvents: eventRows,
@@ -1161,7 +1232,7 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
     coverageSnapshots: [],
   };
 
-  const cardList = [...cards.values()].sort((a, b) => a.card.id.localeCompare(b.card.id));
+  const cardList = [...cards.values()].sort((a, b) => (a.card.id < b.card.id ? -1 : a.card.id > b.card.id ? 1 : 0));
   for (const ci of cardList) {
     const c = ci.card;
     const nameOf = (kind: TraceLink["kind"], id: string): string | undefined =>
@@ -1346,13 +1417,17 @@ function checkUnique(items: { file: string; line?: number; key: string; label: s
   }
 }
 
-/** Process topic → tag words (label, id and synonyms of every tag mapped to it). */
+/**
+ * Process topic → the words that support filing a card under it: each mapped tag's `evidence_words`, or just its
+ * label and ID when none are given. Search synonyms are deliberately not used ("hours" must not make a card a
+ * quoting card).
+ */
 function processTopicWords(p: ParsedSeed): Record<string, string[]> {
   const process = new Set(p.topics.filter((t) => t.value.category === "process").map((t) => t.value.id));
   const out: Record<string, string[]> = {};
   for (const { value: t } of p.tags) {
     if (!t.topic || !process.has(t.topic)) continue;
-    (out[t.topic] ??= []).push(t.label, t.id.replace(/-/g, " "), t.id, ...t.synonyms);
+    (out[t.topic] ??= []).push(...(t.evidence_words ?? [t.label, t.id.replace(/-/g, " "), t.id]));
   }
   return out;
 }

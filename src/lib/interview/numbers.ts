@@ -10,6 +10,9 @@
  *   "about ten times"     → 10 x            "10×", "10x"                    → 10 x
  *   "three more hours"    → 3 h             "3 h", "3 hrs", "3-hour"        → 3 h
  *   "1,800", "a hundred and ten", "twelve"  → bare numbers (unit null)
+ *   "a thou" → 0.001 in · "half a thou" → 0.0005 in · "two tenths" → 0.0002 in
+ *   "an hour and a half", "three and a half hours" → 1.5 h, 3.5 h · "half an hour" → 0.5 h
+ *   "3/4 in" → 0.75 in (a digit fraction is one number)
  *
  * The module is pure: no I/O, no clock, no randomness, no domain facts. Everything that is
  * domain-specific (which words are entity names whose digits must be ignored) is passed in by
@@ -17,11 +20,11 @@
  *
  * Deliberate limits (conservative, documented so the gate stays predictable):
  * - Signs are not parsed ("−3.4 %" yields 3.4 %); direction words ("under", "over") carry sign in speech.
- * - Ordinals ("first article", "2nd op"), "half", "twice", "single", "dozen" and fractions like
- *   "1/2" are not numbers here.
+ * - Ordinals ("first article", "2nd op"), a bare "half", "twice", "single" and "dozen" are not numbers
+ *   here; "half" counts only in the fixed phrases above.
  * - Digits glued to letters are identifiers, not numbers ("6Al", "4V", "316L", "A03", "dmu50"),
  *   and so are digit groups that follow "<letter>-" and the rest of that hyphen chain
- *   ("AV-2231-07", "RJ-26-0310"). "N-word" compounds such as "5-axis" or "2-op" ARE numbers;
+ *   ("AV-2231-07", "RJ-26-0310", "O1874-10"). "N-word" compounds such as "5-axis" or "2-op" ARE numbers;
  *   callers skip taxonomy terms like "5-axis" or "17-4 PH" through `skipSpans`.
  * - A standalone "one" used as a pronoun ("that one's always", "the one") is ignored.
  * - An integer followed by "in" is only inches when punctuation or the end of the text follows
@@ -136,17 +139,20 @@ const ALNUM_RE = /[\p{L}\p{N}]/u;
 function scanDigits(text: string): BaseNumber[] {
   const out: BaseNumber[] = [];
   let prevCode: { end: number } | null = null;
+  let skipUntil = -1;
   for (const m of text.matchAll(DIGIT_RE)) {
     const start = m.index ?? 0;
     const lit = m[0];
     const end = start + lit.length;
     let code = false;
 
+    if (start < skipUntil) continue; // denominator of a fraction already read
     const before = text[start - 1];
     if (before === "-") {
       const beforeHyphen = text[start - 2];
       if (beforeHyphen !== undefined && LETTER_RE.test(beforeHyphen)) code = true; // "AV-2231", "Ti-6"
       if (prevCode && prevCode.end === start - 1) code = true; // "…-2231-07": rest of an identifier chain
+      if (beforeHyphen !== undefined && /\d/.test(beforeHyphen) && LETTER_RE.test(tokenBefore(text, start - 1))) code = true; // "O1874-10"
     }
     const after = text[end];
     if (after !== undefined && (LETTER_RE.test(after) || after === "_")) {
@@ -158,11 +164,25 @@ function scanDigits(text: string): BaseNumber[] {
       continue;
     }
     prevCode = null;
+    const frac = /^\/(\d+)(?![\p{L}\p{N}])/u.exec(text.slice(end, end + 12));
+    if (frac && !lit.includes(".") && !lit.includes(",") && Number(frac[1]) > 0) {
+      const fracEnd = end + frac[0].length;
+      skipUntil = fracEnd;
+      out.push({ value: Number(lit) / Number(frac[1]), start, end: fracEnd, kind: "digits", decimal: true });
+      continue;
+    }
     const value = Number(lit.replace(/,/g, ""));
     if (!Number.isFinite(value)) continue;
     out.push({ value, start, end, kind: "digits", decimal: lit.includes(".") });
   }
   return out;
+}
+
+/** The run of letters/digits that ends just before `index` ("O1874" before the "-" in "O1874-10"). */
+function tokenBefore(text: string, index: number): string {
+  let i = index;
+  while (i > 0 && ALNUM_RE.test(text[i - 1])) i--;
+  return text.slice(i, index);
 }
 
 interface WordToken {
@@ -320,6 +340,8 @@ const TIMES_SIGN_RE = /^\s*×(?![\p{L}\p{N}])/u;
 const TIMES_WORD_RE = new RegExp(`^(?:\\s+|-)${FILLER}times(?![\\p{L}])`, "iu");
 const HOURS_WORD_RE = new RegExp(`^(?:\\s+|-)${FILLER}hours?(?![\\p{L}\\p{N}])`, "iu");
 const HOURS_ABBR_RE = new RegExp(`^(?:\\s*|-)${FILLER}(?:hours?|hrs?|h)(?![\\p{L}\\p{N}])`, "iu");
+const TENTHS_RE = new RegExp(`^(?:\\s*|-)${FILLER}tenths?(?![\\p{L}])(?:\\s+of\\s+a\\s+thou(?![\\p{L}]))?`, "iu");
+const AND_A_HALF_HOURS_RE = new RegExp(`^\\s+and\\s+a\\s+half\\s+${FILLER}hours?(?![\\p{L}\\p{N}])`, "iu");
 const INCH_WORD_RE = /^(?:\s*|-)inch(?:es)?(?![\p{L}])/iu;
 const INCH_ABBR_RE = /^(?:\s*|-)in(?![\p{L}\p{N}])/iu;
 const INCH_MARK_RE = /^["″]/u;
@@ -338,6 +360,7 @@ function matchUnit(text: string, b: BaseNumber): UnitMatch | null {
   let m: RegExpExecArray | null;
 
   if ((m = THOU_RE.exec(rest))) return { unit: "in", length: m[0].length, scale: 1 / 1000 };
+  if ((m = TENTHS_RE.exec(rest))) return { unit: "in", length: m[0].length, scale: 1 / 10000 };
   if ((m = PERCENT_RE.exec(rest))) return { unit: "%", length: m[0].length, scale: 1 };
   if (b.kind === "digits" && (m = TIMES_ATTACHED_RE.exec(rest))) return { unit: "x", length: m[0].length, scale: 1 };
   if ((m = TIMES_SIGN_RE.exec(rest)) || (m = TIMES_WORD_RE.exec(rest))) return { unit: "x", length: m[0].length, scale: 1 };
@@ -369,8 +392,9 @@ function clean(v: number): number {
  */
 export function extractNumbers(text: string, opts: ExtractNumbersOptions = {}): NumberMention[] {
   const skip = opts.skipSpans ?? [];
+  const idioms = scanIdioms(text).filter((m) => !overlaps(m, skip));
   const bases = [...scanDigits(text), ...scanWords(text)]
-    .filter((b) => !overlaps(b, skip))
+    .filter((b) => !overlaps(b, skip) && !overlaps(b, idioms))
     .sort((a, b) => a.start - b.start);
   const byStart = new Map<number, number>();
   bases.forEach((b, idx) => byStart.set(b.start, idx));
@@ -403,6 +427,13 @@ export function extractNumbers(text: string, opts: ExtractNumbersOptions = {}): 
       }
     }
 
+    const half = AND_A_HALF_HOURS_RE.exec(text.slice(b.end, b.end + 48));
+    if (half) {
+      const end = b.end + half[0].length;
+      out.push({ value: b.value + 0.5, unit: "h", raw: text.slice(b.start, end), start: b.start, end });
+      continue;
+    }
+
     const u = matchUnit(text, b);
     const end = u ? b.end + u.length : b.end;
     out.push({
@@ -412,6 +443,28 @@ export function extractNumbers(text: string, opts: ExtractNumbersOptions = {}): 
       start: b.start,
       end,
     });
+  }
+  const freeIdioms = idioms.filter((i) => !out.some((o) => i.start < o.end && o.start < i.end)); // "2 tenths of a thou"
+  return [...out, ...freeIdioms].sort((a, b) => a.start - b.start);
+}
+
+/** Fixed spoken phrases with no leading number word ("a thou", "half a thou", "an hour and a half"). */
+const IDIOMS: { re: RegExp; value: number; unit: NumberUnit }[] = [
+  { re: /(?<![\p{L}\p{N}])half\s+a\s+thou(?![\p{L}\p{N}])/giu, value: 0.0005, unit: "in" },
+  { re: /(?<![\p{L}\p{N}])a\s+thou(?![\p{L}\p{N}])/giu, value: 0.001, unit: "in" },
+  { re: /(?<![\p{L}\p{N}])(?:an|one)\s+hour\s+and\s+a\s+half(?![\p{L}\p{N}])/giu, value: 1.5, unit: "h" },
+  { re: /(?<![\p{L}\p{N}])(?:half\s+an\s+hour|a\s+half[-\s]hour)(?![\p{L}\p{N}])/giu, value: 0.5, unit: "h" },
+];
+
+function scanIdioms(text: string): NumberMention[] {
+  const out: NumberMention[] = [];
+  for (const { re, value, unit } of IDIOMS) {
+    for (const m of text.matchAll(re)) {
+      const start = m.index ?? 0;
+      const end = start + m[0].length;
+      if (out.some((o) => start < o.end && o.start < end)) continue; // "half a thou" wins over "a thou"
+      out.push({ value, unit, raw: m[0], start, end });
+    }
   }
   return out;
 }
@@ -455,14 +508,16 @@ export function numbersEqual(a: NumberMention, b: NumberMention): boolean {
 }
 
 /**
- * True when `claim` is backed by at least one of `evidence`: `numbersEqual`, or — for a bare claim
+ * True when `claim` is backed by at least one of `evidence`: `numbersEqual` (but a claim that carries a unit
+ * is never backed by a bare evidence number), or — for a bare claim
  * only — equality with the numerator or denominator of an evidence ratio ("4 scrapped" is backed by
  * "four of the twelve failed").
  */
 export function numberSupported(claim: NumberMention, evidence: readonly NumberMention[]): boolean {
   return evidence.some(
     (e) =>
-      numbersEqual(claim, e) ||
+      // A claim with a unit needs evidence with that unit: "sit twenty minutes" never backs "20 %" or "20 h".
+      (numbersEqual(claim, e) && !(claim.unit !== null && e.unit === null)) ||
       (claim.unit === null &&
         e.unit === "ratio" &&
         ((e.numerator !== undefined && sameValue(claim.value, e.numerator, null)) ||

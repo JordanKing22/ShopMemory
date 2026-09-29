@@ -203,6 +203,22 @@ function anyContains(texts: readonly string[], phrases: readonly string[]): bool
   return phrases.some((ph) => texts.some((t) => containsPhrase(t, ph)));
 }
 
+/** A negator just before a phrase ("not always", "doesn't usually", "isn't every time") reverses it. */
+const NEGATED_BEFORE = /(?:\b(?:not|never|hardly|rarely|seldom)|n't|n’t)\s+(?:\p{L}+\s+)?$/iu;
+
+/** Like containsPhrase, but an occurrence preceded (within one word) by a negator doesn't count. */
+function statesPhrase(text: string, phrase: string): boolean {
+  const p = phrase.trim().replace(/’/g, "'");
+  if (p === "") return false;
+  const body = p.split(/\s+/).map(escapeRegExp).join("\\s+");
+  const re = new RegExp(`(?<![\\p{L}\\p{N}])${body}(?![\\p{L}\\p{N}])`, "giu");
+  const t = text.replace(/’/g, "'");
+  for (const m of t.matchAll(re)) {
+    if (!NEGATED_BEFORE.test(t.slice(Math.max(0, (m.index ?? 0) - 24), m.index ?? 0))) return true;
+  }
+  return false;
+}
+
 function numbersIn(text: string, protectedTerms: readonly string[]): NumberMention[] {
   return extractNumbers(text, { skipSpans: findTermSpans(text, protectedTerms) });
 }
@@ -383,7 +399,7 @@ export function checkCard(card: TraceCard, ctx: TraceContext): TraceResult {
   // 6. Confidence ----------------------------------------------------------------------------
   if (card.type !== "failure_story" && card.expertConfidence !== "not_stated") {
     const phrases = CONFIDENCE_PHRASES[card.expertConfidence];
-    const stated = valid.some((v) => v.ev.confidence === true && anyContains([v.ev.quote], phrases));
+    const stated = valid.some((v) => v.ev.confidence === true && phrases.some((ph) => statesPhrase(v.ev.quote, ph)));
     if (!stated) {
       push(
         "confidence_unsupported",

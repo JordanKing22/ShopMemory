@@ -77,6 +77,16 @@ describe("generateCommerce", () => {
     }
   });
 
+  it("never gives a quote and a job the same yy-nnnn digits (so job numbers stay recognizable)", () => {
+    const numbers = [...input.anchorQuotes, ...out.quotes].flatMap((q) => [q.quote_number, ...(q.job ? [q.job.job_number] : [])]);
+    const digits = numbers.map((n) => n.slice(3));
+    expect(new Set(digits).size).toBe(digits.length);
+  });
+
+  it("refuses to fall back to Ray when nobody can quote", () => {
+    expect(() => generateCommerce({ ...input, model: { ...input.model, quoters: { "PER-05": 1 } } })).toThrow(/Nobody/);
+  });
+
   it("never generates a reserved combination", () => {
     for (const rc of input.model.reserved_combinations) {
       const hit = out.parts.find((p) => p.customer === rc.customer && p.material === rc.material && p.family === rc.family && p.features.includes(rc.feature));

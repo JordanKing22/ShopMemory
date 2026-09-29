@@ -395,3 +395,37 @@ describe("checkLinkRules (PLAN.md §7.3)", () => {
     expect(checkLinkRules({ type: "customer_quirk", links: [{ kind: "customer" }] })).toEqual([]);
   });
 });
+
+describe("review fixes (Phase 1a): negated confidence", () => {
+  const turns = [{ id: "T1", speaker: "expert" as const, text: "It's not always like that. That one's always. I don't usually. Never skip it." }];
+  const facts = { materialOf: {}, topicOfMaterial: {}, topicOfMachine: {}, topicOfCustomer: {}, materialAliases: {}, processTopicTags: {} };
+  const ctx = { turns, sessionContext: {}, candidates: [], protectedTerms: [], recordFacts: facts };
+  const card = (conf: "always" | "usually", quote: string) => ({
+    id: "KC-X",
+    type: "setup_tip" as const,
+    title: "t",
+    statement: "s",
+    actions: [],
+    appliesWhen: [],
+    doesNotApplyWhen: [],
+    thresholds: [],
+    expertConfidence: conf,
+    topics: [],
+    links: [],
+    evidence: [{ turnId: "T1", quote, confidence: true }],
+  });
+
+  it.each([
+    ["always", "It's not always like that."],
+    ["usually", "I don't usually."],
+  ] as const)("rejects %s backed by a negated phrase (%s)", (conf, quote) => {
+    expect(checkCard(card(conf, quote), ctx).errors.map((e) => e.code)).toEqual(["confidence_unsupported"]);
+  });
+
+  it.each([
+    ["always", "That one's always."],
+    ["always", "Never skip it."],
+  ] as const)("accepts %s backed by %s", (conf, quote) => {
+    expect(checkCard(card(conf, quote), ctx).errors).toEqual([]);
+  });
+});

@@ -21,7 +21,7 @@ export function readSeedSources(dir: string = SEED_DIR): SeedSources {
   const out: SeedSources = {};
   const walk = (rel: string) => {
     const abs = path.join(dir, rel);
-    for (const entry of fs.readdirSync(abs, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    for (const entry of fs.readdirSync(abs, { withFileTypes: true }).sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))) {
       const childRel = rel ? `${rel}/${entry.name}` : entry.name;
       if (entry.isDirectory()) {
         if (!SKIP_DIRS.has(entry.name)) walk(childRel);

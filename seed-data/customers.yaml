@@ -1,7 +1,8 @@
 # The 6 fictional customers. part_classification_floor is the minimum classification of their parts, quotes and
 # jobs (defense customers: export_controlled). The customer record itself is customer_confidential.
 # `account` is role-hidden (owner/quoter only) and never sent to any model. Contact emails are always @example.com.
-# part_number_pattern is a regular expression the loader checks every part number against.
+# part_number_pattern is a regular expression the loader checks every part number against. near_miss_ignore lists
+# ordinary words one letter away from a defense customer's name, so typing them doesn't put a request on hold.
 - id: CUS-01
   name: Aerovance
   industry: aerospace
@@ -74,4 +75,5 @@
   quality_requirements: New supplier onboarding, AS9102 first article, source inspection on first lots.
   aliases: [Velmont]
   part_number_pattern: '^VLM-\d{5}$'
+  near_miss_ignore: [Vermont, Belmont, Delmont]   # real words one letter from "Velmont"; don't hold requests for them
   account: { contact_name: Avery Lindqvist (fictional), contact_email: supplychain@velmont.example.com, payment_terms: Net 45, annual_spend_usd: 260000, pricing_notes: "New account; first lots under review." }

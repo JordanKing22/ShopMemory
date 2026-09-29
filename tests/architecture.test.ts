@@ -33,9 +33,19 @@ function offenders(files: string[], pattern: RegExp, allowed: (f: string) => boo
 }
 
 describe("architecture rules", () => {
-  it("only src/lib/env.ts reads process.env (scripts/lib/load-env.mts only sets telemetry off)", () => {
-    expect(offenders(APP, /process\.env/, (f) => f === "src/lib/env.ts" || f === "scripts/lib/load-env.mts")).toEqual([]);
-    expect(code("scripts/lib/load-env.mts").match(/process\.env\.[A-Z_]+/g)).toEqual(["process.env.NEXT_TELEMETRY_DISABLED"]);
+  it("only src/lib/env.ts reads process.env (scripts/lib/telemetry-off.mts only sets telemetry off)", () => {
+    expect(offenders(APP, /process\.env/, (f) => f === "src/lib/env.ts" || f === "scripts/lib/telemetry-off.mts")).toEqual([]);
+    expect(code("scripts/lib/telemetry-off.mts").match(/process\.env\.[A-Z_]+/g)).toEqual(["process.env.NEXT_TELEMETRY_DISABLED"]);
+  });
+
+  it("every npm script that runs Next.js goes through the telemetry-off wrapper", () => {
+    const pkg = JSON.parse(read("package.json")) as { scripts: Record<string, string> };
+    for (const [name, s] of Object.entries(pkg.scripts)) expect(s, name).not.toMatch(/^next\b/);
+  });
+
+  it("deterministic modules never sort with locale rules", () => {
+    const files = [...filesUnder("src/lib/seed"), ...filesUnder("src/lib/coverage"), ...filesUnder("src/lib/retrieval"), ...filesUnder("src/db")];
+    expect(offenders(files, /\.localeCompare\(/)).toEqual([]);
   });
 
   it("only src/lib/log.ts and scripts/lib/out.ts write to the console", () => {

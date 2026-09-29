@@ -268,3 +268,32 @@ describe("findTermSpans", () => {
     expect(findTermSpans("a (Ti) b", ["(Ti)"])).toEqual([{ start: 2, end: 6 }]);
   });
 });
+
+describe("review fixes (Phase 1a)", () => {
+  it("reads a digit fraction as one number", () => {
+    expect(one("a 3/4 in wall")).toMatchObject({ value: 0.75, unit: "in", raw: "3/4 in" });
+  });
+
+  it("ignores digits chained to an alphanumeric identifier", () => {
+    expect(extractNumbers("run program O1874-10 on the DMU")).toEqual([]);
+  });
+
+  it("understands common spoken shop units", () => {
+    expect(one("hold two tenths")).toMatchObject({ value: 0.0002, unit: "in" });
+    expect(one("half a thou over")).toMatchObject({ value: 0.0005, unit: "in" });
+    expect(one("it grew a thou")).toMatchObject({ value: 0.001, unit: "in" });
+    expect(one("an hour and a half of CMM time")).toMatchObject({ value: 1.5, unit: "h" });
+    expect(one("three and a half hours")).toMatchObject({ value: 3.5, unit: "h" });
+    expect(one("half an hour")).toMatchObject({ value: 0.5, unit: "h" });
+    expect(one("2 tenths of a thou")).toMatchObject({ value: 0.0002, unit: "in" });
+  });
+
+  it("never backs a claim that has a unit with a bare evidence number", () => {
+    const evidence = extractNumbers("let it sit twenty minutes");
+    for (const claim of ["add 20% to finishing", "20 h", "0.020 in", "20x"]) {
+      expect(numberSupported(one(claim), evidence), claim).toBe(false);
+    }
+    expect(numberSupported(one("20 minutes"), evidence)).toBe(true);
+    expect(numberSupported(one("35"), extractNumbers("add thirty-five percent"))).toBe(true);
+  });
+});

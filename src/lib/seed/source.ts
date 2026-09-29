@@ -190,12 +190,7 @@ export function parseTranscript(file: string, body: string, bodyStartLine: numbe
     if (line.startsWith("## ")) {
       const m = TURN_HEADING.exec(line.trimEnd());
       if (!m) {
-        issues.error(
-          file,
-          `Turn heading "${line.slice(0, 60)}" isn't in the form "## T001 expert" or "## T002 interviewer (phase) [MOVE]".`,
-          "transcript",
-          lineNo,
-        );
+        issues.error(file, 'This turn heading isn\'t in the form "## T001 expert" or "## T002 interviewer (phase) [MOVE]".', "transcript", lineNo);
         return;
       }
       flush();
