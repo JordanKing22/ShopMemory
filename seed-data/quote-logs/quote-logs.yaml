@@ -1,0 +1,103 @@
+# Quote Reasoning Logs: the quoter's own answers, written a few days after a quote went out, to "why did you quote
+# it this way?" Each entry names the quote (Q-…) and the person who quoted it, and answers the same questions in
+# their own words: what drove the hours, why that machine, how the hours were built, what risk was priced in, what
+# would change the number, and what a newer quoter would miss. `variance_review` is added after the job ships and
+# compares quoted with actual hours. Talk in hours, allowances and percentages only: never prices or $ amounts
+# (prices live only in the quotes' role-hidden financials). `risk_bucket` is one of: hours, setup, scrap_allowance,
+# inspection, outside_processing, other. `confidence_1to5` is how sure the quoter was when the quote went out.
+# Placeholder domain wording — for SME review.
+
+- id: QRL-01
+  quote: Q-A02
+  person: PER-01
+  main_driver: >-
+    The walls. The sensor mount has walls down around forty-five thou and about an inch and a quarter tall, in
+    titanium. Roughing it is the easy part. Walking those walls down to size is the job.
+  machine_rationale: >-
+    DMU 50. It's where our titanium runs, it has the probe, and with five axes I get most of the features in two ops
+    instead of four setups on a three-axis machine. Marv owns that machine and he's run brackets like this before.
+  hours_rationale: >-
+    Six hours of setup for two ops and the first piece to Linda. Seventy-eight minutes a part, and most of that is the
+    finish passes on the walls. I figured the finishing from the total wall height I have to walk down in light passes,
+    not from the stock that comes out. The software's removal-rate number came in low, like it usually does on these.
+    Twenty parts at seventy-eight minutes plus the six hours of setup is thirty-two hours.
+  risk_priced_in: >-
+    About three hours on top for the walls: a finisher change on a schedule instead of when it looks worn, and a slow
+    first part while we prove the finish holds size.
+  risk_bucket: hours
+  what_would_change: >-
+    If they opened the walls up past sixty thou, I'd take most of the risk hours back out. If the quantity doubled, the
+    setup spreads out, but the finish time per part doesn't go down. A new rev means a full first article again.
+  junior_would_miss: >-
+    They'd quote the finishing off the removal rate and come in low, and they'd let the finisher run until it looks
+    worn. On a thin titanium wall, a worn finisher pushes the wall and you chase size all day.
+  confidence_1to5: 4
+  variance_review: >-
+    Added after the job shipped. Came in at 33.5 hours against 32 quoted, about five percent over: half an hour long on
+    setup and about an hour on run time. Marv's first piece had a tapered wall from a finisher run one part too long,
+    and it was caught at first article. After that the finisher went on a schedule and the walls held size. I'd quote
+    it the same way.
+  created_at: "2025-11-13T15:30:00Z"
+
+- id: QRL-02
+  quote: Q-A11
+  person: PER-05
+  main_driver: >-
+    Flatness on a 12-inch lid, and the clean-and-bag. The tightest callout is a thou, and it's a chamber part, so it
+    has to leave the machine clean. Any chip in a port is a reject.
+  machine_rationale: >-
+    VF-4. The 12 by 12 plate fits, it's where our 6061 plates run, and nothing on it needs five axes. Two ops, and the
+    flip is where the flatness gets made or lost.
+  hours_rationale: >-
+    Three hours of setup for the two ops, including the first-piece check. Jonah's CAM estimate was about ninety
+    minutes a plate of machining. I added fifteen minutes a plate for deburr, clean and bag in the clean area, and
+    three minutes a plate for the flip. That's 108 minutes a plate, times ten plates, plus the setup: 21 hours.
+  risk_priced_in: >-
+    No extra hours. Ray looked it over and said a plate like this runs close if the second op is supported. The risk I
+    thought about was flatness after the flip, so I kept Priya's first-piece flatness check on the CMM inside the setup
+    time instead of adding a risk number.
+  risk_bucket: inspection
+  what_would_change: >-
+    If they tightened the flatness or asked for a cleanliness test report, I'd add inspection time. At fifty pieces
+    I'd ask Jonah and Marv about a dedicated fixture plate instead of re-clamping every plate.
+  junior_would_miss: >-
+    I'm the junior here, and what I almost missed was the clean-and-bag. My first pass had only the machining time.
+    Ray asked me where the cleaning was, because the floor does it every time whether it's in the quote or not.
+  confidence_1to5: 4
+  variance_review: >-
+    21.5 hours actual against 21 quoted, about two percent over. Setup was right at three hours. Run time was half an
+    hour over across the ten plates, and the clean-and-bag took about what I figured. Devin jacked the middle of the
+    plate on the second op and the flatness held. I'd quote the next one the same way.
+  created_at: "2026-06-04T19:10:00Z"
+
+- id: QRL-03
+  quote: Q-A07
+  person: PER-04
+  main_driver: >-
+    Inconel 718 and the seal bore. Half a thou on the seal bore, and 718 fights you the whole way. Every insert change
+    on that bore means a size check before the next ring.
+  machine_rationale: >-
+    Integrex. The ring comes off done in one setup with the sub-spindle hand-off. I finish the seal bore and the
+    sealing face in the main spindle, because the sub on our Integrex sits a little off center; the sub only does the
+    back side.
+  hours_rationale: >-
+    Four hours of setup: jaws, the stop, and the first piece on the CMM. For the cutting I took Ray's three times the
+    cycle of the same ring in 17-4, then added one finishing insert change per ring on the seal bore. That's 97 and a
+    half minutes a ring, times sixteen rings, plus the four hours: 30 hours.
+  risk_priced_in: >-
+    Nothing on top. I counted one finishing insert per ring and figured that covered the tool wear. No scrap allowance.
+  risk_bucket: hours
+  what_would_change: >-
+    If the seal bore opened up to a thou, fewer size checks. If the quantity went up, I'd want the whole lot from one
+    heat of bar, because every ring has to trace to its heat number.
+  junior_would_miss: >-
+    They'd quote 718 off a stainless cycle time, and they'd forget the size check after every insert change on the seal
+    bore. The change is quick. The check is not.
+  confidence_1to5: 4
+  variance_review: >-
+    34 hours actual against 30 quoted, about thirteen percent over. Setup was right at four hours, so all four hours
+    over were run time. The finishing insert on the seal bore didn't last a ring: it needed three a ring, two extra
+    changes on every ring, each with a size check. That's about fifteen minutes a ring over sixteen rings. Now I price
+    the insert changes per ring on top of Ray's three-times cycle, and on a repeat I count the inserts on the old
+    traveler before I quote.
+  created_at: "2026-03-05T16:45:00Z"

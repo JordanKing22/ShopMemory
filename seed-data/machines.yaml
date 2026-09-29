@@ -1,6 +1,6 @@
 # The 8 machines. IDs are permanent (printed QR codes encode /machines/<id>).
 # unit_history describes THIS unit (asset tag, dates, what we saw) — never a manufacturer or model-wide claim.
-# `events` are this unit's recent issues (last ~90 days before DEMO_TODAY), added in Phase 1b.
+# `events` are this unit's logged issues, repairs, PM and upgrades over the last year (the machine page shows the most recent).
 - id: m-vf4
   asset_tag: RP-M01
   name: Haas VF-4
@@ -12,6 +12,13 @@
   location_cell: Mill cell A
   capabilities: [3-axis milling, 4th-axis rotary, probing]
   unit_history: Bought used in 2011. Rotary table added in 2016. Workhorse for aluminum brackets and plates.
+  events:
+    - { id: ME-001, on: "2026-04-13", kind: issue, job: J-I02, person: PER-06,
+        summary: "Chips packed in the jaw pocket while cutting the soft jaw set with the vise at the left end; flood nozzles re-aimed by hand and the pocket re-cut." }
+    - { id: ME-002, on: "2026-08-10", kind: crash, job: J-I04, person: PER-06,
+        summary: "A drill swapped for a longer one after the last job came down long on the first gauge-rack part and hit the soft jaw; jaw scrapped, spindle runout checked and fine." }
+    - { id: ME-003, on: "2026-09-09", kind: pm, job: null, person: PER-02,
+        summary: "Quarterly PM: way lube and coolant changed, rotary table brake checked before the rotary went back on." }
 - id: m-st20
   asset_tag: RP-M02
   name: Haas ST-20
@@ -23,6 +30,11 @@
   location_cell: Turning cell
   capabilities: [2-axis turning, bar feeder]
   unit_history: Installed new in 2015. Bar feeder added in 2020.
+  events:
+    - { id: ME-004, on: "2026-01-02", kind: issue, job: J-G039, person: PER-04,
+        summary: "Bar feeder fed the last bar of the lot short; caught before the cut and the remnant length re-set." }
+    - { id: ME-005, on: "2026-09-09", kind: issue, job: J-G040, person: PER-06,
+        summary: "Stringy 316 chips balled up at the chip conveyor; caught at the hourly check and cleared before it stalled." }
 - id: m-dmu50
   asset_tag: RP-M03
   name: DMG MORI DMU 50
@@ -34,6 +46,13 @@
   location_cell: 5-axis cell
   capabilities: [5-axis simultaneous, probing, through-spindle coolant]
   unit_history: Installed new in 2017. Runs most titanium and thin-wall aerospace work. Spindle serviced in 2024.
+  events:
+    - { id: ME-006, on: "2025-10-20", kind: pm, job: null, person: PER-02,
+        summary: "Annual ballbar test and spindle probe re-qualification on the ring gauge; all axes within the shop's limits." }
+    - { id: ME-007, on: "2026-02-05", kind: issue, job: null, person: PER-02,
+        summary: "On a slow dry run at full tilt a holder clipped the corner of the new dovetail fixture plate; scuffed holder and a gouge in the plate, no crash. The real plate model went into the CAM sim." }
+    - { id: ME-008, on: "2026-09-01", kind: alarm, job: J-G004, person: PER-02,
+        summary: "Probe battery-low alarm during work-offset probing on the cable routing bracket run; battery replaced and the offset re-probed." }
 - id: m-genos
   asset_tag: RP-M04
   name: Okuma GENOS M560-V
@@ -45,6 +64,13 @@
   location_cell: Mill cell B
   capabilities: [3-axis milling, probing, thermal compensation]
   unit_history: Installed new in 2019. Spindle rebuilt in 2023 after a crash.
+  events:
+    - { id: ME-009, on: "2025-12-01", kind: issue, job: null, person: PER-02,
+        summary: "First bores of a Monday morning measured small because the warm-up program was skipped; warm-up run and the bores came back to size." }
+    - { id: ME-010, on: "2026-03-02", kind: pm, job: null, person: PER-02,
+        summary: "Spindle vibration check; readings unchanged since the 2023 rebuild." }
+    - { id: ME-011, on: "2026-08-27", kind: repair, job: null, person: PER-06,
+        summary: "Torn Y-axis way wiper replaced after chips started getting under the cover." }
 - id: m-integrex
   asset_tag: RP-M05
   name: Mazak INTEGREX i-200
@@ -56,6 +82,13 @@
   location_cell: Turning cell
   capabilities: [mill-turn, sub-spindle, B-axis milling head]
   unit_history: Bought used in 2014 from an oilfield shop. Runs the Inconel rings and complex turned housings.
+  events:
+    - { id: ME-012, on: "2025-12-10", kind: alarm, job: null, person: PER-04,
+        summary: "B-axis clamp alarm after a head swing; head cleaned, re-homed and swung back in from the usual side." }
+    - { id: ME-013, on: "2026-06-22", kind: upgrade, job: J-I03, person: PER-04,
+        summary: "New sub-spindle stop from the internal work order fitted and indicated." }
+    - { id: ME-014, on: "2026-09-03", kind: pm, job: null, person: PER-04,
+        summary: "Sub-spindle chuck cleaned and greased; chuck pressure checked on both spindles." }
 - id: m-swiss
   asset_tag: RP-M06
   name: Citizen Cincom L20
@@ -67,6 +100,13 @@
   location_cell: Turning cell
   capabilities: [Swiss-type turning, guide bushing, live tooling]
   unit_history: Installed new in 2018 for medical instrument work.
+  events:
+    - { id: ME-015, on: "2025-11-12", kind: issue, job: J-G047, person: PER-04,
+        summary: "Chatter mark on the 316 cannula hubs after a new bundle went in; guide bushing re-set to the measured bar and the rest of the lot ran clean." }
+    - { id: ME-016, on: "2026-03-04", kind: alarm, job: J-G076, person: PER-08,
+        summary: "Memory-full alarm while loading the standoff program; old programs backed up and cleared, program re-posted with subprograms." }
+    - { id: ME-017, on: "2026-08-21", kind: issue, job: J-G057, person: PER-04,
+        summary: "Short PEEK caps turned up in the chip pan; the mesh liner under the part catcher had been left out and went back in." }
 - id: m-cmm
   asset_tag: RP-Q01
   name: ZEISS CONTURA
@@ -78,6 +118,13 @@
   location_cell: Inspection room
   capabilities: [bridge CMM, scanning probe]
   unit_history: Installed new in 2016 in the temperature-controlled inspection room.
+  events:
+    - { id: ME-018, on: "2026-02-12", kind: alarm, job: null, person: PER-07,
+        summary: "Automatic stylus change into rack port 4 missed and stopped the program; stylus re-seated and re-qualified." }
+    - { id: ME-019, on: "2026-07-08", kind: pm, job: null, person: PER-03,
+        summary: "Annual calibration by the service tech; certificate filed. The rack port 4 change still misses now and then." }
+    - { id: ME-020, on: "2026-08-31", kind: issue, job: null, person: PER-07,
+        summary: "Stylus bumped during a manual alignment; re-qualified, and the parts measured since the last good qualification were re-checked." }
 - id: m-wedm
   asset_tag: RP-M07
   name: Mitsubishi Electric MV2400R
@@ -89,3 +136,8 @@
   location_cell: EDM corner
   capabilities: [wire EDM, auto-threading]
   unit_history: Bought used in 2013. Used for keyways, sharp internal corners and fixture details.
+  events:
+    - { id: ME-021, on: "2026-01-15", kind: repair, job: null, person: PER-02,
+        summary: "Cracked lower flushing nozzle replaced; flushing on thick stock is still weak, as before." }
+    - { id: ME-022, on: "2026-08-19", kind: alarm, job: null, person: PER-02,
+        summary: "Wire broke on thick 17-4; auto-threading restarted on the wrong start hole and was caught before it cut." }

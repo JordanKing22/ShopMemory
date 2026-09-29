@@ -12,7 +12,7 @@
  *   "1,800", "a hundred and ten", "twelve"  → bare numbers (unit null)
  *   "a thou" → 0.001 in · "half a thou" → 0.0005 in · "two tenths" → 0.0002 in
  *   "an hour and a half", "three and a half hours" → 1.5 h, 3.5 h · "half an hour" → 0.5 h
- *   "3/4 in" → 0.75 in (a digit fraction is one number)
+ *   "3/4 in" → 0.75 in (a digit fraction is one number) · "three quarters of an inch" → 0.75 in
  *
  * The module is pure: no I/O, no clock, no randomness, no domain facts. Everything that is
  * domain-specific (which words are entity names whose digits must be ignored) is passed in by
@@ -456,16 +456,26 @@ const IDIOMS: { re: RegExp; value: number; unit: NumberUnit }[] = [
   { re: /(?<![\p{L}\p{N}])(?:half\s+an\s+hour|a\s+half[-\s]hour)(?![\p{L}\p{N}])/giu, value: 0.5, unit: "h" },
 ];
 
+/** Spoken inch fractions: "three quarters of an inch", "an eighth of an inch", "a half inch", "a sixteenth inch". */
+const INCH_FRACTION_RE =
+  /(?<![\p{L}\p{N}])(a|an|one|three|five|seven)[\s-]+(half|quarters?|eighths?|sixteenths?)(?:\s+of\s+an|\s+an)?[\s-]+inch(?:es)?(?![\p{L}\p{N}])/giu;
+const FRACTION_NUMERATOR: Record<string, number> = { a: 1, an: 1, one: 1, three: 3, five: 5, seven: 7 };
+const FRACTION_DENOMINATOR: Record<string, number> = { half: 2, quarter: 4, eighth: 8, sixteenth: 16 };
+
 function scanIdioms(text: string): NumberMention[] {
   const out: NumberMention[] = [];
-  for (const { re, value, unit } of IDIOMS) {
-    for (const m of text.matchAll(re)) {
-      const start = m.index ?? 0;
-      const end = start + m[0].length;
-      if (out.some((o) => start < o.end && o.start < end)) continue; // "half a thou" wins over "a thou"
-      out.push({ value, unit, raw: m[0], start, end });
-    }
+  const add = (value: number, unit: NumberUnit, m: RegExpMatchArray) => {
+    const start = m.index ?? 0;
+    const end = start + m[0].length;
+    if (out.some((o) => start < o.end && o.start < end)) return; // "half a thou" wins over "a thou"
+    out.push({ value, unit, raw: m[0], start, end });
+  };
+  for (const m of text.matchAll(INCH_FRACTION_RE)) {
+    const num = FRACTION_NUMERATOR[m[1].toLowerCase()];
+    const den = FRACTION_DENOMINATOR[m[2].toLowerCase().replace(/s$/, "")];
+    if (num < den) add(num / den, "in", m);
   }
+  for (const { re, value, unit } of IDIOMS) for (const m of text.matchAll(re)) add(value, unit, m);
   return out;
 }
 

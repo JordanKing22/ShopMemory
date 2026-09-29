@@ -1,0 +1,122 @@
+# Cards contributed by Maya Chen (PER-05), Quoter, hired 2026-01-12. IDs KC-064..067 belong to this file.
+# Maya is learning machined-part quoting from Ray, so these are small, practical lessons in her own words.
+# All four are hand-entered (manual) cards: her words are in source.text, which becomes the evidence.
+# Numbers in title/statement/actions/conditions must also appear in source.text.
+# Placeholder domain wording — for SME review.
+
+- id: KC-064
+  type: quoting_rule
+  status: approved
+  title: "Quantrel chamber plates: put deburr, clean and bag in the hours as its own step"
+  statement: >-
+    On Quantrel 6061 chamber plates, always put the deburr, clean and bag in the hours as its own step — about
+    fifteen minutes a plate on the chamber lid. The floor does it every time, whether the quote has it or not.
+  applies_when: ["Quantrel 6061 chamber plate with a cleaning and bagging requirement"]
+  does_not_apply_when: ["plates with no cleaning or bagging requirement"]
+  rationale: "The clean-area work is real floor time that the machining estimate doesn't show."
+  cues: ["cleaning and bagging requirement in the RFQ package"]
+  actions:
+    - "add deburr, clean and bag as its own step in the hours"
+    - "figure about fifteen minutes a plate on a plate like the chamber lid"
+  common_mistake: "Quoting only the machining time from the CAM estimate."
+  expert_confidence: always
+  topics: [t-quoting, t-mat-6061, t-cus-04]
+  tags: [quoting, cleanliness, deburr, semiconductor, aluminum]
+  links: { quotes: [Q-A11], jobs: [J-A11], customer: CUS-04 }
+  source:
+    kind: manual
+    text: >-
+      Quantrel 6061 chamber plates: I always put the deburr, clean and bag in the hours as its own step. On the
+      chamber lid it was about fifteen minutes a plate. The first time I left it out, Ray asked me where it was. The
+      floor does it every time whether the quote has it or not, so if it's not in the hours we just don't get paid
+      for it.
+    note: Entered by Maya after the chamber lid job shipped.
+  approved: { by: PER-05, on: "2026-07-01", mode: self }
+  created_on: "2026-06-29"
+
+- id: KC-065
+  type: quoting_rule
+  status: rejected
+  title: "Repeat Aerovance parts: skip the first article if an earlier lot already had it"
+  statement: >-
+    On repeat Aerovance parts, leave the first article out of the new quote when an earlier lot already had a first
+    article. It was done once and they already have the package.
+  applies_when: ["repeat Aerovance part"]
+  does_not_apply_when: []
+  rationale: "The first article was done once and they have the package."
+  cues: ["the part number has shipped before"]
+  actions: ["leave the first article out of the repeat quote"]
+  common_mistake: null
+  expert_confidence: not_stated
+  topics: [t-quoting, t-cus-01, t-mat-6061]
+  tags: [quoting, first-article, aluminum]
+  links: { jobs: [J-G025], customer: CUS-01 }
+  source:
+    kind: manual
+    text: >-
+      Repeat Aerovance parts, like the 6061 mounting plate: if an earlier lot already had a first article, I leave
+      the first article out of the new quote. It was done once and they have the package.
+    note: Entered by Maya after quoting the repeat mounting plate.
+  review_notes: >-
+    Rejected by Ray. An old first article only carries over when the revision hasn't changed and the part hasn't
+    sat idle for a long time. A rev change, or a gap of about two years since the last lot, means a new first
+    article, and on a new rev Aerovance wants a full one, not a partial. Check the rev and the last ship date against
+    the old package before you leave it out, and ask Linda when you're not sure. On the mounting plate it made no
+    difference because the order didn't call for a first article at all.
+  created_on: "2026-03-18"
+
+- id: KC-066
+  type: quoting_rule
+  status: draft
+  title: "7075 brackets with anodize: ask the anodizer if masking is in their number"
+  statement: >-
+    On 7075 brackets with anodize, ask the anodizer in writing whether masking is in their number before we quote.
+    If the print masks threads or a bore and nobody asked, the masking gets done here and it's not in the hours.
+  applies_when: ["7075 bracket with an anodize callout", "masked threads or bores on the print"]
+  does_not_apply_when: ["no masking on the print"]
+  rationale: "Masking falls between our quote and the vendor's, so nobody counts it."
+  cues: ["masking note on the anodize callout"]
+  actions:
+    - "ask the anodizer in writing whether masking is included"
+    - "add masking time to the hours if we do it ourselves"
+  common_mistake: "Assuming the anodize line covers masking."
+  expert_confidence: not_sure
+  topics: [t-quoting, t-outside-proc, t-mat-7075]
+  tags: [quoting, outside-processing, aluminum]
+  links: { quotes: [Q-A15] }
+  source:
+    kind: manual
+    text: >-
+      7075 brackets with anodize: I think we should ask the anodizer whether masking is in their number, in
+      writing, before we quote. If the print masks threads or a bore and nobody asked, somebody here ends up doing
+      the masking and it's not in the hours. I'm not sure yet how much time to put in when we mask it ourselves. I
+      want to ask Ray.
+    note: Draft entered by Maya after the spare bracket quote; she wants Ray to look at it before review.
+  open_questions: ["How much time should the quote allow when we do the masking ourselves?"]
+  created_on: "2026-08-24"
+
+- id: KC-067
+  type: customer_quirk
+  status: pending_review
+  title: "Sutrella: every part bagged on its own and labeled with the lot number"
+  statement: >-
+    Sutrella always wants every part bagged on its own and labeled with the lot number. On a big lot that's real
+    handling time, so it goes in the quote.
+  applies_when: ["Sutrella instrument or insulator parts"]
+  does_not_apply_when: []
+  rationale: "One part, one bag, one label adds up fast on a big lot."
+  cues: ["Sutrella packaging spec in the RFQ package"]
+  actions: ["quote bagging and labeling time for every part"]
+  common_mistake: "Treating Sutrella packaging like a bulk tote."
+  expert_confidence: always
+  topics: [t-cus-03, t-quoting]
+  tags: [medical, traceability, cleanliness, quoting]
+  links: { customer: CUS-03, quotes: [Q-A12] }
+  source:
+    kind: manual
+    text: >-
+      Sutrella always wants every part bagged on its own and labeled with the lot number. One part, one bag, one
+      label. On a lot of a couple hundred that's real handling time, and it has to be in the quote. Ray told me that
+      before my first Sutrella quote went out.
+    note: Entered by Maya after the insulator quote; waiting on Linda to confirm the labeling requirement.
+  created_on: "2026-08-28"

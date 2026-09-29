@@ -78,6 +78,13 @@ describe("seed bundle", () => {
     }
   });
 
+  it("keys each binder/manual card's provenance turn to its card number (stable IDs)", () => {
+    const ev = bundle.tables.cardEvidence.find((e) => e.cardId === "KC-026")!;
+    expect(ev.turnId).toBe("INT-M-PER-02-T026");
+    const turn = bundle.tables.interviewTurns.find((t) => t.id === ev.turnId)!;
+    expect(turn.seq).toBe(26);
+  });
+
   it("derives classifications from customers, export control, links and overrides", () => {
     const get = <T extends { id: string }>(rows: T[], id: string) => rows.find((r) => r.id === id)!;
     const t = bundle.tables;

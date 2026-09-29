@@ -1,0 +1,309 @@
+# Cards contributed by Jonah Pruitt (PER-08), CAM Programmer, hired 2025-07-14. IDs KC-081..090 belong to this file.
+# Jonah programs the mills, the Integrex and the Swiss, so most of these are CAM-side notes (work offsets, probing
+# routines, tool library naming) in his own words. All ten are hand-entered (manual) cards: his words are in
+# source.text, which becomes the evidence. Numbers in title/statement/actions/conditions must also appear in
+# source.text. KC-086 is a machine quirk about this Swiss unit only and is declared general (no names, no records).
+# Placeholder domain wording — for SME review.
+
+- id: KC-081
+  type: setup_tip
+  status: approved
+  title: "Integrex: probe the part face on the sub-spindle after every hand-off"
+  statement: >-
+    On the Integrex, post a probe touch on the part face right after the hand-off to the sub-spindle, and set the
+    sub-spindle Z from that touch, not from the nominal. A chip on the stop and the part seats short.
+  applies_when: ["parts handed off to the Integrex sub-spindle for back work"]
+  does_not_apply_when: []
+  rationale: "The stop only sets the depth if nothing is trapped between it and the part."
+  cues: ["back-face length wandering part to part"]
+  actions:
+    - "post a probe touch on the part face after the hand-off"
+    - "set the sub-spindle Z from the probe touch"
+  common_mistake: "Trusting the stop and the nominal Z."
+  expert_confidence: always
+  topics: [t-m-integrex, t-cam]
+  tags: [mill-turn, probing, cam]
+  links: { jobs: [J-I03], machine: m-integrex }
+  source:
+    kind: manual
+    text: >-
+      On the Integrex I always post a probe touch on the part face right after the hand-off to the sub-spindle, and
+      the CAM program sets the sub-spindle Z from that touch, not from the nominal. The new sub-spindle stop Tomás
+      made in June sets the depth, but get a chip on the stop and the part seats short. The probe touch costs about
+      twenty seconds a part and it has already saved a couple of back faces.
+    note: Entered by Jonah after the sub-spindle stop work order.
+  approved: { by: PER-08, on: "2026-07-08", mode: self }
+  created_on: "2026-07-06"
+
+- id: KC-082
+  type: setup_tip
+  status: approved
+  title: "DMU 50 tool library: the stickout goes in the tool name"
+  statement: >-
+    Every tool in the DMU 50 CAM library carries its stickout in the name, and the setup sheet prints it. The
+    toolpath was checked at that stickout: load the tool at that length, and ask for a re-post before you run a
+    different stickout.
+  applies_when: ["programs for the DMU 50"]
+  does_not_apply_when: []
+  rationale: "Load a tool shorter than the toolpath was checked at and the holder can hit the part or the fixture."
+  cues: ["stickout in the tool name on the setup sheet"]
+  actions:
+    - "put the stickout in the tool name in the CAM library"
+    - "load each tool at the stickout in its name"
+    - "ask for a re-post before running a different stickout"
+  common_mistake: "Choking up on a tool to make it stiffer without telling programming."
+  expert_confidence: always
+  topics: [t-cam, t-m-dmu50]
+  tags: [cam, dmu]
+  links: { machine: m-dmu50 }
+  source:
+    kind: manual
+    text: >-
+      I always put the stickout in the tool name in our CAM library for the DMU 50, like 'EM 3/8 x 1.25 SO'. The
+      toolpath was checked for collisions at that stickout and no shorter, so the setup sheet prints the name and
+      whoever loads the tool knows the shortest stickout that clears. Marv asked for it after a holder rubbed a
+      fixture. If you have to run a different stickout, tell me and I re-post.
+    note: Entered by Jonah.
+  approved: { by: PER-08, on: "2025-10-08", mode: self }
+  created_on: "2025-10-06"
+
+- id: KC-083
+  type: setup_tip
+  status: approved
+  title: "Genos: probe the blank before roughing and alarm out if it's oversize"
+  statement: >-
+    On the Genos, post a probe check of the blank before the first roughing pass. If the blank is more than thirty
+    thou over what the program expects, alarm out instead of taking a full-depth first cut.
+  applies_when: ["saw-cut blanks on the Genos"]
+  does_not_apply_when: []
+  rationale: "An oversize blank turns the first roughing pass into a heavy bite."
+  cues: ["saw-cut blanks that vary in size"]
+  actions:
+    - "post a blank-size probe check before roughing"
+    - "alarm out if the blank is more than thirty thou over"
+    - "run the check after the warm-up"
+  common_mistake: "Trusting the saw ticket for blank size."
+  thresholds:
+    - { quantity: blank oversize, comparator: ">", value: 0.030, unit: in, verbatim: "more than thirty thou over" }
+  expert_confidence: always
+  topics: [t-m-genos, t-cam]
+  tags: [genos, probing, cam]
+  links: { machine: m-genos }
+  source:
+    kind: manual
+    text: >-
+      On the Genos I always post a probe check of the blank before the first roughing pass. If the blank is more
+      than thirty thou over what the CAM program expects, the macro alarms out instead of taking a full-depth first
+      cut. We had blanks come in long from the saw and the first pass took a heavy bite. It runs after the warm-up,
+      so the probe numbers are good.
+    note: Entered by Jonah.
+  approved: { by: PER-08, on: "2026-01-28", mode: self }
+  created_on: "2026-01-26"
+
+- id: KC-084
+  type: setup_tip
+  status: approved
+  title: "VF-4 work offsets: G54 vise, G55 rotary, fixture plates from G56 up"
+  statement: >-
+    On the VF-4, keep the work offsets the same on every job: G54 is the vise, G55 the rotary, fixture plates from
+    G56 up. The post writes the offset and what it's for as a comment at the top of the program, and the setup
+    sheet matches.
+  applies_when: ["any VF-4 program"]
+  does_not_apply_when: []
+  rationale: "Same offsets on every job means nobody has to guess what an old program used."
+  cues: ["an old program that uses a different offset"]
+  actions:
+    - "use G54 for the vise, G55 for the rotary and G56 and up for fixture plates"
+    - "have the post write the offset as a comment at the top of the program"
+  common_mistake: "Reusing whatever offset an old program happened to use."
+  expert_confidence: always
+  topics: [t-m-vf4, t-cam, t-5ax-workholding]
+  tags: [vf4, cam, workholding]
+  links: { machine: m-vf4 }
+  source:
+    kind: manual
+    text: >-
+      On the VF-4 we keep the work offsets the same on every job: G54 is the vise, G55 is the rotary, and fixture
+      plates start at G56. My CAM post always writes the offset and what it's for as a comment on the first lines of
+      the program, and the setup sheet says the same. A rotary job got set up on G54 once because an old program
+      used it. Now nobody has to guess.
+    note: Entered by Jonah.
+  approved: { by: PER-08, on: "2025-09-17", mode: self }
+  created_on: "2025-09-15"
+
+- id: KC-085
+  type: quoting_rule
+  status: rejected
+  title: "Swiss PEEK parts: quote the cycle time straight from the CAM simulation"
+  statement: >-
+    On Swiss PEEK parts, quote the cycle time straight from the CAM simulation. Adding bar changes and a buffer on
+    top pads it twice.
+  applies_when: ["PEEK parts on the Swiss"]
+  does_not_apply_when: []
+  rationale: "The simulator has been close on the L20."
+  cues: []
+  actions: ["use the CAM simulation cycle time as the quoted cycle time"]
+  common_mistake: null
+  expert_confidence: not_stated
+  topics: [t-m-swiss, t-mat-peek, t-cam]
+  tags: [swiss, peek, cam, quoting]
+  links: { jobs: [J-G077], machine: m-swiss }
+  source:
+    kind: manual
+    text: >-
+      Swiss PEEK parts: the cycle time from the CAM simulation is close enough to quote from as is. On the L20 the
+      simulator has been within a few percent on the standoffs. Adding bar changes and a buffer on top just pads it
+      twice.
+    note: Entered by Jonah after the standoff job.
+  review_notes: >-
+    Rejected by Tomás. The simulator time is a good starting point, but it doesn't see bar changes, the pick-off, or
+    the stops we add to clear chips on PEEK, and it knows nothing about first-piece checks. Quoting stays with the
+    quoter: send the simulator time with a note on what's in it and what isn't, and the quoter adds the rest once.
+  created_on: "2026-05-12"
+
+- id: KC-086
+  type: machine_quirk
+  status: approved
+  title: "RP-M06 Swiss: post with canned cycles and subprograms; the memory fills up"
+  statement: >-
+    RP-M06's program memory fills up, and a long program posted as strings of short moves won't load next to the
+    other jobs. Always post the Swiss with canned cycles and subprograms, and back up and clear old programs off it
+    at the start of every month.
+  applies_when: ["programs posted for RP-M06"]
+  does_not_apply_when: []
+  rationale: "This machine came with the standard program memory, and it runs a lot of small jobs."
+  cues: ["memory-full alarm partway through a program transfer"]
+  actions:
+    - "post with canned cycles and subprograms instead of long strings of short moves"
+    - "back up and clear old programs off the control at the start of every month"
+  common_mistake: "Deleting another job's program at the control to make room."
+  expert_confidence: always
+  topics: [t-m-swiss, t-cam]
+  tags: [swiss, cam]
+  links: { machine: m-swiss }
+  source:
+    kind: manual
+    text: >-
+      Our Swiss, RP-M06, came in 2018 with the standard program memory, and it fills up. A long program posted as
+      strings of short moves won't load next to the other jobs, and the control throws a memory-full alarm partway
+      through the transfer. I always post the Swiss from CAM with canned cycles and subprograms, not long strings of
+      short moves, and I back up and clear the old programs off it at the start of every month.
+    note: Entered by Jonah after a transfer stopped on a memory-full alarm.
+  classification: general
+  approved: { by: PER-08, on: "2026-03-09", mode: self }
+  created_on: "2026-03-05"
+
+- id: KC-087
+  type: customer_quirk
+  status: approved
+  title: "Sutrella 316 instruments: program a deburr pass on every cross hole"
+  statement: >-
+    Sutrella checks every cross hole under a scope and a burr is a reject. On their 316 instruments, always program
+    a back-chamfer or deburr toolpath on every cross hole so nobody has to hand-deburr.
+  applies_when: ["Sutrella 316 instrument parts with cross holes"]
+  does_not_apply_when: []
+  rationale: "Hand deburring those holes is where the rejects came from."
+  cues: ["cross holes on a Sutrella print"]
+  actions: ["program a back-chamfer or deburr toolpath on every cross hole"]
+  common_mistake: "Leaving cross-hole burrs for hand deburr."
+  expert_confidence: always
+  topics: [t-cus-03, t-mat-316, t-cam]
+  tags: [medical, deburr, stainless, cam]
+  links: { customer: CUS-03, jobs: [J-G046] }
+  source:
+    kind: manual
+    text: >-
+      Sutrella checks every cross hole under a scope at incoming, and a burr is a reject. On their 316 instruments I
+      always program a back-chamfer or deburr toolpath on every cross hole, in the machine, so nobody has to
+      hand-deburr. Tomás told me hand work on those holes is where the rejects came from before.
+    note: Entered by Jonah after the probe tip lot.
+  approved: { by: PER-08, on: "2026-07-27", mode: self }
+  created_on: "2026-07-24"
+
+- id: KC-088
+  type: customer_quirk
+  status: pending_review
+  title: "Quantrel: no hand blending on sealing surfaces, so finish grooves in one pass"
+  statement: >-
+    Quantrel doesn't allow rework without their approval, and that includes hand blending a sealing surface. On
+    their 6061 plates, program the O-ring groove finishing toolpath as one continuous pass with a fresh tool.
+  applies_when: ["Quantrel 6061 plates with O-ring grooves or sealing faces"]
+  does_not_apply_when: []
+  rationale: "A stop mark in a groove can't be blended out without their approval."
+  cues: ["O-ring grooves on a Quantrel print"]
+  actions:
+    - "finish O-ring grooves in one continuous pass with a fresh tool"
+    - "send any groove that needs a touch-up to Linda first"
+  common_mistake: "Blending a stop mark out by hand."
+  expert_confidence: not_stated
+  topics: [t-cus-04, t-mat-6061, t-cam]
+  tags: [semiconductor, aluminum, cam, rework]
+  links: { customer: CUS-04, jobs: [J-G063] }
+  source:
+    kind: manual
+    text: >-
+      Quantrel doesn't allow rework without their approval, and that includes hand blending on a sealing surface. So
+      on their 6061 plates I program the O-ring groove finishing toolpath as one continuous pass with a fresh tool,
+      no stop marks. If a groove needs a touch-up, it goes to Linda first, not to the bench.
+    note: Entered by Jonah during the gas distribution plate job; waiting on Linda's review.
+  created_on: "2026-08-26"
+
+- id: KC-089
+  type: failure_story
+  status: approved
+  title: "Probe tips: I left the cross-hole burr for hand work, and every hole had one"
+  statement: >-
+    On the 316 probe tips I programmed the cross hole with no deburr pass because the print didn't call for one.
+    Under the scope every hole had a burr on the far side, and the whole lot got hand-deburred. We ran about half an
+    hour over.
+  applies_when: []
+  does_not_apply_when: []
+  rationale: null
+  cues: ["a cross hole with no deburr callout on the print"]
+  actions: []
+  common_mistake: "Leaving cross-hole burrs for hand deburr because the print doesn't mention them."
+  expert_confidence: not_stated
+  topics: [t-m-swiss, t-cam, t-mat-316]
+  tags: [swiss, deburr, cam, medical]
+  links: { jobs: [J-G046], machine: m-swiss }
+  source:
+    kind: manual
+    text: >-
+      On the 316 probe tips in July I programmed the cross hole without a deburr pass because the print didn't call
+      for one. Under the scope every hole had a burr on the far side. The operator hand-deburred the whole lot and we
+      ran about half an hour over. Nothing got rejected, but that's how I learned to put a back-chamfer toolpath on
+      every cross hole for Sutrella.
+    note: Entered by Jonah after the probe tip lot.
+  approved: { by: PER-08, on: "2026-07-27", mode: self }
+  created_on: "2026-07-24"
+
+- id: KC-090
+  type: inspection_gotcha
+  status: approved
+  title: "Feature off on the CMM? Check the CAM model rev before you touch the program"
+  statement: >-
+    When the CMM report says a feature is off, always check that the CAM model is the same rev as the drawing the
+    report was built from before you change the program. Twice the model was a rev behind; nudging the program would
+    have hidden it.
+  applies_when: ["a feature reported off on a first piece or a first article"]
+  does_not_apply_when: []
+  rationale: "A part made right to the old rev looks like a machining error on a report built from the new one."
+  cues: ["a CMM report that flags a feature on the first piece"]
+  actions:
+    - "check the CAM model rev against the drawing rev on the report"
+    - "only then look at the toolpath and the machine"
+  common_mistake: "Nudging the program to match the report."
+  expert_confidence: always
+  topics: [t-cam, t-m-dmu50]
+  tags: [cam, first-article, dmu]
+  links: { machine: m-dmu50 }
+  source:
+    kind: manual
+    text: >-
+      When the CMM report says a feature is off, before I change the program I always check that my CAM model is the
+      same rev as the drawing the report was built from. Most of mine are the DMU 50 brackets. Twice since I started,
+      the model was a rev behind and the part was right to the old rev. Nudging the program would have hidden it. If
+      the revs match, then I look at the toolpath and the machine.
+    note: Entered by Jonah.
+  approved: { by: PER-08, on: "2026-04-08", mode: self }
+  created_on: "2026-04-06"

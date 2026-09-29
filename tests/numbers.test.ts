@@ -297,3 +297,20 @@ describe("review fixes (Phase 1a)", () => {
     expect(numberSupported(one("35"), extractNumbers("add thirty-five percent"))).toBe(true);
   });
 });
+
+describe("spoken inch fractions", () => {
+  it.each([
+    ["three quarters of an inch", 0.75],
+    ["an eighth of an inch", 0.125],
+    ["a half inch", 0.5],
+    ["a quarter inch", 0.25],
+    ["one sixteenth inch", 0.0625],
+    ["five eighths of an inch", 0.625],
+  ])("%s → %s in", (text, value) => {
+    expect(one(text)).toMatchObject({ value, unit: "in" });
+  });
+
+  it("matches the same value written as digits", () => {
+    expect(numberSupported(one("3/4 in clearance"), extractNumbers("at least three quarters of an inch"))).toBe(true);
+  });
+});

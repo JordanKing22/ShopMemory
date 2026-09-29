@@ -1,0 +1,499 @@
+# Cards contributed by Tomás Ibarra (PER-04). IDs KC-047..063 belong to this file.
+# Interview cards cite exact phrases from EXPERT turns (INT-07 Swiss small parts, INT-08 Inconel 718 rings).
+# Manual cards carry Tomás's own words in source.text (it becomes a manual-entry transcript turn).
+# Numbers in title/statement/actions/conditions must appear (spoken or written) in the evidence.
+# Placeholder domain wording — for SME review.
+
+# ---------------------------------------------------------------- INT-07: Swiss-turning small parts (internal)
+
+- id: KC-047
+  type: setup_tip
+  status: approved
+  title: "Swiss: mike every new bundle and set the guide bushing to the bar you have"
+  statement: >-
+    Mike the bar before you set the guide bushing, three places on a bar, every time you open a new bundle. Set the
+    bushing to the bar you've got, not to the size on the tag. If the bar varies more than about two tenths end to
+    end, it won't run right in the bushing, so buy ground bar for anything tight.
+  applies_when: ["new bundle of bar on the Swiss", "part with a tight diameter"]
+  does_not_apply_when: ["loose work where nothing is tighter than a couple of thou"]
+  rationale: "The guide bushing holds the part right next to the tool; loose on the bar the part moves, too tight the bar galls and sticks."
+  cues: ["chatter and a tight diameter wandering after a new bundle goes in", "offsets being chased shift after shift"]
+  actions: ["mike the bar in three places on a couple of bars from each new bundle", "set the guide bushing to the measured bar", "buy ground bar for tight work"]
+  common_mistake: "Trusting the size on the bar's tag and chasing size with offsets."
+  thresholds:
+    - { quantity: bar size variation end to end, comparator: ">", value: 0.0002, unit: in, verbatim: "more than about two tenths" }
+  expert_confidence: always
+  topics: [t-m-swiss, t-tight-tol]
+  tags: [swiss, tight-tolerance]
+  links: { machine: m-swiss }
+  source: { kind: interview, interview: INT-07 }
+  evidence:
+    - { turn: INT-07-T016, quote: "Mike the bar before you set the guide bushing. Three places on a bar, a couple of bars from the bundle. I do it every time we open a new bundle.", confidence: true }
+    - { turn: INT-07-T016, quote: "If the bar varies more than about two tenths from end to end, it's not going to run right in the bushing. That's why we buy ground bar for anything tight now." }
+    - { turn: INT-07-T014, quote: "You set the bushing to the bar you've got, not to the size on the tag." }
+    - { turn: INT-07-T018, quote: "Loose work, where nothing on the part is tighter than a couple of thou." }
+  approved: { by: PER-04, on: "2026-07-21", mode: self }
+  created_on: "2026-07-16"
+
+- id: KC-048
+  type: setup_tip
+  status: approved
+  title: "316 on the Swiss: peck the drills and break the chip on the roughing passes"
+  statement: >-
+    On 316, always program a peck on the drills and a chip break on the roughing passes. 316 wants to make one long
+    string; if you don't break it, it wraps the part and the tool and drags across the finished diameter.
+  applies_when: ["316 on the Swiss"]
+  does_not_apply_when: []
+  rationale: "A continuous 316 chip wraps and marks the finished diameter."
+  cues: ["long, stringy chips wrapping the part or the tool"]
+  actions: ["program a peck on every drill", "program a chip break on the roughing passes"]
+  common_mistake: "Letting a tool make a continuous chip on 316."
+  expert_confidence: always
+  topics: [t-m-swiss, t-mat-316]
+  tags: [swiss, stainless]
+  links: { machine: m-swiss, material: mat-316 }
+  source: { kind: interview, interview: INT-07 }
+  evidence:
+    - { turn: INT-07-T020, quote: "316 wants to make one long string. If you don't break it, it wraps around the part and the tool, and it drags across the finished diameter." }
+    - { turn: INT-07-T020, quote: "Always program a peck on the drills and a chip break on the roughing passes.", confidence: true }
+    - { turn: INT-07-T012, quote: "With the parts chattering, the 316 chips got long and stringy and started wrapping. A couple of parts got marked up on the finished diameter." }
+  approved: { by: PER-04, on: "2026-07-21", mode: self }
+  created_on: "2026-07-16"
+
+- id: KC-049
+  type: setup_tip
+  status: approved
+  title: "PEEK on the Swiss: sharp tools, light pick-off grip, measure after ten minutes"
+  statement: >-
+    PEEK grows with heat: a part right out of the catcher measures big and is back on size ten minutes later. Keep
+    the tools sharp so they cut instead of pushing a fuzzy burr, set the sub-spindle grip light on the pick-off,
+    and usually let the parts sit ten minutes before you measure a diameter.
+  applies_when: ["PEEK parts on the Swiss"]
+  does_not_apply_when: []
+  rationale: "A dull tool makes heat, and heat makes PEEK grow and burr."
+  cues: ["a fuzzy burr instead of a clean edge", "a diameter measuring big right out of the catcher"]
+  actions: ["keep the tools sharp", "set the sub-spindle grip light on the pick-off", "let parts sit ten minutes before measuring a diameter"]
+  common_mistake: "Measuring a warm PEEK part and offsetting to it."
+  expert_confidence: usually
+  topics: [t-m-swiss, t-mat-peek]
+  tags: [swiss, peek, deburr]
+  links: { machine: m-swiss, material: mat-peek }
+  source: { kind: interview, interview: INT-07 }
+  evidence:
+    - { turn: INT-07-T022, quote: "PEEK grows with heat. A sleeve right out of the catcher measures big, and ten minutes later it's back on size." }
+    - { turn: INT-07-T022, quote: "Keep the tools sharp on PEEK. A dull tool makes heat and pushes a fuzzy burr instead of cutting." }
+    - { turn: INT-07-T022, quote: "Usually I let the parts sit ten minutes before I measure a diameter.", confidence: true }
+    - { turn: INT-07-T022, quote: "And on the pick-off, set the sub-spindle grip light, or it squeezes the sleeve out of round." }
+  approved: { by: PER-04, on: "2026-07-21", mode: self }
+  created_on: "2026-07-16"
+
+- id: KC-050
+  type: machine_quirk
+  status: approved
+  title: "RP-M06 part catcher misses short parts: run the mesh liner, check it at bar change"
+  statement: >-
+    Our L20, RP-M06, doesn't catch parts shorter than about a quarter inch overall; they drop into the chips and get
+    dinged. Since 2021 we run a fine mesh liner in the chip pan under the catcher, and we always check the catcher
+    at every bar change.
+  applies_when: ["RP-M06 Swiss", "parts shorter than about a quarter inch overall"]
+  does_not_apply_when: ["longer parts, which the catcher grabs fine"]
+  rationale: null
+  cues: ["short parts turning up dinged in the chip pan"]
+  actions: ["run the fine mesh liner under the catcher for short parts", "check the part catcher at every bar change"]
+  common_mistake: "Running short parts without the liner and finding them in the chips."
+  expert_confidence: always
+  topics: [t-m-swiss]
+  tags: [swiss]
+  links: { machine: m-swiss }
+  source: { kind: interview, interview: INT-07 }
+  evidence:
+    - { turn: INT-07-T024, quote: "Our L20, RP-M06, has a quirk with the part catcher. Anything shorter than about a quarter inch, the catcher misses it, and it drops into the chips and gets dinged." }
+    - { turn: INT-07-T024, quote: "Since 2021 we run a fine mesh liner in the chip pan under the catcher. We always check the catcher at every bar change.", confidence: true }
+    - { turn: INT-07-T026, quote: "Overall length, yes. Longer than that, the catcher grabs them fine." }
+  approved: { by: PER-04, on: "2026-07-21", mode: self }
+  created_on: "2026-07-16"
+
+- id: KC-051
+  type: quoting_rule
+  status: approved
+  title: "Small Swiss parts: quote the handling as its own time, not just the cycle"
+  statement: >-
+    When you quote small parts on the Swiss, the cycle time is the easy part. Usually price the handling as its own
+    time per part: deburr under the scope, measure after they cool, bag and count. On PEEK sleeves and spacers the
+    handling after the machine takes longer than the cycle.
+  applies_when: ["small parts on the Swiss", "PEEK sleeves and spacers"]
+  does_not_apply_when: []
+  rationale: "The machine runs by itself; the deburr, measuring and bagging are people time."
+  cues: ["parts that need deburr under the scope", "parts that must cool before they're measured"]
+  actions: ["price deburr, measuring, bagging and counting as their own time per part"]
+  common_mistake: "Quoting a small Swiss part from the cycle time alone."
+  expert_confidence: usually
+  topics: [t-quoting, t-m-swiss, t-mat-peek]
+  tags: [quoting, swiss, peek, deburr]
+  links: { jobs: [J-G054], machine: m-swiss, material: mat-peek }
+  source: { kind: interview, interview: INT-07 }
+  evidence:
+    - { turn: INT-07-T028, quote: "When I quote small parts on the Swiss, the cycle time is the easy part. What people miss is the handling: deburr under the scope, measure after they cool, bag and count." }
+    - { turn: INT-07-T028, quote: "On the PEEK sleeves and spacers the handling after the machine takes longer than the cycle." }
+    - { turn: INT-07-T028, quote: "I usually price the handling as its own time per part.", confidence: true }
+  approved: { by: PER-04, on: "2026-07-21", mode: self }
+  created_on: "2026-07-16"
+
+# ---------------------------------------------------------------- INT-08: Inconel 718 rings (export_controlled)
+
+- id: KC-052
+  type: quoting_rule
+  status: approved
+  title: "In718 rings: price insert changes per ring on top of the three-times cycle"
+  statement: >-
+    For Inconel 718 rings I usually take Ray's three times the 17-4 cycle for the cutting; the insert changes get
+    priced on top, counted per ring. The three-times number is right for the cutting; it doesn't see the tool
+    changes.
+  applies_when: ["Inconel 718 rings on the Integrex"]
+  does_not_apply_when: []
+  rationale: "Insert changes on Inconel are stops at the machine that a cutting-time multiplier doesn't include."
+  cues: []
+  actions: ["take three times the 17-4 cycle for the cutting", "price the insert changes on top, counted per ring"]
+  common_mistake: "Letting the cutting-time multiplier stand in for the insert changes."
+  expert_confidence: usually
+  topics: [t-quoting, t-mat-in718]
+  tags: [quoting, inconel, tool-wear]
+  links: { quotes: [Q-A07], jobs: [J-A07], material: mat-in718 }
+  source: { kind: interview, interview: INT-08 }
+  evidence:
+    - { turn: INT-08-T028, quote: "I usually take Ray's three times the 17-4 cycle for the cutting, and then I price the insert changes on top, counted per ring.", confidence: true }
+    - { turn: INT-08-T028, quote: "Ray's number is right for the cutting. It doesn't see the tool changes." }
+  approved: { by: PER-04, on: "2026-09-01", mode: self }
+  created_on: "2026-08-27"
+
+- id: KC-053
+  type: quoting_rule
+  status: approved
+  title: "Repeat In718 rings: count the inserts on the last traveler before pricing"
+  statement: >-
+    Before pricing a repeat Inconel ring job, pull the old traveler and count the inserts actually used. The last
+    job's actuals beat anything figured from a catalog, which is why every insert change gets written on the
+    traveler.
+  applies_when: ["repeat Inconel ring job"]
+  does_not_apply_when: []
+  rationale: "Insert life on Inconel rings has run shorter than planned twice; the traveler shows what really happened."
+  cues: ["a repeat ring job coming in to be priced"]
+  actions: ["pull the old traveler and count the inserts used", "write every insert change on the traveler"]
+  common_mistake: "Pricing insert life from a catalog instead of the last job."
+  expert_confidence: always
+  topics: [t-quoting, t-mat-in718]
+  tags: [quoting, inconel, tool-wear]
+  links: { quotes: [Q-A07], jobs: [J-A07, J-G094], material: mat-in718 }
+  source: { kind: interview, interview: INT-08 }
+  evidence:
+    - { turn: INT-08-T026, quote: "Before I price a repeat Inconel ring, I pull the old traveler and count the inserts we actually used." }
+    - { turn: INT-08-T026, quote: "I always do that now.", confidence: true }
+    - { turn: INT-08-T026, quote: "That's why the guys write every insert change on the traveler." }
+    - { turn: INT-08-T026, quote: "We got burned on the bearing retainer rings in January, and again on these." }
+    - { turn: INT-08-T026, quote: "The last job's actuals beat anything I can figure from a catalog." }
+  approved: { by: PER-04, on: "2026-09-01", mode: self }
+  created_on: "2026-08-27"
+
+- id: KC-054
+  type: setup_tip
+  status: approved
+  title: "In718 on the Integrex: never let the tool dwell; finish at least ten thou deep"
+  statement: >-
+    On Inconel 718, never let the tool dwell: keep the feed on through the corners, always. Take at least ten thou on
+    the finish pass so you cut under the skin the pass before hardened, move the depth a little on each roughing
+    pass so the notch doesn't wear in the same spot, and keep flood coolant right at the edge.
+  applies_when: ["turning Inconel 718 on the Integrex"]
+  does_not_apply_when: []
+  rationale: "Inconel work hardens; a stopped feed or a light pass leaves a hard skin that the next pass rides on and the edge fails."
+  cues: ["the cut going from a hiss to a squeal", "chip color changing"]
+  actions:
+    - "keep the feed on through the corners"
+    - "take at least ten thou on the finish pass"
+    - "move the depth a little on each roughing pass"
+    - "flood coolant right at the edge; never run it dry"
+    - "rough with round inserts in a tough carbide grade made for the heat-resistant alloys"
+  common_mistake: "Taking a light spring pass to clean up the finish, like on stainless."
+  thresholds:
+    - { quantity: finish pass depth, comparator: ">=", value: 0.010, unit: in, verbatim: "at least ten thou" }
+  expert_confidence: always
+  topics: [t-m-integrex, t-mat-in718]
+  tags: [inconel, mill-turn, tool-wear]
+  links: { machine: m-integrex, jobs: [J-A07], material: mat-in718 }
+  source: { kind: interview, interview: INT-08 }
+  evidence:
+    - { turn: INT-08-T018, quote: "Never let the tool dwell. If the feed stops in the cut, even for a second, it work hardens right there and the next pass hits a hard spot." }
+    - { turn: INT-08-T018, quote: "Keep the feed on through the corners, always.", confidence: true }
+    - { turn: INT-08-T018, quote: "Take at least ten thou on the finish pass so you're under the skin from the pass before." }
+    - { turn: INT-08-T018, quote: "Move the depth a little on each roughing pass so the notch doesn't wear in the same spot on the insert." }
+    - { turn: INT-08-T018, quote: "And flood coolant right at the edge. Never run it dry." }
+    - { turn: INT-08-T020, quote: "For roughing I use round inserts in a tough carbide grade made for the heat-resistant alloys, with a sharp coated edge." }
+  approved: { by: PER-04, on: "2026-09-01", mode: self }
+  created_on: "2026-08-27"
+
+- id: KC-055
+  type: failure_story
+  status: approved
+  title: "Seal carrier rings: priced one finishing insert per ring, needed three"
+  statement: >-
+    I priced the Inconel 718 seal carrier rings at thirty hours with one finishing insert per ring. They needed three
+    a ring, two extra changes on every ring, and the job came in at thirty-four hours. Fifteen minutes a ring over
+    sixteen rings is the four hours.
+  applies_when: []
+  does_not_apply_when: []
+  rationale: null
+  cues: ["a finishing insert that doesn't last one ring"]
+  actions: []
+  common_mistake: "Pricing Inconel insert life off how stainless wears."
+  expert_confidence: not_stated
+  topics: [t-mat-in718, t-quoting, t-m-integrex]
+  tags: [inconel, quoting, tool-wear, mill-turn]
+  links: { jobs: [J-A07], quotes: [Q-A07], machine: m-integrex }
+  source: { kind: interview, interview: INT-08 }
+  evidence:
+    - { turn: INT-08-T010, quote: "I priced it at thirty hours. I used Ray's three times the 17-4 cycle for the cutting and put in one finishing insert per ring." }
+    - { turn: INT-08-T010, quote: "We ended up at three inserts a ring, two extra changes on every ring." }
+    - { turn: INT-08-T010, quote: "It came in at thirty-four hours." }
+    - { turn: INT-08-T012, quote: "Two extra a ring is fifteen minutes. Sixteen rings, that's the four hours." }
+  approved: { by: PER-04, on: "2026-09-01", mode: self }
+  created_on: "2026-08-27"
+
+- id: KC-056
+  type: customer_quirk
+  status: approved
+  title: "Graymoor: every ring traceable to its bar's heat number; never mix heats in a lot"
+  statement: >-
+    Graymoor wants every ring traceable to the heat number of the bar it came from. Write the heat number on the
+    traveler for every ring and never mix two heats in one lot; their source inspector checks it every time.
+  applies_when: ["Graymoor ring jobs"]
+  does_not_apply_when: []
+  rationale: null
+  cues: ["a leftover bar from another job on the rack"]
+  actions: ["write the bar's heat number on the traveler for every ring", "keep one heat per lot"]
+  common_mistake: "Cutting a ring from a leftover bar of a different heat."
+  expert_confidence: always
+  topics: [t-cus-05, t-mat-in718]
+  tags: [traceability, defense, inconel]
+  links: { customer: CUS-05, jobs: [J-A07] }
+  source: { kind: interview, interview: INT-08 }
+  evidence:
+    - { turn: INT-08-T022, quote: "Graymoor wants every ring traceable to the heat number of the bar it came from. We write the heat number on the traveler for every ring, and we never mix two heats in one lot.", confidence: true }
+    - { turn: INT-08-T022, quote: "Their source inspector checks it every time." }
+    - { turn: INT-08-T022, quote: "On an earlier lot somebody cut a ring from a leftover bar of a different heat, and we had to pull it and cut another one." }
+  approved: { by: PER-04, on: "2026-09-01", mode: self }
+  created_on: "2026-08-27"
+
+# ---------------------------------------------------------------- Manual entries (Tomás's own words)
+
+- id: KC-057
+  type: machine_quirk
+  status: approved
+  title: "RP-M05: sub-spindle sits about three tenths off the main spindle's center"
+  statement: >-
+    Our Integrex, RP-M05, has had its sub-spindle about three tenths off center from the main since we bought it
+    used in 2014. Anything that has to run true end to end, always finish both diameters in the main spindle, or
+    indicate the part in the sub before you trust the pick-off.
+  applies_when: ["RP-M05 Integrex", "features that must run true to each other across the pick-off"]
+  does_not_apply_when: []
+  rationale: "This unit's sub-spindle has never lined up dead on with the main."
+  cues: ["runout between the two ends after the pick-off"]
+  actions: ["finish both diameters in the main spindle", "indicate the part in the sub-spindle before trusting the pick-off"]
+  common_mistake: "Chasing the error in the program."
+  thresholds:
+    - { quantity: sub-spindle offset from main spindle center, comparator: approx, value: 0.0003, unit: in, verbatim: "about three tenths off center" }
+  expert_confidence: always
+  topics: [t-m-integrex, t-tight-tol]
+  tags: [mill-turn, tight-tolerance]
+  links: { machine: m-integrex }
+  source:
+    kind: manual
+    text: >-
+      Our Integrex, RP-M05, came to us used in 2014 from an oilfield shop, and the sub-spindle has never lined up
+      dead on with the main. It sits about three tenths off center. So anything that has to run true from end to
+      end, I always finish both diameters in the main spindle, or I indicate the part in the sub before I trust the
+      pick-off. Don't chase it in the program.
+    note: Hand-entered at the machine.
+  classification: general
+  approved: { by: PER-04, on: "2025-11-06", mode: self }
+  created_on: "2025-11-04"
+
+- id: KC-058
+  type: machine_quirk
+  status: approved
+  title: "RP-M05 milling head: always swing the B-axis in from the same side"
+  statement: >-
+    The milling head on RP-M05 has had a little play through vertical since we got the machine in 2014. Always swing
+    the B-axis to position from the same side and let the clamp lock before the first cut. Come at it from the
+    other side and a cross hole ends up about a thou off location.
+  applies_when: ["RP-M05 Integrex", "milled features after a B-axis swing"]
+  does_not_apply_when: []
+  rationale: "This unit's head has a little play when it swings through vertical."
+  cues: ["cross holes off location by about a thou"]
+  actions: ["swing the B-axis to position from the same side", "let the clamp lock before the first cut", "post every CAM program with the same approach"]
+  common_mistake: "Letting the program swing the head in from either side."
+  expert_confidence: always
+  topics: [t-m-integrex, t-cam]
+  tags: [mill-turn, cam]
+  links: { machine: m-integrex }
+  source:
+    kind: manual
+    text: >-
+      The milling head on RP-M05 has a little play when it swings through vertical. It's been like that since we got
+      the machine in 2014. We always swing the B-axis to position from the same side and let the clamp lock before
+      the first cut, and we post every CAM program that way now. Come at it from the other side and a cross hole
+      ends up about a thou off location.
+    note: Hand-entered at the machine.
+  classification: general
+  approved: { by: PER-04, on: "2026-02-19", mode: self }
+  created_on: "2026-02-17"
+
+- id: KC-059
+  type: machine_quirk
+  status: approved
+  title: "RP-M02 bar feeder: always fit the matching spindle liner for small bar"
+  statement: >-
+    Since the bar feeder went on RP-M02 in 2020, small bar whips in the spindle without the right liner. Anything
+    under 3/4 inch bar, always put in the matching spindle liner before you load the feeder.
+  applies_when: ["RP-M02 ST-20 running from the bar feeder", "bar under 3/4 inch"]
+  does_not_apply_when: []
+  rationale: "Without the liner, small bar whips inside this spindle."
+  cues: ["the lathe shaking when the bar spins up"]
+  actions: ["put in the matching spindle liner before loading the feeder with bar under 3/4 inch"]
+  common_mistake: "Skipping the liner on a quick small-bar job."
+  thresholds:
+    - { quantity: bar diameter, comparator: "<", value: 0.75, unit: in, verbatim: "under 3/4 inch bar" }
+  expert_confidence: always
+  topics: [t-m-st20]
+  tags: [st20]
+  links: { machine: m-st20 }
+  source:
+    kind: manual
+    text: >-
+      Since the bar feeder went on RP-M02 in 2020, small bar whips in the spindle if you run it without the right
+      liner. Anything under 3/4 inch bar, always put in the matching spindle liner before you load the feeder. The
+      first time we skipped it the whole lathe shook, and the bar marked up the inside of the spindle.
+    note: Hand-entered at the machine.
+  classification: general
+  approved: { by: PER-04, on: "2025-05-14", mode: self }
+  created_on: "2025-05-12"
+
+- id: KC-060
+  type: machine_quirk
+  status: approved
+  title: "RP-M02 chip conveyor jams on stringy 316 chips: break the chip, check it hourly"
+  statement: >-
+    The chip conveyor on RP-M02 jams on stringy 316 chips; in 2022 it jammed overnight and burned out the conveyor
+    motor. On any 316 job on the ST-20, always run a chip-breaking insert and check the conveyor every hour.
+  applies_when: ["RP-M02 ST-20", "316 jobs"]
+  does_not_apply_when: []
+  rationale: "Stringy 316 chips ball up and jam this unit's conveyor."
+  cues: ["chips balling up at the conveyor"]
+  actions: ["run a chip-breaking insert on 316", "check the chip conveyor every hour on 316 jobs"]
+  common_mistake: "Leaving a 316 job running overnight without checking the conveyor."
+  expert_confidence: always
+  topics: [t-m-st20, t-mat-316]
+  tags: [st20, stainless]
+  links: { machine: m-st20 }
+  source:
+    kind: manual
+    text: >-
+      The chip conveyor on RP-M02 has never liked stringy 316 chips. They ball up and jam it. In 2022 it jammed
+      overnight and burned out the conveyor motor. Now on any 316 job on the ST-20 we always run a chip-breaking
+      insert, and somebody checks the conveyor every hour.
+    note: Hand-entered at the machine.
+  classification: general
+  approved: { by: PER-04, on: "2026-01-12", mode: self }
+  created_on: "2026-01-08"
+
+- id: KC-061
+  type: quoting_rule
+  status: approved
+  title: "Swiss or ST-20: long parts in small bar go on the Swiss"
+  statement: >-
+    When I quote a turned part that fits in 3/4 inch bar and is longer than about three times its diameter, it
+    usually goes on the Swiss: the guide bushing holds it at the cut, so it comes off done in one op. Short, fat
+    parts, or anything bigger than the Swiss takes, go on the ST-20.
+  applies_when: ["part fits in 3/4 inch bar", "part longer than about three times its diameter"]
+  does_not_apply_when: ["short, fat parts", "bar bigger than the Swiss takes"]
+  rationale: "The guide bushing supports a long part right at the cut, so it comes off done."
+  cues: ["a long, slender turned part on the print"]
+  actions: ["put long parts in small bar on the Swiss", "put short, fat or large-bar parts on the ST-20"]
+  common_mistake: "Quoting a long slender part on the ST-20 and paying for a second op."
+  thresholds:
+    - { quantity: length to diameter, comparator: ">", value: 3, unit: x, verbatim: "longer than about three times its diameter" }
+  expert_confidence: usually
+  topics: [t-quoting, t-m-swiss, t-m-st20]
+  tags: [quoting, swiss, st20]
+  links: { jobs: [J-G077, J-G074], machines: [m-swiss, m-st20] }
+  source:
+    kind: manual
+    text: >-
+      How I pick the machine when I quote a turned part: if it fits in 3/4 inch bar and it's longer than about three
+      times its diameter, it usually goes on the Swiss. The guide bushing holds it right at the cut, so it comes off
+      done in one op. Short, fat parts, or anything bigger than the Swiss takes, go on the ST-20. The PEEK standoffs
+      went on the Swiss and came in under the hours. The lift pins went on the ST-20 because the Swiss was booked.
+      They ran fine, but it took a second op to finish the far end.
+    note: Entered by Tomás after the standoff job.
+  approved: { by: PER-04, on: "2026-05-15", mode: self }
+  created_on: "2026-05-12"
+
+- id: KC-062
+  type: quoting_rule
+  status: approved
+  title: "Swiss material: count parts per bar, with the cut-off and the remnant"
+  statement: >-
+    On small Swiss parts, figure material by bars, not by part length. Every part eats its length plus the cut-off,
+    about sixty thou, plus a little facing stock, and every bar leaves a remnant of about eight inches. Always count
+    how many parts you get out of one bar and quote whole bars, rounded up.
+  applies_when: ["small parts from bar on the Swiss"]
+  does_not_apply_when: []
+  rationale: "On short parts the cut-off and the remnant are a big share of every bar."
+  cues: ["short parts, like PEEK caps"]
+  actions: ["count parts per bar including the cut-off and facing stock", "quote whole bars and round up"]
+  common_mistake: "Figuring material from part length times quantity."
+  thresholds:
+    - { quantity: cut-off width per part, comparator: approx, value: 0.060, unit: in, verbatim: "about sixty thou" }
+    - { quantity: bar remnant, comparator: approx, value: 8, unit: in, verbatim: "about eight inches" }
+  expert_confidence: always
+  topics: [t-quoting, t-m-swiss, t-mat-peek]
+  tags: [quoting, swiss, peek]
+  links: { jobs: [J-G057], machine: m-swiss, material: mat-peek }
+  source:
+    kind: manual
+    text: >-
+      Small parts on the Swiss, I figure the material by bars, not by part length. Every part eats its own length
+      plus the cut-off, about sixty thou, plus a little facing stock. Every bar leaves a remnant of about eight
+      inches the machine can't use. On the short PEEK caps that adds up fast. I always count how many parts I get
+      out of one bar, quote it in whole bars, and round up, because nobody sells us half a bar.
+    note: Entered by Tomás after the PEEK cap job.
+  approved: { by: PER-04, on: "2026-09-03", mode: self }
+  created_on: "2026-08-31"
+
+- id: KC-063
+  type: failure_story
+  status: approved
+  title: "Pivot shafts: sized warm at the machine, two tenths under once cold"
+  statement: >-
+    On the 17-4 pivot shafts I sized the bearing diameters at the machine with the parts still warm from the cut.
+    Next morning inspection had them two tenths under on the tightest diameter. Nothing was scrapped, but every
+    shaft got held until it was cold and measured twice, and the job ran an hour over.
+  applies_when: []
+  does_not_apply_when: []
+  rationale: null
+  cues: ["sizing a tight turned diameter on a part still warm from the cut"]
+  actions: []
+  common_mistake: "Setting the offset from a warm part."
+  expert_confidence: not_stated
+  topics: [t-tight-tol, t-mat-174ph, t-m-integrex]
+  tags: [tight-tolerance, stainless, mill-turn]
+  links: { jobs: [J-G045], machine: m-integrex }
+  source:
+    kind: manual
+    text: >-
+      The 17-4 pivot shafts in June. I sized the bearing diameters right at the machine with the parts still warm
+      from the cut, and they measured good. Next morning Linda's room had them two tenths under on the tightest
+      diameter. Nothing got scrapped, but we held every shaft until it was cold, measured it twice, and the job ran
+      an hour over. Now on any turned diameter held to tenths, I let the part cool to room temperature before I
+      touch the offset.
+    note: Entered by Tomás after the pivot shaft job.
+  approved: { by: PER-04, on: "2026-06-18", mode: self }
+  created_on: "2026-06-15"

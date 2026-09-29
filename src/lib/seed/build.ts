@@ -684,7 +684,7 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
         const text = c.source.text.trim();
         turnList.push({ cardId: c.id, text, createdOn: c.created_on });
         manualTurns.set(interviewId, turnList);
-        const turnId = `${interviewId}-T${pad3(turnList.length)}`;
+        const turnId = manualTurnId(interviewId, c.id); // keyed by the card number: adding cards never renumbers others
         const confidence = c.expert_confidence !== "not_stated" && c.type !== "failure_story";
         evidence = [{ turnId, start: 0, end: text.length, quote: text, confidence }];
         const tc = toTraceCard(c, links, [{ turnId, quote: text, confidence }]);
@@ -753,11 +753,11 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
       classificationSource: "derived",
       classificationReason: null,
     });
-    turnList.forEach((t, i) => {
+    for (const t of [...turnList].sort((a, b) => (a.cardId < b.cardId ? -1 : 1))) {
       turnRows.push({
-        id: `${interviewId}-T${pad3(i + 1)}`,
+        id: manualTurnId(interviewId, t.cardId),
         interviewId,
-        seq: i + 1,
+        seq: Number(t.cardId.slice(3)),
         speaker: "expert",
         phase: null,
         move: null,
@@ -766,7 +766,7 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
         createdAt: noon(t.createdOn),
         classification: cards.get(t.cardId)!.classification,
       });
-    });
+    }
   }
 
   // ---------------------------------------------------------------------------------------------
@@ -1393,6 +1393,14 @@ function tryGenerate(issues: IssueList, input: Parameters<typeof generateCommerc
 
 export function manualInterviewId(personId: string): string {
   return `INT-M-${personId}`;
+}
+
+/**
+ * A binder/manual card's provenance turn: its seq is the card number (KC-026 → INT-M-PER-02-T026), so turn IDs are
+ * as permanent as card IDs.
+ */
+function manualTurnId(interviewId: string, cardId: string): string {
+  return `${interviewId}-T${cardId.slice(3)}`;
 }
 
 function uniqueMap<T extends { id: string }>(items: Located<T>[], label: string, issues: IssueList): Map<string, Located<T>> {

@@ -1,0 +1,250 @@
+# Cards contributed by Priya Raman (PER-07), CMM Inspector (trainee), hired 2025-10-13. IDs KC-073..080 belong to
+# this file. Priya programs and runs the CMM under Linda, so these are practical inspection lessons in her own
+# words, many of them things Linda taught her. All eight are hand-entered (manual) cards: her words are in
+# source.text, which becomes the evidence. Numbers in title/statement/actions/conditions must also appear in
+# source.text. KC-076 is a machine quirk about this CMM unit only and is declared general (no names, no records).
+# Placeholder domain wording — for SME review.
+
+- id: KC-073
+  type: inspection_gotcha
+  status: approved
+  title: "After a face is re-cut, re-run the full CMM program, not just that face"
+  statement: >-
+    Any time a face gets re-cut after it's been inspected, like the sealing faces on the 4-port manifold after heat
+    treat, always re-run the full CMM program, not just a flatness check on that face. Anything measured from that
+    face can change when the face does.
+  applies_when: ["a face is re-cut after it has been inspected, for example after heat treat"]
+  does_not_apply_when: []
+  rationale: "Features measured from a re-cut face can shift even when the face itself checks flat."
+  cues: ["an extra finish pass on a sealing or datum face"]
+  actions: ["re-run the full CMM program after any face is re-cut"]
+  common_mistake: "Re-checking only the flatness of the face that was re-cut."
+  expert_confidence: always
+  topics: [t-fai-cmm, t-m-cmm]
+  tags: [cmm, first-article, heat-treat]
+  links: { jobs: [J-A10], machine: m-cmm }
+  source:
+    kind: manual
+    text: >-
+      On the 4-port manifold in 17-4, the sealing faces got an extra finish pass after heat treat. I only re-checked
+      the flatness of the faces. Linda had me re-run the whole CMM program, because anything measured from those
+      faces can change when the faces do. Now any time a face gets re-cut after it's been inspected, I always re-run
+      the full program, not just the face.
+    note: Entered by Priya after the manifold job; reviewed with Linda.
+  approved: { by: PER-07, on: "2026-05-15", mode: self }
+  created_on: "2026-05-11"
+
+- id: KC-074
+  type: inspection_gotcha
+  status: approved
+  title: "Scanning a big flat face: slow the scan before you believe a bad flatness number"
+  statement: >-
+    On a big flat face like the chamber lid, a fast scan can read the flatness worse than the part is. Always slow
+    the scan and re-run it, or check it point by point, before you call a flatness reject.
+  applies_when: ["scanning flatness on a large face, like a 12-inch 6061 plate", "flatness held to about a thou"]
+  does_not_apply_when: []
+  rationale: "At the default speed the scan picks up more than the part; slowed down, it agreed with a point-by-point check."
+  cues: ["flatness out on a fast scan of a big face"]
+  actions:
+    - "slow the scan way down and re-run it before calling a flatness reject"
+    - "confirm with a point-by-point check"
+  common_mistake: "Rejecting a plate on the first fast scan."
+  expert_confidence: always
+  topics: [t-tight-tol, t-mat-6061, t-m-cmm]
+  tags: [tight-tolerance, cmm, aluminum]
+  links: { jobs: [J-A11], machine: m-cmm }
+  source:
+    kind: manual
+    text: >-
+      Scanning the sealing face on the chamber lid at the default speed, the CMM said the flatness was out. Linda had
+      me slow the scan way down and re-run it, and it came back well inside the tolerance, and it matched a
+      point-by-point check. On a 12-inch 6061 plate held to about a thou, a fast scan reads worse than the part is.
+      Now I always slow the scan on big flat faces before I call a flatness reject.
+    note: Entered by Priya after inspecting the chamber lids.
+  approved: { by: PER-07, on: "2026-06-29", mode: self }
+  created_on: "2026-06-24"
+
+- id: KC-075
+  type: inspection_gotcha
+  status: approved
+  title: "Every feature off the same way by the same amount? Check the stylus first"
+  statement: >-
+    If every position comes out off in the same direction by about the same amount, suspect the CMM stylus before
+    the part. A bumped stylus doesn't alarm; it shifts every point. Re-qualify after any bump or stylus change,
+    before the next part.
+  applies_when: ["hole positions all off in the same direction on the CMM"]
+  does_not_apply_when: []
+  rationale: "A bumped stylus throws no alarm; it moves every point it takes by the same amount."
+  cues: ["every hole position off the same direction by about the same amount"]
+  actions:
+    - "re-qualify the stylus after any bump or stylus change"
+    - "re-check whatever was measured since the last good qualification"
+  common_mistake: "Telling the machinist to move his offsets because the CMM said the holes moved."
+  expert_confidence: always
+  topics: [t-m-cmm, t-fai-cmm]
+  tags: [cmm]
+  links: { machine: m-cmm }
+  source:
+    kind: manual
+    text: >-
+      If every hole position on a part is off the same direction by about the same amount, suspect the stylus
+      before the part. A bumped stylus on the CMM doesn't throw an alarm, it just shifts every point it takes. Linda
+      showed me that my first month. Now I always re-qualify the stylus after any bump or stylus change, before the
+      next part goes on the table, and I re-check whatever I measured since the last good qualification.
+    note: Entered by Priya in her first months on the CMM.
+  approved: { by: PER-07, on: "2025-11-20", mode: self }
+  created_on: "2025-11-17"
+
+- id: KC-076
+  type: machine_quirk
+  status: approved
+  title: "RP-Q01: keep the long star stylus out of rack port 4; that change misses"
+  statement: >-
+    On RP-Q01, the automatic stylus change into rack port 4 misses now and then and stops the program. Keep the long
+    star stylus in port 2, and after a change error always check the stylus is seated before you re-qualify and
+    restart.
+  applies_when: ["programs on RP-Q01 that change styli from the rack"]
+  does_not_apply_when: []
+  rationale: "That port hasn't changed cleanly since the rack was re-taught at the 2025 service."
+  cues: ["stylus-change error partway through a program"]
+  actions:
+    - "keep the long star stylus in rack port 2"
+    - "check the stylus is seated after a change error"
+    - "re-qualify before restarting the program"
+  common_mistake: "Restarting after a change error without looking at the stylus."
+  expert_confidence: always
+  topics: [t-m-cmm]
+  tags: [cmm]
+  links: { machine: m-cmm }
+  source:
+    kind: manual
+    text: >-
+      Our CMM, RP-Q01: since the stylus rack was re-taught at the 2025 service, the automatic change into port 4
+      misses now and then, and the program stops with a stylus-change error partway through. We keep the long star
+      stylus in port 2 now and leave port 4 for the short straight one that hardly gets used. When a program stops on
+      a change error, I always check the stylus is seated before I re-qualify and restart.
+    note: Entered by Priya after a program stopped on a stylus change in February.
+  classification: general
+  approved: { by: PER-07, on: "2026-02-18", mode: self }
+  created_on: "2026-02-16"
+
+- id: KC-077
+  type: setup_tip
+  status: approved
+  title: "First run of a new or edited CMM program: slow it down, hand on the stop"
+  statement: >-
+    The first time a new or edited CMM program runs, always turn the speed way down and step through it with your
+    hand on the stop button. The moves between features are where it hits a clamp or a rest the program doesn't
+    know about.
+  applies_when: ["a CMM program that's new, or edited since its last clean run"]
+  does_not_apply_when: []
+  rationale: "The program doesn't know about the clamp or the rest you added."
+  cues: ["a program that's new, or edited since its last clean run"]
+  actions:
+    - "turn the speed way down for the first run"
+    - "step through it with your hand on the stop button"
+    - "go to full speed once it has run clean"
+  common_mistake: "Running an edited program at full speed because the last version was fine."
+  expert_confidence: always
+  topics: [t-m-cmm, t-fai-cmm]
+  tags: [cmm]
+  links: { machine: m-cmm }
+  source:
+    kind: manual
+    text: >-
+      The first time any new or edited CMM program runs, I always turn the speed way down and step through it with my
+      hand on the stop button. The moves between features are where it hits something, because the program doesn't
+      know about the clamp or the rest you added. Linda showed me after I clipped a clamp with the stylus my first
+      week. Once it has run clean, it runs at full speed.
+    note: Entered by Priya.
+  approved: { by: PER-07, on: "2025-12-10", mode: self }
+  created_on: "2025-12-08"
+
+- id: KC-078
+  type: customer_quirk
+  status: approved
+  title: "Aerovance first articles: a measured number on every line, never just \"OK\""
+  statement: >-
+    Aerovance always kicks back a first article if any characteristic says OK or pass instead of a measured
+    number. Even a hole checked with a pin gauge gets the go and no-go pin sizes written in.
+  applies_when: ["Aerovance first article package"]
+  does_not_apply_when: []
+  rationale: null
+  cues: ["a characteristic checked with a gauge instead of on the CMM"]
+  actions:
+    - "write a measured value on every characteristic"
+    - "record the go and no-go pin sizes for holes checked with pins"
+    - "check every line of the form before it goes to Linda"
+  common_mistake: "Writing \"OK\" for attribute checks."
+  expert_confidence: always
+  topics: [t-cus-01, t-fai-cmm]
+  tags: [first-article, cmm]
+  links: { customer: CUS-01, jobs: [J-G006] }
+  source:
+    kind: manual
+    text: >-
+      Aerovance always kicks back a first article if any characteristic says OK or pass instead of a measured
+      number. Even a hole I check with a pin gauge gets the go and no-go pin sizes written in, the pin that went and
+      the one that didn't. Linda had a package come back for that before I started, so she has me check every line
+      of the form before it goes to her.
+    note: Entered by Priya after the stiffener bracket first article.
+  approved: { by: PER-07, on: "2026-09-03", mode: self }
+  created_on: "2026-09-01"
+
+- id: KC-079
+  type: customer_quirk
+  status: approved
+  title: "Sutrella: the lot number on every page of the inspection report"
+  statement: >-
+    Sutrella always wants the lot number on every page of the inspection report, the CMM printout and the check
+    sheets too, not just the cover sheet. Put the lot number in the CMM report header before you print.
+  applies_when: ["Sutrella inspection reports"]
+  does_not_apply_when: []
+  rationale: "A report page without the lot number breaks their lot traceability."
+  cues: ["a Sutrella lot going to final inspection"]
+  actions:
+    - "add the lot number to the CMM report header before printing"
+    - "check that every page carries the lot number"
+  common_mistake: "Putting the lot number only on the cover sheet."
+  expert_confidence: always
+  topics: [t-cus-03, t-fai-cmm]
+  tags: [medical, traceability, cmm]
+  links: { customer: CUS-03, jobs: [J-G046] }
+  source:
+    kind: manual
+    text: >-
+      Sutrella always wants the lot number on every page of the inspection report, not just the cover sheet: the
+      CMM printout, the check sheets, all of it. Linda said they rejected a report once because one page of the CMM
+      printout had only the part number. I add the lot number to the CMM report header before I print.
+    note: Entered by Priya after the probe tip lot.
+  approved: { by: PER-07, on: "2026-07-29", mode: self }
+  created_on: "2026-07-27"
+
+- id: KC-080
+  type: failure_story
+  status: pending_review
+  title: "My first solo FAI program: aligned off the easy edges, not the print datums"
+  statement: >-
+    On the clamp support bracket I built my first solo FAI alignment off the two machined edges that were easiest to
+    touch instead of datums B and C on the print. Everything passed. Linda caught it before she signed; off the
+    right datums one hole went from the middle of the tolerance to near the edge.
+  applies_when: []
+  does_not_apply_when: []
+  rationale: null
+  cues: ["an alignment built from convenient faces instead of the print datums"]
+  actions: []
+  common_mistake: "Aligning off whatever is easiest to probe."
+  expert_confidence: not_stated
+  topics: [t-fai-cmm, t-mat-6061]
+  tags: [first-article, cmm]
+  links: { jobs: [J-G002], machine: m-cmm }
+  source:
+    kind: manual
+    text: >-
+      The clamp support bracket in May was the first FAI program I wrote on my own. I built the alignment off the
+      two machined edges that were easiest to touch, not datums B and C on the print. Every hole position passed.
+      Linda checked my alignment against the print before she signed and made me redo it. Off the right datums the
+      parts still passed, but one hole went from the middle of the tolerance to near the edge. My first report was
+      measuring the wrong thing.
+    note: Entered by Priya; waiting on Linda's review.
+  created_on: "2026-05-29"

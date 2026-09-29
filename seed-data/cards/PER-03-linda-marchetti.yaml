@@ -1,6 +1,131 @@
 # Cards contributed by Linda Marchetti (PER-03). IDs KC-030..046 belong to this file.
 # Phase 1a holds the demo-critical cards (KC-034 and KC-038); the rest are added in Phase 1b.
+# Interview cards cite exact phrases from EXPERT turns of INT-05 / INT-06. Manual cards carry Linda's own words in
+# source.text (it becomes a manual-entry transcript turn). Numbers in title/statement/actions/conditions must appear
+# in that evidence.
 # Placeholder domain wording — for SME review.
+
+- id: KC-030
+  type: inspection_gotcha
+  status: approved
+  title: "New rev: balloon the new drawing from scratch, never from the old ballooned copy"
+  statement: >-
+    Never start a new revision from the old ballooned drawing. Balloon the new drawing from scratch and check our
+    numbers against the customer's characteristic list line by line before the CMM program gets touched. You can't
+    tell by looking at what changed whether they renumbered.
+  applies_when: ["new revision of a part we've run before"]
+  does_not_apply_when: ["repeat order on the same rev"]
+  rationale: "A customer can renumber every characteristic after a change, and nothing about the change tells you."
+  cues: ["a new rev letter on a part with an old job folder"]
+  actions:
+    - "balloon the new drawing from scratch"
+    - "check our balloon numbers against the customer's characteristic list line by line"
+    - "do it before the CMM program gets touched"
+  common_mistake: "Trusting the old folder: last rev's ballooned drawing and CMM program."
+  expert_confidence: always
+  topics: [t-fai-cmm, t-cus-01]
+  tags: [first-article, cmm]
+  links: { jobs: [J-A04], customer: CUS-01 }
+  source: { kind: interview, interview: INT-05 }
+  evidence:
+    - { turn: INT-05-T016, quote: "You can't tell by looking at what changed. That's the trap. So I never start a new rev from the old ballooned drawing. I balloon the new drawing from scratch and check our numbers against their characteristic list line by line before the CMM program gets touched.", confidence: true }
+    - { turn: INT-05-T018, quote: "A repeat order on the same rev, sure. Same drawing, same numbers, same program." }
+    - { turn: INT-05-T030, quote: "Trust the old folder." }
+  approved: { by: PER-03, on: "2026-06-26", mode: self }
+  created_on: "2026-06-25"
+
+- id: KC-031
+  type: inspection_gotcha
+  status: approved
+  title: "The CMM report isn't the first article: every note gets a balloon and a result"
+  statement: >-
+    Every note on the drawing is a characteristic — edge breaks, part marking, the finish, the material spec — and
+    gets a balloon. Anything the CMM can't measure still needs its own line with the result and how you checked it.
+    Most of the time a package comes back, it's a note nobody ballooned.
+  applies_when: ["any first article package"]
+  does_not_apply_when: []
+  rationale: null
+  cues: ["notes on the drawing with no balloon"]
+  actions:
+    - "balloon every note, not just the dimensions"
+    - "give everything the CMM can't measure its own line with the result and how you checked it (visual, gauge pin, profilometer, cert number)"
+  common_mistake: "Measuring every dimension perfectly and forgetting the notes and the certs."
+  expert_confidence: usually
+  topics: [t-fai-cmm]
+  tags: [first-article, cmm]
+  links: { jobs: [J-A04] }
+  source: { kind: interview, interview: INT-05 }
+  evidence:
+    - { turn: INT-05-T006, quote: "The notes are where people miss things — edge breaks, marking, the finish note, the material spec. Every one of those is a characteristic and gets a balloon." }
+    - { turn: INT-05-T020, quote: "Most of the time when a package comes back from anybody, it's a note nobody ballooned", confidence: true }
+    - { turn: INT-05-T020, quote: "The CMM report isn't the first article. Anything the CMM can't measure still needs its own line, with the result and how you checked it: visual, gauge pin, profilometer, the cert number." }
+    - { turn: INT-05-T030, quote: "They'll measure every dimension perfectly and forget the notes and the certs." }
+    - { turn: INT-05-T032, quote: "Every note gets a balloon and a result, not just the dimensions." }
+  approved: { by: PER-03, on: "2026-06-26", mode: self }
+  created_on: "2026-06-25"
+
+- id: KC-032
+  type: customer_quirk
+  status: approved
+  title: "Aerovance: no partial first article on a new rev; raw CMM printout behind the form"
+  statement: >-
+    Aerovance won't take a partial first article on a new revision, even if the only change is a note: every
+    characteristic gets measured again and reported, every time. They want the raw CMM printout behind their form,
+    with our balloon numbers on the printout too, so name the CMM features by balloon number.
+  applies_when: ["Aerovance part", "new revision"]
+  does_not_apply_when: ["repeat order on the same rev"]
+  rationale: "Their receiving inspection loads our numbers against their characteristic list; if they don't line up, they stop reading."
+  cues: ["a printout that says circle twelve where the form says balloon twenty-one"]
+  actions:
+    - "do a full first article on every new rev, even when only a note changed"
+    - "attach the raw CMM printout behind their form"
+    - "name the features in the CMM program by balloon number"
+  common_mistake: "Sending a partial first article because the rev only changed a note."
+  expert_confidence: always
+  topics: [t-cus-01, t-fai-cmm]
+  tags: [first-article, cmm]
+  links: { customer: CUS-01, jobs: [J-A04] }
+  source: { kind: interview, interview: INT-05 }
+  evidence:
+    - { turn: INT-05-T018, quote: "But a new rev, even if the only change is a note, gets a full first article. Aerovance won't take a partial first article on a new revision. Every characteristic gets measured again and reported, every time.", confidence: true }
+    - { turn: INT-05-T022, quote: "And they want the raw CMM printout behind the form, with our balloon numbers on the printout too." }
+    - { turn: INT-05-T022, quote: "So I name the features in the CMM program by balloon number." }
+    - { turn: INT-05-T014, quote: "Their receiving inspection loads our numbers against their characteristic list." }
+  approved: { by: PER-03, on: "2026-06-26", mode: self }
+  created_on: "2026-06-25"
+
+- id: KC-033
+  type: quoting_rule
+  status: approved
+  title: "First article time goes with the balloon count, not the size of the part"
+  statement: >-
+    First article time usually goes with the balloon count, not the size of the part. The harness clip is small and
+    has sixty-three balloons: about three hours all in on a new rev with a CMM program we could edit. A new part
+    number with no program, figure a full day. Ask quality for the balloon count and whether a program exists, and
+    quote the first article as its own time.
+  applies_when: ["part that needs a first article"]
+  does_not_apply_when: ["repeat order on the same rev"]
+  rationale: "Ballooning and checking the numbers take longer than the CMM run itself."
+  cues: ["a first article callout on the PO or the drawing"]
+  actions:
+    - "ask quality for the balloon count and whether a CMM program exists"
+    - "allow about three hours when there's a program to edit"
+    - "figure a full day for a new part number with no program"
+    - "quote the first article as its own time, not buried in the cycle"
+  common_mistake: "Guessing first article time from how big the part is."
+  thresholds:
+    - { quantity: first article time with a CMM program to edit, comparator: approx, value: 3, unit: h, verbatim: "about three hours all in" }
+  expert_confidence: usually
+  topics: [t-fai-cmm]
+  tags: [first-article, quoting, cmm]
+  links: { quotes: [Q-A04], jobs: [J-A04] }
+  source: { kind: interview, interview: INT-05 }
+  evidence:
+    - { turn: INT-05-T024, quote: "When it goes right, a first article like the harness clip is about three hours all in, and that's with a CMM program we could edit from rev C." }
+    - { turn: INT-05-T024, quote: "A new part number with no program, figure a full day. The time usually goes with the balloon count, not the size of the part. The harness clip is small and it has sixty-three balloons.", confidence: true }
+    - { turn: INT-05-T026, quote: "I tell him the balloon count and whether we already have a program. He quotes the first article as its own time, not buried in the cycle." }
+  approved: { by: PER-03, on: "2026-06-26", mode: self }
+  created_on: "2026-06-25"
 
 - id: KC-034
   type: inspection_gotcha
@@ -28,6 +153,96 @@
   approved: { by: PER-03, on: "2026-06-05", mode: self }
   created_on: "2026-06-03"
 
+- id: KC-035
+  type: failure_story
+  status: approved
+  title: "Harness clip rev D: new hole ballooned at the end, Aerovance kicked the package back"
+  statement: >-
+    On the harness clip rev D we started the first article from the rev C folder. The new hole went on at the end as
+    balloon sixty-three, but Aerovance had it as characteristic twenty-one and renumbered everything after it. Their
+    quality engineer kicked the whole package back the day after we sent it. The parts shipped on time, but redoing
+    it cost us most of two days.
+  applies_when: []
+  does_not_apply_when: []
+  rationale: null
+  cues: ["a new rev that adds a feature"]
+  actions: []
+  common_mistake: "Handing off a new rev without saying the customer renumbers."
+  expert_confidence: not_stated
+  topics: [t-fai-cmm, t-cus-01]
+  tags: [first-article, cmm]
+  links: { jobs: [J-A04], customer: CUS-01 }
+  source: { kind: interview, interview: INT-05 }
+  evidence:
+    - { turn: INT-05-T010, quote: "She pulled the rev C folder, the old ballooned drawing and the old CMM program, and worked from those." }
+    - { turn: INT-05-T010, quote: "She added the new hole at the end as balloon sixty-three, the way you'd do it on our own format. Aerovance had put it in as characteristic twenty-one and renumbered everything after it." }
+    - { turn: INT-05-T010, quote: "Friday morning their quality engineer kicked the whole package back." }
+    - { turn: INT-05-T010, quote: "The parts still shipped on time, but it cost us most of two days." }
+    - { turn: INT-05-T012, quote: "I handed it to her and didn't tell her Aerovance renumbers on a new rev." }
+  approved: { by: PER-03, on: "2026-06-26", mode: self }
+  created_on: "2026-06-25"
+
+- id: KC-036
+  type: inspection_gotcha
+  status: approved
+  title: "Let parts soak to room temperature on the granite before measuring anything tight"
+  statement: >-
+    Parts come off the machine warm, and a warm aluminum part measures big — two tenths big on a two-inch bore
+    straight off the machine. Anything under a thou of total tolerance soaks on the granite until it's at room
+    temperature: usually an hour for a small aluminum part, overnight for a big stainless block.
+  applies_when: ["total tolerance under a thou", "parts straight off the machine"]
+  does_not_apply_when: ["a loose part at plus or minus five thou"]
+  rationale: "Parts come off the machine warm, from the cut and the coolant, and a warm part measures big."
+  cues: ["\"the CMM's wrong\" on a part that just came off the machine"]
+  actions:
+    - "let the part soak on the granite until it's at room temperature"
+    - "leave a big stainless block overnight"
+  common_mistake: "Measuring a warm part and blaming the CMM."
+  thresholds:
+    - { quantity: total tolerance, comparator: "<", value: 0.001, unit: in, verbatim: "under a thou of total tolerance" }
+  expert_confidence: always
+  topics: [t-m-cmm, t-tight-tol]
+  tags: [cmm, tight-tolerance]
+  links: { machine: m-cmm }
+  source: { kind: interview, interview: INT-06 }
+  evidence:
+    - { turn: INT-06-T020, quote: "So I let parts soak on the granite until they're at room temperature before I measure anything tight. For a small aluminum part that's usually an hour. A big stainless block, I leave it overnight." }
+    - { turn: INT-06-T022, quote: "On a two-inch aluminum bore straight off the machine, I've seen two tenths big." }
+    - { turn: INT-06-T024, quote: "Anything under a thou of total tolerance always soaks, no arguments.", confidence: true }
+    - { turn: INT-06-T024, quote: "A loose part at plus or minus five thou, I'm not going to make the floor wait an hour for it." }
+  approved: { by: PER-03, on: "2026-08-06", mode: self }
+  created_on: "2026-08-05"
+
+- id: KC-037
+  type: inspection_gotcha
+  status: approved
+  title: "Align CMM programs to the print datums, never to the faces the part was clamped on"
+  statement: >-
+    Always align to the datums on the print, never to the faces the machinist clamped on. Align to how the part was
+    held and you're checking the machine's repeatability, not the part — every number on the report is perfect and
+    wrong.
+  applies_when: ["any CMM report that goes in the job folder as the inspection"]
+  does_not_apply_when: ["an in-process setup check run off the machinist's setup faces, marked setup check"]
+  rationale: "The print datums are how the part gets used."
+  cues: ["an alignment that uses a feature that isn't a datum", "a whole lot that comes out dead nominal"]
+  actions:
+    - "hold the program's alignment next to the datum frame on the print"
+    - "write setup check across the top of any report run off setup faces"
+  common_mistake: "Aligning the program to how the part sat in the vise."
+  expert_confidence: always
+  topics: [t-m-cmm, t-fai-cmm]
+  tags: [cmm, scrap]
+  links: { machine: m-cmm }
+  source: { kind: interview, interview: INT-06 }
+  evidence:
+    - { turn: INT-06-T014, quote: "Align to how the part was held and you're checking the machine's repeatability, not the part. The print datums are how the part gets used. So I always align to the datums on the print, never to the faces the machinist clamped on.", confidence: true }
+    - { turn: INT-06-T006, quote: "if you align to the wrong thing, every number on the report is perfect and wrong." }
+    - { turn: INT-06-T010, quote: "I aligned it to the top face and the first bore, because that's how the part sat in the vise." }
+    - { turn: INT-06-T016, quote: "Look at the alignment at the top of the program and hold it next to the datum frame on the print. If the alignment uses a feature that isn't a datum, stop and ask why. And be suspicious when a whole lot comes out dead nominal." }
+    - { turn: INT-06-T018, quote: "But that report never goes in the job folder as the inspection. I write setup check across the top of it." }
+  approved: { by: PER-03, on: "2026-08-06", mode: self }
+  created_on: "2026-08-05"
+
 - id: KC-038
   type: inspection_gotcha
   status: approved
@@ -53,3 +268,260 @@
     note: Entered by Linda after the manifold job.
   approved: { by: PER-03, on: "2026-05-14", mode: self }
   created_on: "2026-05-13"
+
+- id: KC-039
+  type: inspection_gotcha
+  status: approved
+  title: "Tight bores: scan or take at least eight points, never three"
+  statement: >-
+    Never take three points on a tight bore and call it round. A reamed or bored hole can come out lobed, and three
+    points can land right on the high spots — it reads perfect and it's out of round. On anything tight, scan the
+    bore or take at least eight points, at two depths.
+  applies_when: ["bores with a tight tolerance"]
+  does_not_apply_when: []
+  rationale: "Three points can sit on the high spots of a lobed hole."
+  cues: ["a tight bore that reads perfectly round from a few points"]
+  actions:
+    - "scan the bore"
+    - "or take at least eight points, at two depths"
+  common_mistake: "Taking three points on a bore and calling it round."
+  thresholds:
+    - { quantity: points on a tight bore, comparator: ">=", value: 8, unit: null, verbatim: "at least eight points" }
+  expert_confidence: always
+  topics: [t-m-cmm, t-tight-tol]
+  tags: [cmm, tight-tolerance]
+  links: { machine: m-cmm }
+  source: { kind: interview, interview: INT-06 }
+  evidence:
+    - { turn: INT-06-T030, quote: "Take three points on a bore and call it round. A reamed or bored hole can come out lobed, with high spots, and three points can land right on them. It reads perfect and it's out of round." }
+    - { turn: INT-06-T030, quote: "We saw that on a stainless valve body last year: three points said round, the scan said two tenths out." }
+    - { turn: INT-06-T030, quote: "On anything tight I always scan the bore, or take at least eight points, at two depths.", confidence: true }
+  approved: { by: PER-03, on: "2026-08-06", mode: self }
+  created_on: "2026-08-05"
+
+- id: KC-040
+  type: setup_tip
+  status: approved
+  title: "Hold parts on the CMM lightly, sitting the way the print datums say"
+  statement: >-
+    Hold the part as lightly as it'll let you — clay, a couple of light clamps, the fixture plate with the rests —
+    sitting the way the print datums say, datum A down on the rests if you can. Never clamp across a feature you're
+    measuring, and never hard enough to pull the part flat. On a part we'll see again, photograph the setup for the
+    program folder.
+  applies_when: ["any part going on the CMM"]
+  does_not_apply_when: []
+  rationale: "It has to sit so it can't move but isn't squeezed."
+  cues: ["a part that needs clamping to sit still"]
+  actions:
+    - "sit datum A down on the rests if you can"
+    - "never clamp across a feature you're measuring"
+    - "photograph the setup and put it in the program folder so the next run sits the same way"
+  common_mistake: "Clamping hard enough to pull the part flat."
+  expert_confidence: always
+  topics: [t-m-cmm, t-fai-cmm]
+  tags: [cmm, workholding]
+  links: { machine: m-cmm }
+  source: { kind: interview, interview: INT-06 }
+  evidence:
+    - { turn: INT-06-T026, quote: "As lightly as it'll let you. Clay, a couple of light clamps, the fixture plate with the rests. It has to sit the way the print datums say, datum A down on the rests if you can." }
+    - { turn: INT-06-T026, quote: "Never clamp across a feature you're measuring, and never clamp hard enough to pull the part flat.", confidence: true }
+    - { turn: INT-06-T026, quote: "If it's a part we'll see again, I take a photo of the setup and put it in the program folder, so the next run sits the same way." }
+  approved: { by: PER-03, on: "2026-08-06", mode: self }
+  created_on: "2026-08-05"
+
+- id: KC-041
+  type: machine_quirk
+  status: approved
+  title: "RP-Q01 CONTURA: check the air gauge and drain the filter bowl before the first run"
+  statement: >-
+    Since water got into RP-Q01's air line in the summer of 2023, always check its air pressure gauge and drain its
+    filter bowl first thing in the morning, before anything runs. When the pressure's low it moves rough and the
+    first readings wander.
+  applies_when: ["RP-Q01 CONTURA", "first run of the day"]
+  does_not_apply_when: []
+  rationale: "Water got into this unit's air line once; when the pressure's low it moves rough and the readings wander."
+  cues: ["low reading on the air pressure gauge", "water in the filter bowl", "first readings of the day wandering"]
+  actions:
+    - "check the air pressure gauge"
+    - "drain the filter bowl before anything runs"
+  common_mistake: "Blaming the part when the first readings of the day wander."
+  expert_confidence: always
+  topics: [t-m-cmm]
+  tags: [cmm]
+  links: { machine: m-cmm }
+  source:
+    kind: manual
+    text: >-
+      RP-Q01, the CONTURA — since the shop compressor's dryer quit in the summer of 2023 and put water in the CMM's
+      air line, I always check its air pressure gauge and drain its filter bowl first thing in the morning, before
+      anything runs. When the pressure's low it moves rough and the first readings wander. We put a second filter
+      on its line after that.
+    note: Hand-entered at the inspection room terminal.
+  classification: general
+  approved: { by: PER-03, on: "2025-04-16", mode: self }
+  created_on: "2025-04-14"
+
+- id: KC-042
+  type: customer_quirk
+  status: approved
+  title: "Halvorsen: check every heat treat and passivation cert against their approved sources"
+  statement: >-
+    Before a Halvorsen lot ships, check every heat treat and passivation cert: the vendor on their approved source
+    list, the spec and revision matching their PO, the part number and quantity matching our traveler. Their
+    receiving always checks the same things, and one wrong spec revision holds the whole lot at their dock.
+  applies_when: ["Halvorsen lot with heat treat or passivation"]
+  does_not_apply_when: []
+  rationale: "Their receiving checks every cert against their approved source list."
+  cues: ["a cert from a vendor or a spec revision you haven't seen on their POs"]
+  actions:
+    - "check the vendor against Halvorsen's approved source list"
+    - "match the spec and revision to the PO"
+    - "match the part number and quantity to our traveler"
+    - "get a wrong cert reissued before the lot ships, not after"
+  common_mistake: "Passing a vendor's cert through without checking it against the PO and the approved source list."
+  expert_confidence: always
+  topics: [t-cus-02, t-outside-proc]
+  tags: [outside-processing, heat-treat, traceability]
+  links: { customer: CUS-02 }
+  source:
+    kind: manual
+    text: >-
+      Halvorsen — before a lot ships I check every heat treat and passivation cert myself. The vendor has to be on
+      their approved source list, the spec and revision have to match their PO, and the part number and quantity
+      have to match our traveler. Their receiving always checks the same things, and one wrong spec revision on a
+      cert holds the whole lot at their dock. If a cert is wrong, I get the vendor to reissue it before we ship, not
+      after.
+    note: Entered by Linda.
+  approved: { by: PER-03, on: "2025-09-24", mode: self }
+  created_on: "2025-09-22"
+
+- id: KC-043
+  type: customer_quirk
+  status: approved
+  title: "Sutrella: finish on the working end every lot, every piece under the scope, no marking"
+  statement: >-
+    Sutrella checks surface finish on the working end of their 316 instruments at incoming, every lot, and looks at
+    every piece under magnification for burrs. Check finish on the first and last piece of every lot with the
+    profilometer, put every working end under the scope, not a sample, and never mark the part or use tape flags —
+    they reject for residue.
+  applies_when: ["Sutrella 316 instruments"]
+  does_not_apply_when: []
+  rationale: "They find a burr you can't feel with a fingernail."
+  cues: ["an instrument with a working end or a finish callout"]
+  actions:
+    - "check finish on the first and last piece of every lot with the profilometer"
+    - "look at every working end under the scope, not a sample"
+    - "no marker and no tape flags on the part"
+  common_mistake: "Inspecting a sample and flagging parts with tape."
+  expert_confidence: always
+  topics: [t-cus-03, t-mat-316]
+  tags: [medical, deburr, cleanliness]
+  links: { customer: CUS-03 }
+  source:
+    kind: manual
+    text: >-
+      Sutrella checks surface finish on the working end of their 316 instruments at incoming, every lot, and they look
+      at every piece under magnification for burrs. They'll find a burr you can't feel with a fingernail. So we always
+      check finish on the first and last piece of every lot with the profilometer, and every working end goes under
+      the scope here, not a sample. No marker on the part and no tape flags. They reject for residue.
+    note: Entered by Linda.
+  approved: { by: PER-03, on: "2025-11-21", mode: self }
+  created_on: "2025-11-19"
+
+- id: KC-044
+  type: customer_quirk
+  status: approved
+  title: "Graymoor source inspector: be ready to re-run any feature on the CMM while they watch"
+  statement: >-
+    Graymoor's source inspector always picks a few characteristics off the drawing and has us re-run them on the CMM
+    while they watch. Build the program so any feature can run by itself, named by its balloon number, and have the
+    first article parts, the ballooned drawing, the CMM reports and every cert laid out before they walk in.
+  applies_when: ["Graymoor", "source inspection on the first lot of a new part number"]
+  does_not_apply_when: []
+  rationale: "The week before ship is for getting ready for the inspector, not for finishing the first articles."
+  cues: ["a source inspection date on the schedule"]
+  actions:
+    - "build the CMM program so any feature can run by itself, named by its balloon number"
+    - "lay out the first article parts, ballooned drawing, CMM reports and certs before the inspector arrives"
+    - "keep drawings and reports in the inspection room while they're here"
+  common_mistake: "Having only a program for the whole part, so every characteristic they pick means running the whole part."
+  expert_confidence: always
+  topics: [t-cus-05, t-fai-cmm]
+  tags: [defense, first-article, cmm]
+  links: { customer: CUS-05, jobs: [J-A10] }
+  source:
+    kind: manual
+    text: >-
+      Graymoor's source inspector — Ray's right that the first articles have to be done a week before ship. On my
+      side that week is for getting ready for them. The first article parts, the ballooned drawing, the CMM reports
+      and every cert are laid out before they walk in. They always pick a few characteristics off the drawing and
+      have us re-run them on the CMM while they watch, so I build the program so any feature can run by itself,
+      named by its balloon number. On the manifold they picked five, and we had each one on the screen in a couple
+      of minutes. If all you have is a program for the whole part, you're running the whole part five times.
+      Drawings and reports stay in the inspection room while they're here.
+    note: Entered by Linda after the manifold job.
+  approved: { by: PER-03, on: "2026-07-22", mode: self }
+  created_on: "2026-07-20"
+
+- id: KC-045
+  type: quoting_rule
+  status: approved
+  title: "Heat-treated 17-4 with close bores: quote a CMM check at incoming and at final"
+  statement: >-
+    When a 17-4 part with close bores gets heat treated, quote inspection time twice: a CMM check at incoming from
+    the heat treater, before it goes back on a machine, and again at final. On the Halvorsen end cap I caught the
+    bores out of round at incoming.
+  applies_when: ["17-4 part with close bores and a heat treat callout"]
+  does_not_apply_when: []
+  rationale: "If the parts go straight back on the machine, nobody knows how much stock is left for the finish op."
+  cues: ["close bores plus a heat treat callout"]
+  actions:
+    - "quote a CMM check at incoming from the heat treater"
+    - "quote inspection again at final"
+    - "put the incoming check in the schedule, not squeezed in"
+  common_mistake: "Sending heat-treated parts straight back to the machine without an incoming check."
+  expert_confidence: always
+  topics: [t-outside-proc, t-mat-174ph, t-fai-cmm]
+  tags: [heat-treat, outside-processing, cmm, tight-tolerance]
+  links: { jobs: [J-A08] }
+  source:
+    kind: manual
+    text: >-
+      Anything that comes back from the heat treater gets a CMM check at incoming before it goes back on a machine.
+      On the Halvorsen end cap I caught the bores out of round at incoming. If they'd gone straight back on the
+      Genos, nobody would have known how much stock was left for the finish op. So when a 17-4 part with close bores
+      gets heat treated, I always want inspection quoted twice: once at incoming from the heat treater and once at
+      final. And the incoming check has to be in the schedule, not squeezed in.
+    note: Entered by Linda after the end cap job.
+  approved: { by: PER-03, on: "2025-12-12", mode: self }
+  created_on: "2025-12-10"
+
+- id: KC-046
+  type: inspection_gotcha
+  status: approved
+  title: "Sutrella drill guide: gauge-pin the guide bore from both ends, not just the CMM"
+  statement: >-
+    On the Sutrella drill guide, check the guide bore with gauge pins from both ends, not just the CMM from the top —
+    the stylus only reaches in so far. Do the final check after passivation, at room temperature.
+  applies_when: ["small, long bores like the drill guide's guide bore"]
+  does_not_apply_when: []
+  rationale: "A long bore can check fine at the top and be tight at the other end."
+  cues: ["a long bore that checks fine at the top on the CMM"]
+  actions:
+    - "check the guide bore with gauge pins from both ends"
+    - "do the final check after passivation, at room temperature"
+  common_mistake: "Trusting the CMM reading at the top of a long bore."
+  expert_confidence: always
+  topics: [t-mat-316, t-cus-03, t-tight-tol]
+  tags: [medical, tight-tolerance, cmm]
+  links: { jobs: [J-G051], customer: CUS-03 }
+  source:
+    kind: manual
+    text: >-
+      Sutrella drill guide — check the guide bore with gauge pins from both ends, not just the CMM from the top. The
+      stylus only reaches in so far. On the July lot the bore checked fine on the CMM at the top, and the pin wouldn't
+      go from the other end. Between that and thermal growth on the Swiss that morning, we re-measured everything and
+      offset. I always pin these from both ends now, after passivation, at room temperature.
+    note: Entered by Linda after the drill guide job.
+  approved: { by: PER-03, on: "2025-07-23", mode: self }
+  created_on: "2025-07-21"

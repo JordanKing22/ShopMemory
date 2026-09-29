@@ -1,0 +1,149 @@
+# Cards contributed by Devin Okafor (PER-06), Setup Machinist (trainee), hired 2026-03-09. IDs KC-068..072 belong
+# to this file. Devin sets up on the Haas mills and is learning from Marv and Tomás, so these are small, practical
+# setup lessons in his own words. All five are hand-entered (manual) cards: his words are in source.text, which
+# becomes the evidence. Numbers in title/statement/actions/conditions must also appear in source.text.
+# Placeholder domain wording — for SME review.
+
+- id: KC-068
+  type: setup_tip
+  status: approved
+  title: "Cutting soft jaws on the VF-4: clamp a spacer at the pressure you'll run"
+  statement: >-
+    When you cut soft jaws on the VF-4, always clamp a spacer between the jaws at the same vise pressure you'll run
+    the parts at, then cut the pocket. Cut them open and loose and the jaws close up different on the part.
+  applies_when: ["cutting soft jaws in the VF-4 vise"]
+  does_not_apply_when: []
+  rationale: "The jaws move when you crank down; cutting them clamped matches how they'll hold the part."
+  cues: ["parts sitting crooked in fresh soft jaws"]
+  actions: ["clamp a spacer at run pressure before cutting the jaw pocket"]
+  common_mistake: "Cutting the jaw pocket with the vise open."
+  expert_confidence: always
+  topics: [t-m-vf4, t-5ax-workholding, t-mat-7075]
+  tags: [workholding, vf4, aluminum]
+  links: { jobs: [J-A09], machine: m-vf4 }
+  source:
+    kind: manual
+    text: >-
+      When I cut soft jaws on the VF-4, I always clamp a spacer between the jaws at the same vise pressure I'm going
+      to run the parts at, then cut the pocket. Marv showed me on the 7075 spare brackets. Cut them open and loose
+      and the jaws close up different when you crank down on a part, and the brackets sit crooked.
+    note: Entered by Devin after the spare bracket job.
+  approved: { by: PER-06, on: "2026-06-10", mode: self }
+  created_on: "2026-06-08"
+
+- id: KC-069
+  type: setup_tip
+  status: approved
+  title: "Big 6061 plates on the VF-4: jack the middle before you clamp the second op"
+  statement: >-
+    On a big 6061 plate like the 12-inch chamber lid, put jack screws under the middle before you clamp for the
+    second op. Clamp only the edges and the plate bows up into the cutter, and the flatness is gone when you let
+    it go.
+  applies_when: ["large 6061 plate flipped for a second op on the VF-4"]
+  does_not_apply_when: ["small, thick plates that don't move in the clamps"]
+  rationale: "A plate held only at the edges bows under the cutter and springs back when it's let go."
+  cues: ["plate rocking or bowing when it's clamped at the edges"]
+  actions:
+    - "put jack screws under the middle of the plate before clamping for the second op"
+    - "snug the jacks by hand, just touching"
+    - "indicate the middle of the plate while you clamp"
+  common_mistake: "Cranking the jacks up like another clamp."
+  expert_confidence: always
+  topics: [t-m-vf4, t-5ax-workholding, t-cus-04]
+  tags: [workholding, vf4, aluminum, semiconductor]
+  links: { jobs: [J-A11], customer: CUS-04, machine: m-vf4 }
+  source:
+    kind: manual
+    text: >-
+      On the Quantrel chamber lid, a 12-inch 6061 plate, I put jack screws under the middle before I clamp for the
+      second op. Clamp just the edges and the plate bows up into the cutter, then springs back when you let it go
+      and your flatness is gone. Marv had me snug the jacks by hand, just touching, not cranked. I indicate the
+      middle while I clamp to see it doesn't move. I do it every time on the big plates now.
+    note: Entered by Devin after running the chamber lid job.
+  approved: { by: PER-06, on: "2026-06-26", mode: self }
+  created_on: "2026-06-24"
+
+- id: KC-070
+  type: setup_tip
+  status: draft
+  title: "ST-20 soft jaws: mark each jaw to the chuck slot it was bored in"
+  statement: >-
+    When you bore soft jaws on the ST-20, mark each jaw with the chuck slot it was bored in, so the jaws go back on
+    the same way for the next lot.
+  applies_when: ["bored soft jaws on the ST-20 that get saved for the next lot"]
+  does_not_apply_when: []
+  rationale: "Jaws bored in one set of slots only hold true in those slots."
+  cues: ["a box of bored jaws on the shelf for a repeat job"]
+  actions:
+    - "mark each jaw with the chuck slot it was bored in"
+    - "put the jaws back in the same slots for the next lot"
+  common_mistake: "Putting bored jaws back on in whatever slot they land in."
+  expert_confidence: not_sure
+  topics: [t-m-st20, t-mat-316]
+  tags: [workholding, st20, stainless]
+  links: { jobs: [J-G040], machine: m-st20 }
+  source:
+    kind: manual
+    text: >-
+      When I bore soft jaws on the ST-20 I mark each jaw 1, 2 and 3 with the chuck slot it was bored in, so they go
+      back on the same way for the next lot of the 316 adapters. I think that's enough that we don't have to re-bore
+      them, but I'm not sure. I need to ask Tomás if he takes a skim cut every time they go back on.
+    note: Draft entered by Devin during the adapter run; he wants to check it with Tomás before review.
+  open_questions: ["Do saved jaws need a skim cut every time they go back on, or is marking the slots enough?"]
+  created_on: "2026-09-08"
+
+- id: KC-071
+  type: machine_quirk
+  status: approved
+  title: "RP-M01 VF-4: aim the flood nozzles by hand when the vise sits at the left end"
+  statement: >-
+    On RP-M01, when the rotary is on and the vise sits at the left end of the table, the flood nozzles don't reach
+    the cut unless you bend them over. Always aim every nozzle at the cut by hand before cycle start.
+  applies_when: ["RP-M01 with the rotary table on and the vise at the left end"]
+  does_not_apply_when: []
+  rationale: "With the vise out at the left end, this machine's nozzles fall short and chips pack into the cut."
+  cues: ["chips packing in a pocket", "aluminum welding to the end mill"]
+  actions: ["aim every flood nozzle at the cut by hand before cycle start"]
+  common_mistake: "Trusting the nozzles where the last job left them."
+  expert_confidence: always
+  topics: [t-m-vf4, t-mat-6061]
+  tags: [vf4, aluminum]
+  links: { jobs: [J-I02], machine: m-vf4 }
+  source:
+    kind: manual
+    text: >-
+      Our VF-4, RP-M01: when the rotary table is on, the vise has to go at the left end of the table, and the flood
+      nozzles on this machine don't reach that far unless you bend them over. When I cut the VF-4 soft jaw set in
+      April, chips packed in the pocket and the end mill started welding aluminum before Marv showed me. Now I always
+      aim every nozzle at the cut by hand before I hit cycle start when the vise is on the left.
+    note: Entered by Devin after the soft jaw work order.
+  approved: { by: PER-06, on: "2026-04-20", mode: self }
+  created_on: "2026-04-15"
+
+- id: KC-072
+  type: failure_story
+  status: pending_review
+  title: "Gauge rack: I only touched off my own tools, and a swapped drill hit the jaw"
+  statement: >-
+    On the thread gauge rack I only touched off the tools I'd loaded myself. A drill had been swapped for a longer
+    one after the last job, and on the first part it came down long and went into the soft jaw. One jaw scrapped,
+    spindle checked out fine. Now I re-touch every tool in the program unless the tool sheet says it hasn't changed.
+  applies_when: []
+  does_not_apply_when: []
+  rationale: null
+  cues: ["a tool in the program that you didn't load yourself"]
+  actions: []
+  common_mistake: "Assuming the tools you didn't touch are still set from the last job."
+  expert_confidence: not_stated
+  topics: [t-m-vf4, t-mat-6061]
+  tags: [vf4, workholding]
+  links: { jobs: [J-I04], machine: m-vf4 }
+  source:
+    kind: manual
+    text: >-
+      Thread gauge rack in August. Someone had swapped the drill for a longer one after the last job and I didn't
+      know. I only touched off the tools I'd loaded myself. First part, the drill came down long and went into the
+      soft jaw. Nobody hurt, the spindle checked out fine, one jaw scrapped. Now I re-touch every tool in the
+      program unless the tool sheet says it hasn't changed since the last job.
+    note: Entered by Devin the week after; waiting on Marv's review.
+  created_on: "2026-08-12"

@@ -2,6 +2,234 @@
 # Phase 1a holds the demo-critical cards (KC-021 and KC-026); the rest are added in Phase 1b.
 # Placeholder domain wording — for SME review.
 
+- id: KC-013
+  type: setup_tip
+  status: approved
+  title: "Dovetail plate: lowest feature you cut at least 3/4 inch above the jaws"
+  statement: >-
+    On the DMU 50 dovetail plate, leave the blank tall enough that the lowest feature you cut sits at least 3/4 inch
+    above the top of the jaws. That's what our holders need to clear the jaws at the steepest tilt we run.
+  applies_when: ["part held in the dovetail plate on the DMU 50", "features that need a steep tilt"]
+  does_not_apply_when: ["every feature is on top and nothing needs a steep tilt", "a tall part — make a fixture instead"]
+  rationale: "Less clearance and you're betting on the sim; a lot more and the part sings on the finish passes."
+  cues: ["low features that need a steep tilt"]
+  actions:
+    - "measure from the top of the jaws to the lowest feature you cut, not to the bottom of the blank"
+    - "order the blank taller to suit"
+  common_mistake: "Measuring the clearance to the bottom of the blank instead of the lowest feature."
+  thresholds:
+    - { quantity: lowest cut feature above the top of the dovetail jaws, comparator: ">=", value: 0.75, unit: in, verbatim: "at least 3/4 inch above the top of the jaws" }
+  expert_confidence: usually
+  topics: [t-5ax-workholding, t-m-dmu50]
+  tags: [workholding, dmu, chatter]
+  links: { jobs: [J-I01], parts: [PRT-I01], machine: m-dmu50 }
+  source: { kind: interview, interview: INT-03 }
+  evidence:
+    - { turn: INT-03-T018, quote: "I want the part at least 3/4 inch above the top of the jaws. That's what our holders need to clear the jaws at the steepest tilt we run." }
+    - { turn: INT-03-T020, quote: "From the top of the dovetail jaws to the lowest feature you have to cut on the part. Not to the bottom of the blank." }
+    - { turn: INT-03-T022, quote: "Most of the time I stick to it.", confidence: true }
+    - { turn: INT-03-T022, quote: "If every feature is on top and nothing needs a steep tilt, I'll grab it lower so I can run shorter tools. And if the part is tall, I'd rather make a fixture than leave it hanging up in the air on an eighth of an inch of dovetail." }
+    - { turn: INT-03-T034, quote: "It's 3/4 inch to the lowest feature you cut, not to the part." }
+  approved: { by: PER-02, on: "2026-07-24", mode: self }
+  created_on: "2026-07-22"
+
+- id: KC-014
+  type: setup_tip
+  status: approved
+  title: "Probe the dovetail plate every time it goes back on the DMU, then probe the blank"
+  statement: >-
+    Every time the dovetail plate goes back on the DMU 50 table, probe the center bore for X and Y and the top face
+    for Z before the first part, then probe the blank. Never trust the old work offset, even if the plate went back
+    on the same dowels.
+  applies_when: ["the dovetail plate goes back on the DMU 50"]
+  does_not_apply_when: []
+  rationale: "The plate sits the same way every time; saw-cut blanks are never the same height, and a shallow dovetail drops the part and eats your clearance."
+  cues: ["the plate just went back on the table", "a new batch of saw-cut blanks"]
+  actions: ["probe the center bore for X and Y", "probe the top face for Z", "probe each blank before cutting"]
+  common_mistake: "Trusting the old work offset because the plate went back on the same dowels."
+  expert_confidence: always
+  topics: [t-5ax-workholding, t-m-dmu50]
+  tags: [probing, workholding, dmu]
+  links: { jobs: [J-I01], machine: m-dmu50 }
+  source: { kind: interview, interview: INT-03 }
+  evidence:
+    - { turn: INT-03-T024, quote: "Every time the plate goes back on the table, I probe it.", confidence: true }
+    - { turn: INT-03-T024, quote: "The bore in the middle and the top face, before the first part. I never trust the old work offset, even if the plate went back on the same dowels." }
+    - { turn: INT-03-T026, quote: "The bore gives me X and Y, the top face gives me Z, and the plate is the one thing that sits the same way every time. Then I probe the blank too, because saw-cut blanks are never the same height." }
+  approved: { by: PER-02, on: "2026-07-24", mode: self }
+  created_on: "2026-07-22"
+
+- id: KC-015
+  type: failure_story
+  status: approved
+  title: "New dovetail plate: holder clipped it on the dry run; the sim still had the old vise"
+  statement: >-
+    Dry running the new dovetail plate on the DMU 50, the holder clipped the corner of the plate at full tilt. Jonah's
+    CAM sim still had the old vise in it, not the plate. The rapid was turned way down, so it was a scuffed holder and
+    a gouge in the plate, not a crash. We put the real plate model in the sim and moved two toolpaths.
+  applies_when: []
+  does_not_apply_when: []
+  rationale: null
+  cues: ["a new fixture going under a program that ran on the old one"]
+  actions: []
+  common_mistake: "Trusting the sim without asking what fixture is in it."
+  expert_confidence: not_stated
+  topics: [t-5ax-workholding, t-cam, t-m-dmu50]
+  tags: [workholding, cam, dmu]
+  links: { jobs: [J-I01], parts: [PRT-I01], machine: m-dmu50 }
+  source: { kind: interview, interview: INT-03 }
+  evidence:
+    - { turn: INT-03-T010, quote: "At full tilt the holder clipped the corner of the plate. I had the rapid turned way down and my hand on feed hold, so it was a scuffed holder and a gouge in the plate, not a crash. Jonah's CAM sim still had the old vise in it, not the plate. We put the real plate model in the sim, moved two toolpaths, and the first real part ran clean the next morning." }
+    - { turn: INT-03-T012, quote: "It clipped because I trusted the sim. Nobody checked what fixture was in it." }
+    - { turn: INT-03-T030, quote: "I dry run every new fixture at the steepest tilt, rapid turned way down, hand on feed hold." }
+  approved: { by: PER-02, on: "2026-07-24", mode: self }
+  created_on: "2026-07-22"
+
+- id: KC-016
+  type: quoting_rule
+  status: approved
+  title: "A new 5-axis fixture goes on its own quote line: making it and proving it"
+  statement: >-
+    When a 5-axis job needs a new fixture, put the fixture on its own line so it doesn't hide in the setup hours:
+    making it, and proving it on the machine. The dovetail plate was about six hours on the VF-4, and proving it took
+    most of a shift on the DMU.
+  applies_when: ["5-axis job that needs a new fixture"]
+  does_not_apply_when: ["the part fits the dovetail plate we already have"]
+  rationale: "A new fixture is real work: making it and proving it."
+  cues: ["a 5-axis part that won't fit a fixture we already own"]
+  actions: ["put the fixture on its own line", "include the time to prove it on the machine"]
+  common_mistake: "Letting the fixture hide in the setup hours."
+  expert_confidence: usually
+  topics: [t-quoting, t-5ax-workholding]
+  tags: [quoting, workholding]
+  links: { jobs: [J-I01], parts: [PRT-I01], machine: m-dmu50 }
+  source: { kind: interview, interview: INT-03 }
+  evidence:
+    - { turn: INT-03-T028, quote: "A new fixture is real work: making it, and proving it on the machine. The dovetail plate was about six hours on the VF-4, and proving it took most of a shift on the DMU." }
+    - { turn: INT-03-T028, quote: "When somebody quotes a 5-axis job that needs a new fixture, I usually tell them to put the fixture on its own line, so it doesn't hide in the setup hours.", confidence: true }
+    - { turn: INT-03-T028, quote: "If the part fits the plate we already have, there's no fixture line." }
+  approved: { by: PER-02, on: "2026-07-24", mode: self }
+  created_on: "2026-07-22"
+
+- id: KC-017
+  type: setup_tip
+  status: approved
+  title: "Anodized 7075, unmasked tight bores: finish high by what the coat takes off"
+  statement: >-
+    On 7075 where dimensions apply after anodize and the bores aren't masked, finish tight bores on the high side:
+    aim for the low limit plus what the coat takes off the diameter, plus a tenth. On the hinge bracket our
+    anodizer's coat closed a bore up about four tenths on the diameter.
+  applies_when: ["7075 part where dimensions apply after anodize", "tight bore with no masking note"]
+  does_not_apply_when: ["bores masked for anodize — finish to print", "a different finish, like chem film — ask again"]
+  rationale: "The coat grows in from all the way around a bore, so the diameter loses twice what the coat grows on one side."
+  cues: ["a finish note that says after anodize or after finish", "no masking note on the bores"]
+  actions:
+    - "get the growth number from the anodizer for that callout"
+    - "aim for the low limit plus what the coat takes off the diameter, plus a tenth"
+    - "set it before the first piece"
+  common_mistake: "Cutting to the model's nominal size instead of reading the print notes."
+  thresholds:
+    - { quantity: bore diameter lost to this anodize coat, comparator: approx, value: 0.0004, unit: in, verbatim: "about four tenths on the diameter" }
+  expert_confidence: always
+  topics: [t-mat-7075, t-tight-tol, t-m-dmu50]
+  tags: [aluminum, outside-processing, tight-tolerance, dmu]
+  links: { jobs: [J-A05], machine: m-dmu50 }
+  source: { kind: interview, interview: INT-04 }
+  evidence:
+    - { turn: INT-04-T010, quote: "The print says dimensions apply after anodize, and the hinge bores aren't masked. Our anodizer's number for this coat is about two tenths a side, so a bore closes up about four tenths on the diameter." }
+    - { turn: INT-04-T020, quote: "If there's no masking note and the bore is tight, I always finish it on the high side. I aim for the low limit plus what the coat takes off the diameter, plus a tenth.", confidence: true }
+    - { turn: INT-04-T018, quote: "From our anodizer, for this callout on 7075. It's their number, not mine." }
+    - { turn: INT-04-T022, quote: "If the bores are masked, finish to print. And if the finish is something else, like chem film, you ask again." }
+    - { turn: INT-04-T014, quote: "In a bore it grows in from all the way around, so the diameter loses twice what the coat grows on one side." }
+  approved: { by: PER-02, on: "2026-08-17", mode: self }
+  created_on: "2026-08-13"
+
+- id: KC-018
+  type: setup_tip
+  status: approved
+  title: "Hinge bracket: machine the edge breaks at tilt before the part leaves the dovetail"
+  statement: >-
+    On the hinge bracket, put the edge breaks in the CAM program: a small chamfer mill runs every edge it can reach at
+    tilt while the part is still in the dovetail, and hand deburr is only what's left. It took hand deburr from about
+    six minutes a part to under two.
+  applies_when: ["part held in the dovetail on the DMU 50", "edges the chamfer mill can reach at tilt"]
+  does_not_apply_when: []
+  rationale: "At tilt the chamfer mill reaches the back side of the hinge lugs, where hand tools ding the bores. Once the part is off the dovetail you've lost your locating."
+  cues: ["edges on the back side of the lugs"]
+  actions:
+    - "put the edge breaks in the CAM program with a small chamfer mill"
+    - "do the edge breaks before the part comes off the plate"
+    - "hand deburr only what's left"
+  common_mistake: "Deburring by hand after the part is off the machine and dinging the hinge bores."
+  expert_confidence: always
+  topics: [t-m-dmu50, t-cam]
+  tags: [deburr, cam, dmu]
+  links: { jobs: [J-A05], machine: m-dmu50 }
+  source: { kind: interview, interview: INT-04 }
+  evidence:
+    - { turn: INT-04-T024, quote: "On the hinge bracket I put the edge breaks in the CAM program. A small chamfer mill runs every edge it can reach at tilt, while the part is still in the dovetail. Hand deburr is only what's left after that. It took the hand deburr from about six minutes a part to under two, and the edges all look the same." }
+    - { turn: INT-04-T026, quote: "At tilt the chamfer mill gets to the back side of the hinge lugs. By hand you can't reach in there without dinging a bore. And once the part is off the dovetail you've lost your locating." }
+    - { turn: INT-04-T026, quote: "I always do the edge breaks before the part comes off the plate.", confidence: true }
+  approved: { by: PER-02, on: "2026-08-17", mode: self }
+  created_on: "2026-08-13"
+
+- id: KC-019
+  type: failure_story
+  status: approved
+  title: "Hinge bracket first piece: bores finished without the anodize allowance"
+  statement: >-
+    On the first piece of the 7075 hinge bracket I finished the hinge bores a couple tenths over the low limit, where I
+    always finish a bore, without reading the finish note. The print says dimensions apply after anodize and the bores
+    aren't masked, so they'd have come back under the low limit. Linda caught it at first piece; we opened the piece
+    up and moved the offset for the rest. About half an hour lost, no scrap.
+  applies_when: []
+  does_not_apply_when: []
+  rationale: null
+  cues: ["a finish note that says dimensions apply after anodize"]
+  actions: []
+  common_mistake: "Cutting the first piece before reading the finish notes."
+  expert_confidence: not_stated
+  topics: [t-mat-7075, t-cus-01, t-m-dmu50]
+  tags: [aluminum, outside-processing, first-article, dmu]
+  links: { quotes: [Q-A05], jobs: [J-A05], customer: CUS-01, machine: m-dmu50 }
+  source: { kind: interview, interview: INT-04 }
+  evidence:
+    - { turn: INT-04-T002, quote: "The access panel hinge bracket. 7075, forty pieces, anodized after machining." }
+    - { turn: INT-04-T008, quote: "I finished the two hinge bores where I always finish a bore, a couple tenths over the low limit. Linda looked at it and asked me where the anodize was going to go. I hadn't read the note." }
+    - { turn: INT-04-T010, quote: "My bores would have come back under the low limit. We opened the first piece up and moved the offset for the rest. That cost me about half an hour. No scrap." }
+    - { turn: INT-04-T012, quote: "Linda caught it at first piece, before the lot ran." }
+  approved: { by: PER-02, on: "2026-08-17", mode: self }
+  created_on: "2026-08-13"
+
+- id: KC-020
+  type: quoting_rule
+  status: approved
+  title: "5-axis bracket that fits our dovetail plate: three and a half hours of setup holds"
+  statement: >-
+    On a 5-axis bracket that fits the dovetail plate we already have, three and a half hours of setup usually holds:
+    load the plate, probe it, prove the program at tilt, first piece to Linda. If it needs soft jaws cut or a new
+    fixture, that's more setup and it goes in the quote.
+  applies_when: ["5-axis bracket that fits the existing dovetail plate on the DMU 50"]
+  does_not_apply_when: ["the bracket needs soft jaws cut", "the bracket needs a new fixture"]
+  rationale: "Ray asks the 5-axis lead before he quotes a 5-axis job, and that's why his setup numbers hold."
+  cues: ["a 5-axis bracket that fits the dovetail plate"]
+  actions:
+    - "quote about three and a half hours of setup when the part fits the dovetail plate"
+    - "add setup for soft jaws or a new fixture"
+    - "ask the 5-axis lead before quoting a 5-axis job"
+  common_mistake: "Using the plate setup number for a part that needs its own jaws or fixture."
+  expert_confidence: usually
+  topics: [t-quoting, t-5ax-workholding, t-m-dmu50]
+  tags: [quoting, workholding, dmu]
+  links: { quotes: [Q-A05], jobs: [J-A05], machine: m-dmu50 }
+  source: { kind: interview, interview: INT-04 }
+  evidence:
+    - { turn: INT-04-T010, quote: "Ray gave me three and a half hours of setup and that's what it took." }
+    - { turn: INT-04-T028, quote: "Load the plate, probe it, prove the program at tilt, first piece to Linda. On a bracket that fits the plate, three and a half hours of setup usually holds.", confidence: true }
+    - { turn: INT-04-T028, quote: "If a bracket like this needs soft jaws cut, or a new fixture, that's more setup, and it should be in the quote. Ray asks me before he quotes a 5-axis job, and that's why his setup numbers hold." }
+  approved: { by: PER-02, on: "2026-08-17", mode: self }
+  created_on: "2026-08-13"
+
 - id: KC-021
   type: failure_story
   status: approved
@@ -28,6 +256,122 @@
   approved: { by: PER-02, on: "2025-12-15", mode: self }
   created_on: "2025-12-12"
 
+- id: KC-022
+  type: machine_quirk
+  status: approved
+  title: "RP-M03 DMU 50: on winter mornings, warm up B and C before compound-angle work"
+  statement: >-
+    RP-M03 sits closest to the dock door. On winter mornings, always run the axis warm-up program that swings B and C
+    through full travel for twenty minutes, then probe the part, before any compound-angle work. Cold, the first part
+    comes out a few tenths off location.
+  applies_when: ["RP-M03 on a winter morning", "features cut at compound angles"]
+  does_not_apply_when: []
+  rationale: "This machine sits by the dock door and runs cold first thing."
+  cues: ["the first compound-angle part of the morning is off location"]
+  actions: ["run the axis warm-up program for twenty minutes", "probe the part before the first cut"]
+  common_mistake: "Cutting the first compound-angle part on a cold machine."
+  expert_confidence: always
+  topics: [t-m-dmu50, t-tight-tol]
+  tags: [warm-up, dmu, probing]
+  links: { machine: m-dmu50 }
+  source:
+    kind: manual
+    text: >-
+      RP-M03, our DMU 50, sits closest to the dock door. On winter mornings the first part cut at compound angles comes
+      out a few tenths off location until the machine warms up. We always run the axis warm-up program first — it
+      swings B and C through full travel for twenty minutes — and then I probe the part before the first cut.
+    note: Entered by Marv after a cold week in January.
+  classification: general
+  approved: { by: PER-02, on: "2025-01-30", mode: self }
+  created_on: "2025-01-27"
+
+- id: KC-023
+  type: machine_quirk
+  status: approved
+  title: "RP-M03 DMU 50: re-qualify the spindle probe after any bump or stylus change"
+  statement: >-
+    Since RP-M03's spindle service in 2024, always re-qualify the spindle probe on the ring gauge after any bump, even
+    a light one, and after every stylus change. In 2025 a light tap on a clamp threw it about two thou off in X, and it
+    looked fine.
+  applies_when: ["RP-M03 spindle probe after a bump or a stylus change"]
+  does_not_apply_when: []
+  rationale: "A probe can look fine and still read off after a light tap."
+  cues: ["a bore off location with no other explanation", "the probe touched something it shouldn't have"]
+  actions: ["re-qualify the probe on the ring gauge before anything else runs"]
+  common_mistake: "Trusting a probe that looks fine after a light tap."
+  expert_confidence: always
+  topics: [t-m-dmu50]
+  tags: [probing, dmu]
+  links: { machine: m-dmu50 }
+  source:
+    kind: manual
+    text: >-
+      RP-M03 — since the spindle service in 2024, re-qualify the spindle probe on the ring gauge after any bump, even a
+      light one, and after every stylus change. Right after the service it read off until we re-qualified it. In 2025
+      it took a light tap on a clamp, looked fine, and read about two thou off in X. We found out when a bore came out
+      off location. Now it always gets re-qualified before anything else runs.
+    note: Entered by Marv after the probe tap.
+  classification: general
+  approved: { by: PER-02, on: "2025-06-18", mode: self }
+  created_on: "2025-06-16"
+
+- id: KC-024
+  type: machine_quirk
+  status: approved
+  title: "RP-M01 VF-4: re-find the rotary's A-axis center every time it goes back on"
+  statement: >-
+    Every time the rotary table goes back on RP-M01, sweep the face and re-find the A-axis center with the probe. Since
+    we added it in 2016 it has never gone back in the same place twice. Don't take heavy cuts with the rotary brake off.
+  applies_when: ["RP-M01 with the rotary table back on"]
+  does_not_apply_when: []
+  rationale: "The rotary comes off and goes back on a lot, and it never lands in the same place."
+  cues: ["the rotary table just went back on"]
+  actions: ["sweep the rotary face", "re-find the A-axis center with the probe", "keep the brake on for heavy cuts"]
+  common_mistake: "Using the A-axis center from the last time the rotary was on."
+  expert_confidence: always
+  topics: [t-m-vf4]
+  tags: [probing, vf4]
+  links: { machine: m-vf4 }
+  source:
+    kind: manual
+    text: >-
+      RP-M01, the VF-4: the rotary table we added in 2016 comes off and goes back on a lot. Every time it goes back on,
+      sweep the face and re-find the A-axis center with the probe. It has never gone back in the same place twice. And
+      don't take heavy cuts with the rotary brake off. It'll walk.
+    note: Entered by Marv for the Haas cell.
+  classification: general
+  approved: { by: PER-02, on: "2024-05-15", mode: self }
+  created_on: "2024-05-13"
+
+- id: KC-025
+  type: machine_quirk
+  status: approved
+  title: "RP-M04 Genos: keep vises off the far-left T-slot since the 2023 crash"
+  statement: >-
+    Since the 2023 crash, RP-M04's far-left T-slot has a peened edge and a vise bolted there rocks. Put vises on the
+    middle slots; if you have to use the left one, indicate the vise and shim it. Always indicate a vise after you
+    bolt it down on this machine.
+  applies_when: ["bolting a vise to RP-M04's table"]
+  does_not_apply_when: []
+  rationale: "The crash peened the slot edge; stoning it didn't fully fix it."
+  cues: ["a vise that rocks or won't indicate flat"]
+  actions: ["put vises on the middle T-slots", "indicate and shim a vise on the left slot", "indicate every vise after bolting it down"]
+  common_mistake: "Bolting a vise to the first open slot without indicating it."
+  expert_confidence: always
+  topics: [t-m-genos]
+  tags: [genos, workholding]
+  links: { machine: m-genos }
+  source:
+    kind: manual
+    text: >-
+      RP-M04, the Genos: the crash in 2023 that took out the spindle also peened the edge of the far-left T-slot. We
+      stoned it, but a vise bolted there still rocks. Put your vises on the middle slots. If you have to use the left
+      one, indicate the vise and shim it. Always indicate a vise after you bolt it down on that machine.
+    note: Entered by Marv after the spindle rebuild.
+  classification: general
+  approved: { by: PER-02, on: "2023-11-08", mode: self }
+  created_on: "2023-11-06"
+
 - id: KC-026
   type: setup_tip
   status: approved
@@ -53,3 +397,98 @@
     note: Entered by Marv after the manifold job.
   approved: { by: PER-02, on: "2026-05-12", mode: self }
   created_on: "2026-05-11"
+
+- id: KC-027
+  type: machine_quirk
+  status: approved
+  title: "RP-M07 wire EDM: set thick 17-4 up for our weak lower flush"
+  statement: >-
+    RP-M07's lower flushing has been weak since we bought it used in 2013. On 17-4 over two inches thick, set the
+    flattest face down on the lower nozzle, bring the upper nozzle right down to the part, and run the first pass
+    slower than the book. When it breaks wire on thick 17-4, it's usually the flushing, not the wire.
+  applies_when: ["RP-M07 wire EDM", "17-4 over two inches thick"]
+  does_not_apply_when: []
+  rationale: "The lower flush on this unit can't clear the gap on thick stock unless the part seals against it."
+  cues: ["wire breaks on thick 17-4"]
+  actions:
+    - "set the flattest face down on the lower nozzle"
+    - "bring the upper nozzle right down to the part"
+    - "run the first pass slower than the book"
+  common_mistake: "Blaming the wire and changing spools when it's the flushing."
+  thresholds:
+    - { quantity: 17-4 stock thickness, comparator: ">", value: 2, unit: in, verbatim: "over two inches thick" }
+  expert_confidence: usually
+  topics: [t-m-wedm, t-mat-174ph]
+  tags: [wire-edm, stainless]
+  links: { machine: m-wedm }
+  source:
+    kind: manual
+    text: >-
+      RP-M07, the wire EDM: the lower flushing has been weak since we bought it used in 2013. On 17-4 over two inches
+      thick, set the part with its flattest face down on the lower nozzle, bring the upper nozzle right down to the
+      part, and run the first pass slower than the book. When it breaks wire on thick 17-4, it's usually the flushing,
+      not the wire.
+    note: Entered by Marv for the EDM corner.
+  classification: general
+  approved: { by: PER-02, on: "2024-09-11", mode: self }
+  created_on: "2024-09-09"
+
+- id: KC-028
+  type: customer_quirk
+  status: approved
+  title: "Halvorsen housings: machine the edge breaks on bearing bores and sealing faces"
+  statement: >-
+    Halvorsen's incoming inspection rejects hand-blended edges on the bearing bores and the sealing faces. Always
+    machine those edge breaks with a chamfer mill on the DMU 50; hand deburr only the outside edges, and never with a
+    file near a bore.
+  applies_when: ["Halvorsen housing with bearing bores or sealing faces"]
+  does_not_apply_when: []
+  rationale: null
+  cues: ["bearing bores or sealing faces on a Halvorsen print"]
+  actions:
+    - "program the edge breaks on bores and sealing faces with a chamfer mill"
+    - "hand deburr only the outside edges"
+    - "keep files away from the bores"
+  common_mistake: "Blending a bore edge by hand because it's faster."
+  expert_confidence: always
+  topics: [t-cus-02, t-m-dmu50]
+  tags: [deburr, dmu]
+  links: { customer: CUS-02, jobs: [J-G033], machine: m-dmu50 }
+  source:
+    kind: manual
+    text: >-
+      Halvorsen housings: their incoming inspection rejects hand-blended edges on the bearing bores and the sealing
+      faces. Every edge break there gets machined. I always program them with a chamfer mill on the DMU. Hand deburr is
+      only for the outside edges, and never with a file near a bore.
+    note: Entered by Marv after the bearing housing run.
+  approved: { by: PER-02, on: "2026-08-20", mode: self }
+  created_on: "2026-08-17"
+
+- id: KC-029
+  type: customer_quirk
+  status: approved
+  title: "Quantrel: no rework without their written OK, not even a re-cut"
+  statement: >-
+    Quantrel doesn't allow rework without their written OK — not even re-cutting a missed chamfer or a floor left a
+    thou shallow. Stop, tag the part, and have Linda ask them first. A reworked part they didn't approve is a reject,
+    even if it measures good.
+  applies_when: ["any Quantrel part that's off"]
+  does_not_apply_when: []
+  rationale: "Our habit is to put the part back in and fix it; with Quantrel that turns a fixable part into a reject."
+  cues: ["a Quantrel part that missed a feature or a size"]
+  actions: ["stop and tag the part", "have Linda get Quantrel's written OK before any rework"]
+  common_mistake: "Putting the part back in and fixing it, like we would for anyone else."
+  expert_confidence: always
+  topics: [t-cus-04]
+  tags: [rework, semiconductor]
+  links: { customer: CUS-04, jobs: [J-G071] }
+  source:
+    kind: manual
+    text: >-
+      Quantrel: no rework without their written OK. Not even re-cutting a chamfer you missed or a floor you left a thou
+      shallow. Our habit is to put the part back in and fix it. With Quantrel you stop, tag the part, and Linda asks
+      them first. A reworked part they didn't approve is a reject, even if it measures good. It's in red at the top of
+      the router on every Quantrel job, like the clamp ring base plates we ran in March. Always ask first.
+    note: Entered by Marv after the clamp ring base plates.
+  approved: { by: PER-02, on: "2026-03-27", mode: self }
+  created_on: "2026-03-25"
