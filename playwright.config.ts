@@ -38,8 +38,11 @@ export default defineConfig({
   reporter: "list",
   use: {
     baseURL: "http://127.0.0.1:3100",
-    // Deliberately non-UTC so tests catch dates formatted without timeZone: 'UTC' (PLAN.md §12).
-    timezoneId: "America/Chicago",
+    // Deliberately non-UTC and different from the server's TZ (America/Chicago, scripts/e2e-server.mts). A date formatted
+    // without timeZone: 'UTC' then renders differently on the server and in the browser. In a client component that shows
+    // up as a hydration error, which routes-smoke catches. Keep this zone east of UTC while the server stays west of it
+    // (PLAN.md §12).
+    timezoneId: "Asia/Tokyo",
     locale: "en-US",
     // No traces/videos: they would write page and AI stream content to disk (CLAUDE.md hard rule 2).
     trace: "off",

@@ -52,6 +52,7 @@ export const CAPABILITIES = [
   "fullExport",
   "fullDelete",
   "generateDocuments",
+  "searchLibrary",
 ] as const;
 export type Capability = (typeof CAPABILITIES)[number];
 
@@ -71,6 +72,8 @@ const CAPABILITY_MATRIX: Record<Capability, Record<Role, boolean>> = {
   fullExport: { owner: true, quoter: false, machinist: false, trainee: false },
   fullDelete: { owner: true, quoter: false, machinist: false, trainee: false },
   generateDocuments: { owner: true, quoter: true, machinist: true, trainee: false },
+  // Knowledge Library search (a read-only Server Action; results are role-projected by the data layer).
+  searchLibrary: { owner: true, quoter: true, machinist: true, trainee: true },
 };
 
 /** Capabilities that DEMO_OPEN_CONTROLS opens to every persona. Full export/delete never open up. */

@@ -1145,6 +1145,9 @@ export function buildSeedBundle(sources: SeedSources, opts: BuildOptions = {}): 
       sortOrder: i + 1,
     })),
     tags: p.tags.map(({ value: t }) => ({ id: t.id, label: t.label, topicId: t.topic, synonyms: t.synonyms })),
+    // Explicit IDs in file order: part of the bundle hash, and a reset that skipped this table would fail on a duplicate
+    // key instead of silently doubling the groups.
+    searchSynonymGroups: p.synonyms.map((terms, i) => ({ id: i + 1, terms })),
     personTopicExpertise: p.matrix.rows.flatMap((row) =>
       p.matrix!.personIds.map((pid, j) => ({
         personId: pid,

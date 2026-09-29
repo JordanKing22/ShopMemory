@@ -13,7 +13,7 @@ async function seriousViolations(page: Page): Promise<string[]> {
     .map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`);
 }
 
-/** Detail routes and a bad ID for each; the first whose list page is built is used. */
+/** Every detail route with a bad ID (Phase 2 builds all four). */
 const DETAIL_ROUTES = [
   { list: "/library", bad: "/library/KC-999" },
   { list: "/jobs", bad: "/jobs/RJ-00-0000" },
@@ -21,24 +21,21 @@ const DETAIL_ROUTES = [
   { list: "/machines", bad: "/machines/m-no-such-machine" },
 ];
 
-test("a bad record ID renders Record not found inside the app shell", async ({ page, request }) => {
-  let target: string | undefined;
-  for (const r of DETAIL_ROUTES) {
-    if ((await request.get(r.list, { maxRedirects: 0 })).status() === 200) {
-      target = r.bad;
-      break;
-    }
-  }
-  test.skip(!target, "No detail route is built yet (pages land later in Phase 2).");
+for (const r of DETAIL_ROUTES) {
+  test(`a bad record ID (${r.bad}) renders Record not found inside the app shell`, async ({ page, request }) => {
+    const built = (await request.get(r.list, { maxRedirects: 0 })).status() === 200;
+    test.skip(!built, `${r.list} is not built yet.`);
 
-  const res = await page.goto(target!);
-  expect(res?.status()).toBe(404);
-  await expect(page.getByRole("heading", { level: 1, name: "Record not found" })).toBeVisible();
-  await expect(page.locator("[data-provider-badge]")).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "Main" }).first()).toBeVisible();
-  await expect(page.locator("[data-fictional-banner]")).toHaveCount(1);
-  expect(await seriousViolations(page)).toEqual([]);
-});
+    const res = await page.goto(r.bad);
+    expect(res?.status()).toBe(404);
+    await expect(page.getByRole("heading", { level: 1, name: "Record not found" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
+    await expect(page.locator("[data-provider-badge]")).toBeVisible();
+    await expect(page.getByRole("navigation", { name: "Main" }).first()).toBeVisible();
+    await expect(page.locator("[data-fictional-banner]")).toHaveCount(1);
+    expect(await seriousViolations(page)).toEqual([]);
+  });
+}
 
 test("an unmatched URL renders the root 404 with the fictional banner", async ({ page }) => {
   const res = await page.goto("/no-such-page-in-the-demo");

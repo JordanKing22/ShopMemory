@@ -44,6 +44,7 @@ const DELETE_ORDER: Table[] = [
   s.quotes,
   s.parts,
   s.personTopicExpertise,
+  s.searchSynonymGroups,
   s.tags,
   s.topics,
   s.customerAccounts,

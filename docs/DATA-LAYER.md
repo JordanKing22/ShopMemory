@@ -32,10 +32,13 @@ page.tsx (Server Component)
    **Never hide a value with CSS or conditional rendering alone.** If the value is in the RSC payload, it has leaked.
 3. **Don't even select pricing columns** unless `canSee(actor.role, "prices")`. Only then join `quote_financials`.
    For machinist and trainee, no `quote_financials` column and no `customer_accounts` column may appear in the query or the view model,
-   not even as a hidden placeholder that holds the value.
+   not even as a hidden placeholder that holds the value. Their field names stay out too (PLAN.md §4.8): gate the whole group as one slot
+   (`financials: Gated<FinancialValues | null>` in `jobs.ts`) and let the page render a pill per field from that one `Hidden`.
+   `tests/role-projection.test.ts` fails on any pricing or contact key in a restricted payload.
 4. **Gate derived values too.** A departure date is hidden, and so is everything computed from it: months until departure, the departure factor
-   in a risk explanation, the "departing within 24 months" KPI and the "⌛ Retires in 20 mo" chip. The same goes for margins computed from prices
-   and for win rates computed from outcomes. **Don't sort or filter by a hidden field** for a role that can't see it, because the order leaks it.
+   in a risk explanation (plus the tenure and backup factors, which would let it be solved from the visible risk), the "departing within
+   24 months" KPI and the "⌛ Retires in 20 mo" chip. The same goes for margins computed from prices and for win rates computed from outcomes.
+   **Don't sort or filter by a hidden field** for a role that can't see it, because the order leaks it.
 5. **Every record view model carries `classification`**, including list rows. It comes from the row's own `classification` column and is never recomputed in the page.
    Render it with `<ClassificationBadge level={...} />`. An export-controlled detail page also shows `<ExportControlledBanner />`.
 6. **View models are plain serializable data**: strings, numbers, booleans, null, arrays and plain objects. No `Date`, `Map`, class instances, functions
@@ -68,8 +71,10 @@ Quoted vs actual hours, setup and cycle times, customer names and documented cus
 import { eq } from "drizzle-orm";
 import type { Db } from "@/db/client";
 import { customers, jobs, quoteFinancials, quotes, type Classification } from "@/db/schema";
-import { canSee, type Role } from "@/lib/auth/roles";
+import { canSee, hiddenLabel, type Role } from "@/lib/auth/roles";
 import { gated, type Gated } from "@/lib/data/gate";
+
+interface FinancialValues { unitPriceUsd: number; totalPriceUsd: number }   // illustrative subset (jobs.ts has every price field)
 
 export interface JobDetailVM {
   id: string;
@@ -78,7 +83,7 @@ export interface JobDetailVM {
   quotedHours: number;
   actualHours: number | null;
   outcome: Gated<string>;                   // winLoss
-  unitPriceUsd: Gated<number>;              // prices
+  financials: Gated<FinancialValues | null>; // prices: ONE slot; null = may see prices but no quote_financials row
 }
 
 export function jobDetail(db: Db, actor: { role: Role; personId: string | null }, id: string): JobDetailVM | null {
@@ -94,10 +99,14 @@ export function jobDetail(db: Db, actor: { role: Role; personId: string | null }
     .get();
   if (!row) return null;
 
-  // Pricing is queried only for roles that may see it (rule 3), and the value is gated either way.
-  const price = canSee(actor.role, "prices")
-    ? db.select({ unit: quoteFinancials.unitPriceUsd }).from(quoteFinancials).where(eq(quoteFinancials.quoteId, row.quoteId)).get()?.unit ?? null
-    : null;
+  // Rule 3: quote_financials is queried only for roles that may see prices. Restricted roles get one Hidden slot
+  // built without the values, so neither an amount nor a pricing field name is in the payload. A missing row stays
+  // null (never a made-up $0.00).
+  const financials: Gated<FinancialValues | null> = canSee(actor.role, "prices")
+    ? gated(actor.role, "prices",
+        db.select({ unitPriceUsd: quoteFinancials.unitPriceUsd, totalPriceUsd: quoteFinancials.totalPriceUsd })
+          .from(quoteFinancials).where(eq(quoteFinancials.quoteId, row.quoteId)).get() ?? null)
+    : { hidden: true, label: hiddenLabel(actor.role) };
 
   return {
     id: row.id,
@@ -106,7 +115,7 @@ export function jobDetail(db: Db, actor: { role: Role; personId: string | null }
     quotedHours: row.quotedHours,
     actualHours: row.actualHours,
     outcome: gated(actor.role, "winLoss", row.outcome),
-    unitPriceUsd: gated(actor.role, "prices", price ?? 0),
+    financials,
   };
 }
 ```
@@ -141,13 +150,26 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
     <>
       {job.classification === "export_controlled" && <ExportControlledBanner />}
       <ClassificationBadge level={job.classification} />
-      {job.unitPriceUsd.hidden ? <HiddenField label={job.unitPriceUsd.label} /> : formatMoneyUSD(job.unitPriceUsd.value)}
+      {job.financials.hidden ? (
+        // One pill per field, all from the same Hidden object (no per-field names in the payload).
+        <>
+          <HiddenField label={job.financials.label} /> {/* unit price */}
+          <HiddenField label={job.financials.label} /> {/* total price */}
+        </>
+      ) : job.financials.value === null ? (
+        <p>No prices were recorded for this quote.</p>
+      ) : (
+        <>
+          {formatMoneyUSD(job.financials.value.unitPriceUsd)} · {formatMoneyUSD(job.financials.value.totalPriceUsd)}
+        </>
+      )}
     </>
   );
 }
 ```
 
-(Column names in the example are illustrative. Check `src/db/schema/*` for the real ones.)
+(Column names in the example are illustrative. Check `src/db/schema/*` for the real ones. The real renderer is
+`FinancialsSection` in `src/components/jobs/financials.tsx`.)
 
 ## Existing modules
 
@@ -161,11 +183,18 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
 | `src/lib/policy/summary.ts` | `getRoutingSummary(getEnv())`: mode, provider, host, clearance dots, per-label `routes` (primary · secondary · local · blocked) and config problems for the header badge (pure, reads config only) |
 | `src/lib/policy/matrix.ts` | `ROUTING_MATRIX`, `matrixRows()`, `allowed()`: the routing table the Privacy page renders; `crossRegionOf()` (unknown Bedrock profile scope counts as global) |
 | `src/lib/routing-copy.ts` | `modeSentence()`, `clearanceText()`, `ecHeaderLabel()`, `CROSS_REGION_TEXT` …: routing wording for the badge, Settings and Privacy. Never names a destination the policy blocks; reuse it instead of writing new routing sentences |
+| `src/lib/data/search.ts` | pure `buildSearchSynonymIndex(db)` → one `SynonymIndex` (`src/lib/retrieval/synonyms.ts`) over `search_synonym_groups` (the seeded `search-synonyms.yaml`), material names/short names/aliases and tag labels/synonyms; `listSearchSynonymGroups(db)` gives the raw groups. Same for every role, so no actor |
 | `src/lib/classification-labels.ts` | `CLASSIFICATION_LABEL`, `CLASSIFICATION_SHORT` (also re-exported by `ClassificationBadge`) |
+| `src/lib/data/risk.ts` | pure `riskOverview(db, actor)` → the `/risk` heat map (current + baseline risk, bands, SPOF, KPIs, per-cell factors; departure data and the U, T and D factors only as `Hidden` for machinist/trainee, PLAN.md §6); `shortTopicLabel()`, `tenureLabel()`. Server: `getRiskOverview()` in `src/server/queries/risk.ts` |
+| `src/lib/data/cards.ts` | pure `libraryPage(db, actor, rawFacets)`, `listCards()`, `searchCards(db, actor, query, facets)` (sanitized FTS5 + synonym index), `cardDetail(db, actor, id)`, facet parsing (`parseLibraryFacets`, `libraryHref`), `CARD_TYPE_LABEL`, `CARD_STATUS_LABEL`. Server: `getLibraryPage()`, `getCardDetail()`, `searchLibraryCards()` in `src/server/queries/cards.ts`; free-text search goes through the `searchLibraryAction` Server Action (`src/app/actions/library.ts`), never the URL |
+| `src/lib/data/people.ts` | pure `listPeople(db, actor)`, `personProfile(db, actor, id)` (gated `departure`, coverage, topics, cards, interviews), `tenureLabels()`, `peopleLibraryHref()`, `peopleJobsHref()`. Server: `getPeopleList()`, `getPersonProfile()` in `src/server/queries/people.ts` |
+| `src/lib/data/machines.ts` | pure `listMachines(db, actor, demoToday)`, `machineDetail(db, actor, id, opts)`, `machineLabel()`, `listMachineLabels()`, `machineQr()` (server-built QR module path). Server: `getMachinesList()`, `getMachineDetail()`, `getMachineLabel()`, `getMachineLabels()` in `src/server/queries/machines.ts` |
+| `src/lib/data/jobs.ts` | pure `jobsPage(db, actor, rawFilters)`, `listJobs()`, `parseJobFilters()`, `jobsHref()`, `jobDetail(db, actor, id)` (accepts `J-…` and `Q-…`; quote financials and outcome queried only for roles that can see them). Server: `getJobsPage()`, `getJobDetail()` in `src/server/queries/jobs.ts` |
 
 ## Testing a data function
 
-Pure functions run against a real schema in a temp DB: `openDb({ file, create: true })`, then `migrate(...)` and
-`resetDatabase(db.$client, buildSeedBundle(readSeedSources()).bundle!, { nowIso })` (see `tests/seed-pipeline.test.ts`).
+Pure functions run against the real schema and seed: `const { db, sqlite, bundle } = seededDb()` from `tests/helpers/seeded-db.ts`
+gives a fresh migrated `:memory:` database loaded through the real `resetDatabase()` (the bundle is built once per worker), and
+`actorFor("machinist", "PER-02")` builds the actor argument. Call `seededDb()` in `beforeAll` and `sqlite.close()` in `afterAll`.
 Assert for machinist and trainee that the serialized view model contains no price or contact value:
 `expect(JSON.stringify(vm)).not.toContain(String(price))`.

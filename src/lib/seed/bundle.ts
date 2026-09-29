@@ -18,6 +18,7 @@ export const SEEDED_TABLES = {
   customerAccounts: s.customerAccounts,
   topics: s.topics,
   tags: s.tags,
+  searchSynonymGroups: s.searchSynonymGroups,
   personTopicExpertise: s.personTopicExpertise,
   parts: s.parts,
   quotes: s.quotes,

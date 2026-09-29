@@ -21,10 +21,10 @@ const SEE: Record<Role, Record<GatedField, boolean>> = {
 };
 
 const CAN_CLOSED: Record<Role, Record<Capability, boolean>> = {
-  owner: { viewAll: true, switchPersona: true, changeAiRouting: true, resetDemo: true, fullExport: true, fullDelete: true, generateDocuments: true },
-  quoter: { viewAll: false, switchPersona: true, changeAiRouting: false, resetDemo: false, fullExport: false, fullDelete: false, generateDocuments: true },
-  machinist: { viewAll: false, switchPersona: true, changeAiRouting: false, resetDemo: false, fullExport: false, fullDelete: false, generateDocuments: true },
-  trainee: { viewAll: false, switchPersona: true, changeAiRouting: false, resetDemo: false, fullExport: false, fullDelete: false, generateDocuments: false },
+  owner: { viewAll: true, switchPersona: true, changeAiRouting: true, resetDemo: true, fullExport: true, fullDelete: true, generateDocuments: true, searchLibrary: true },
+  quoter: { viewAll: false, switchPersona: true, changeAiRouting: false, resetDemo: false, fullExport: false, fullDelete: false, generateDocuments: true, searchLibrary: true },
+  machinist: { viewAll: false, switchPersona: true, changeAiRouting: false, resetDemo: false, fullExport: false, fullDelete: false, generateDocuments: true, searchLibrary: true },
+  trainee: { viewAll: false, switchPersona: true, changeAiRouting: false, resetDemo: false, fullExport: false, fullDelete: false, generateDocuments: false, searchLibrary: true },
 };
 
 // DEMO_OPEN_CONTROLS=true opens only AI routing and Reset to every persona.

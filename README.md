@@ -7,7 +7,7 @@ Shop, setup sheets, training), with a visible privacy layer for shops that handl
 **Everything in this demo is fictional**: the shop ("Ridgeline Precision (fictional)"), its people, customers, parts
 and jobs. Don't enter real customer, CUI or export-controlled data.
 
-> Status: **Phase 1 complete** (schema, seed engine, all seed data). The screens arrive in Phase 2. See
+> Status: **Phase 2 complete** (read-only screens: Knowledge Risk, Library, People, Machines, Jobs). The AI features arrive from Phase 3. See
 > [PLAN.md](PLAN.md) §13 for the phase plan and §19 for the progress log.
 
 ## Quick start (Windows or Ubuntu)
@@ -18,7 +18,11 @@ Requires Node.js 24 LTS (22.13+ also works). No build tools are needed: the SQLi
 npm ci
 npm run seed      # checks seed-data/, creates data/floorwise.db and loads the demo data
 npm test
+npm run build && npm start   # then open http://127.0.0.1:3000
 ```
+
+Use the persona menu in the header to switch roles: as Marv (machinist) or Devin (trainee), prices, win/loss and
+departure dates show a "Hidden for … role" pill instead of the value.
 
 Later phases need an Anthropic API key in `.env.local` (copy `.env.example`) to record the demo's cached answers.
 The scripted demo itself runs from those cached answers (`DEMO_MODE=true`) with no key and no network.

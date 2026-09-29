@@ -145,6 +145,43 @@ describe("architecture rules", () => {
     expect(code("src/app/not-found.tsx")).not.toMatch(/record it points to/);
   });
 
+  it("every Server Action module checks the actor and a capability, and wraps its work in withSafeErrors", () => {
+    const actions = filesUnder("src/app/actions");
+    expect(actions.length).toBeGreaterThan(0);
+    const missing = actions.flatMap((f) => {
+      const c = code(f);
+      return [
+        /^\s*["']use server["']/.test(c) ? null : `${f}: no "use server"`,
+        /requireActor\(/.test(c) ? null : `${f}: no requireActor()`,
+        /assertCan\(/.test(c) ? null : `${f}: no assertCan()`,
+        /withSafeErrors\(/.test(c) ? null : `${f}: no withSafeErrors()`,
+      ].filter((x): x is string => x !== null);
+    });
+    expect(missing).toEqual([]);
+  });
+
+  it("dates are never formatted in local time: toLocale*String() and Intl.DateTimeFormat() always pass timeZone", () => {
+    // Static backstop for the E2E time-zone split (server America/Chicago, browser Asia/Tokyo; PLAN.md §12). Numbers
+    // go through src/lib/format.ts (Intl.NumberFormat), so every toLocaleString() here is treated as a date.
+    const call = /\.toLocale(?:Date|Time)?String\(|\bIntl\.DateTimeFormat\(/g;
+    const bad = filesUnder("src").flatMap((f) => {
+      const c = code(f);
+      return [...c.matchAll(call)].flatMap((m) => {
+        const start = (m.index ?? 0) + m[0].length;
+        let depth = 1;
+        let i = start;
+        while (i < c.length && depth > 0) {
+          if (c[i] === "(") depth++;
+          else if (c[i] === ")") depth--;
+          i++;
+        }
+        const args = c.slice(start, i - 1);
+        return /\btimeZone\b/.test(args) ? [] : [`${f}: ${m[0]}${args.slice(0, 60)})`];
+      });
+    });
+    expect(bad).toEqual([]);
+  });
+
   it("npm scripts run under cmd.exe (no inline env vars, rm -rf or single quotes)", () => {
     const pkg = JSON.parse(read("package.json")) as { scripts: Record<string, string> };
     for (const [name, s] of Object.entries(pkg.scripts)) {

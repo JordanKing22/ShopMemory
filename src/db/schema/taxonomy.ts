@@ -36,6 +36,16 @@ export const tags = sqliteTable("tags", {
   synonyms: text("synonyms", { mode: "json" }).$type<string[]>().notNull(),
 });
 
+/**
+ * Curated search-synonym groups from seed-data/taxonomy/search-synonyms.yaml (PLAN.md §5.3), one row per group, in
+ * file order. Terms are stored as the SME wrote them; `buildSynonymIndex()` normalizes them. Library/Ask search merges
+ * these with material aliases and tag synonyms (`buildSearchSynonymIndex()` in src/lib/data/search.ts).
+ */
+export const searchSynonymGroups = sqliteTable("search_synonym_groups", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  terms: text("terms", { mode: "json" }).$type<string[]>().notNull(),
+});
+
 /** SME-seeded tacit level 0–3 (PLAN.md §6). */
 export const personTopicExpertise = sqliteTable(
   "person_topic_expertise",
