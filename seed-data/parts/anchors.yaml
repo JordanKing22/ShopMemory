@@ -1,5 +1,6 @@
 # Hand-authored demo parts (PRT-A01..A12). IDs and part numbers are pinned: the demo script and cached
 # responses depend on them. Classification is derived (customer floor + export_control) unless overridden.
+# PRT-A01: the recent quote Ray is interviewed about (demo step 2).
 - id: PRT-A01
   customer: CUS-01
   part_number: AV-2231-07
@@ -16,7 +17,7 @@
   tightest_tol_in: 0.002
   envelope_in: 4.2 x 2.1 x 1.6
   complexity: 4
-  notes: The recent quote Ray is interviewed about (demo step 2).
+  notes: "New rev C: full first article."
 - id: PRT-A02
   customer: CUS-01
   part_number: AV-1874-03
@@ -33,6 +34,7 @@
   tightest_tol_in: 0.002
   envelope_in: 3.6 x 1.8 x 1.2
   complexity: 4
+# PRT-A03: the job that went sideways in April (J-A03).
 - id: PRT-A03
   customer: CUS-01
   part_number: AV-2107-11
@@ -43,12 +45,13 @@
   features:
   - thin_wall
   - five_axis
+  - first_article
   min_wall_in: 0.038
   max_wall_height_in: 1.45
   tightest_tol_in: 0.003
   envelope_in: 4.8 x 2.0 x 1.5
   complexity: 4
-  notes: The job that went sideways in April (J-A03).
+  notes: ""
 - id: PRT-A04
   customer: CUS-01
   part_number: AV-1932-05
@@ -74,6 +77,7 @@
   features:
   - five_axis
   - anodize
+  - first_article
   min_wall_in: 0.08
   max_wall_height_in: 0.75
   tightest_tol_in: 0.002
@@ -110,6 +114,7 @@
   envelope_in: 5.5 dia x 0.8
   complexity: 4
   export_control: itar
+# PRT-A08: the end cap whose bores moved after heat treat (INT-01 context).
 - id: PRT-A08
   customer: CUS-02
   part_number: HFC-20518
@@ -124,7 +129,7 @@
   tightest_tol_in: 0.0005
   envelope_in: 3.2 dia x 1.9
   complexity: 4
-  notes: Bores moved after heat treat (INT-01 context).
+  notes: Bores moved after heat treat on the first lot.
 - id: PRT-A09
   customer: CUS-05
   part_number: GDS-7702-015
@@ -143,6 +148,7 @@
   classification_override:
     direction: down
     reason: Commercial spare, not on the USML (EAR99). Reviewed by the owner on 2026-05-04.
+# PRT-A10: the export-controlled job used in demo step 6c (J-A10).
 - id: PRT-A10
   customer: CUS-05
   part_number: GDS-4410-120
@@ -159,7 +165,7 @@
   envelope_in: 4.0 x 3.0 x 2.5
   complexity: 5
   export_control: itar
-  notes: The export-controlled job used in demo step 6c (J-A10).
+  notes: ""
 - id: PRT-A11
   customer: CUS-04
   part_number: QRL-310442

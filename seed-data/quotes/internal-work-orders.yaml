@@ -41,7 +41,7 @@
   status: complete
   started_on: '2026-08-10'
   shipped_on: '2026-08-10'
-  lead: PER-08
+  lead: PER-06
   actual_machine: m-vf4
   actual_setup_hours: 0.5
   actual_run_hours: 1.5

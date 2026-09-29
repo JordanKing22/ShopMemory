@@ -1,6 +1,6 @@
 {
   "comment": "Written by npm run seed:lock. Commit it with any intentional seed-data edit.",
-  "hash": "d438e26013dce56bc9d854b40da038c4f9501602b65774a8150bf1caed68980a",
+  "hash": "9eb6bb30c7b0598093cb441143973ebe5d4900f2fee50a3893369d80c3f98884",
   "demoToday": "2026-09-15",
   "seed": 20260915,
   "rows": {
@@ -25,11 +25,597 @@
     "quoteReasoningLogs": 3,
     "knowledgeCards": 90,
     "cardLinks": 168,
-    "cardTopics": 191,
-    "cardTags": 248,
-    "cardEvidence": 167,
+    "cardTopics": 187,
+    "cardTags": 246,
+    "cardEvidence": 172,
     "documents": 25,
     "documentCards": 79,
     "coverageSnapshots": 156
+  },
+  "generated_refs": {
+    "J-G033": {
+      "facts": {
+        "job_number": "RJ-26-0724",
+        "part": "PRT-G11",
+        "status": "complete",
+        "started_on": "2026-07-24",
+        "shipped_on": "2026-08-13",
+        "machine": "m-dmu50",
+        "lead": "PER-02",
+        "quoted_hours": 110.5,
+        "actual_hours": 112,
+        "quoted_by": "PER-01",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": true,
+        "debrief": "No surprises; shipped on time."
+      },
+      "referencedBy": [
+        "KC-028"
+      ]
+    },
+    "J-G071": {
+      "facts": {
+        "job_number": "RJ-26-0228",
+        "part": "PRT-G28",
+        "status": "complete",
+        "started_on": "2026-02-26",
+        "shipped_on": "2026-03-22",
+        "machine": "m-genos",
+        "lead": "PER-02",
+        "quoted_hours": 114,
+        "actual_hours": 114.5,
+        "quoted_by": "PER-01",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": true,
+        "debrief": "No surprises; shipped on time."
+      },
+      "referencedBy": [
+        "KC-029"
+      ]
+    },
+    "J-G051": {
+      "facts": {
+        "job_number": "RJ-25-0706",
+        "part": "PRT-G21",
+        "status": "complete",
+        "started_on": "2025-07-06",
+        "shipped_on": "2025-07-17",
+        "machine": "m-swiss",
+        "lead": "PER-04",
+        "quoted_hours": 25,
+        "actual_hours": 27,
+        "quoted_by": "PER-01",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": true,
+        "debrief": "Size wandered mid-run; re-measured and offset."
+      },
+      "referencedBy": [
+        "KC-046"
+      ]
+    },
+    "J-G054": {
+      "facts": {
+        "job_number": "RJ-26-0504",
+        "part": "PRT-G22",
+        "status": "complete",
+        "started_on": "2026-05-04",
+        "shipped_on": "2026-05-10",
+        "machine": "m-swiss",
+        "lead": "PER-04",
+        "quoted_hours": 7,
+        "actual_hours": 7,
+        "quoted_by": "PER-04",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": true,
+        "debrief": "Ran close to quote."
+      },
+      "referencedBy": [
+        "KC-051"
+      ]
+    },
+    "J-G094": {
+      "facts": {
+        "job_number": "RJ-26-0119",
+        "part": "PRT-G38",
+        "status": "complete",
+        "started_on": "2026-01-19",
+        "shipped_on": "2026-02-02",
+        "machine": "m-integrex",
+        "lead": "PER-04",
+        "quoted_hours": 38,
+        "actual_hours": 42,
+        "quoted_by": "PER-01",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": false,
+        "debrief": "Work hardening slowed the finish passes."
+      },
+      "referencedBy": [
+        "KC-053"
+      ]
+    },
+    "J-G077": {
+      "facts": {
+        "job_number": "RJ-26-0502",
+        "part": "PRT-G30",
+        "status": "complete",
+        "started_on": "2026-05-02",
+        "shipped_on": "2026-05-07",
+        "machine": "m-swiss",
+        "lead": "PER-04",
+        "quoted_hours": 18.5,
+        "actual_hours": 17.5,
+        "quoted_by": "PER-04",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": true,
+        "debrief": "No surprises; shipped on time."
+      },
+      "referencedBy": [
+        "KC-061",
+        "KC-085"
+      ]
+    },
+    "J-G074": {
+      "facts": {
+        "job_number": "RJ-26-0224",
+        "part": "PRT-G29",
+        "status": "complete",
+        "started_on": "2026-02-24",
+        "shipped_on": "2026-03-02",
+        "machine": "m-st20",
+        "lead": "PER-04",
+        "quoted_hours": 9.5,
+        "actual_hours": 9.5,
+        "quoted_by": "PER-01",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": true,
+        "debrief": "No surprises; shipped on time."
+      },
+      "referencedBy": [
+        "DOC-SS-19",
+        "KC-061"
+      ]
+    },
+    "J-G057": {
+      "facts": {
+        "job_number": "RJ-26-0819",
+        "part": "PRT-G23",
+        "status": "complete",
+        "started_on": "2026-08-19",
+        "shipped_on": "2026-08-27",
+        "machine": "m-swiss",
+        "lead": "PER-04",
+        "quoted_hours": 9.5,
+        "actual_hours": 9.5,
+        "quoted_by": "PER-01",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": true,
+        "debrief": "No surprises; shipped on time."
+      },
+      "referencedBy": [
+        "DOC-SS-16",
+        "KC-062",
+        "ME-017"
+      ]
+    },
+    "J-G045": {
+      "facts": {
+        "job_number": "RJ-26-0603",
+        "part": "PRT-G17",
+        "status": "complete",
+        "started_on": "2026-06-03",
+        "shipped_on": "2026-06-11",
+        "machine": "m-integrex",
+        "lead": "PER-04",
+        "quoted_hours": 7,
+        "actual_hours": 8,
+        "quoted_by": "PER-04",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": false,
+        "debrief": "Extra inspection loops to hold the tight bores."
+      },
+      "referencedBy": [
+        "DOC-SS-12",
+        "KC-063"
+      ]
+    },
+    "Q-G017": {
+      "facts": {
+        "quote_number": "RQ-26-0425",
+        "part": "PRT-G06",
+        "quoted_on": "2026-04-25",
+        "quoted_by": "PER-05",
+        "qty": 6,
+        "quoted_hours": 5.5,
+        "machine": "m-dmu50",
+        "outcome": "lost"
+      },
+      "referencedBy": [
+        "KC-065"
+      ]
+    },
+    "J-G040": {
+      "facts": {
+        "job_number": "RJ-26-0905",
+        "part": "PRT-G15",
+        "status": "in_process",
+        "started_on": "2026-09-05",
+        "shipped_on": null,
+        "machine": "m-st20",
+        "lead": "PER-04",
+        "quoted_hours": 11.5,
+        "actual_hours": null,
+        "quoted_by": "PER-01",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": null,
+        "debrief": ""
+      },
+      "referencedBy": [
+        "DOC-SS-18",
+        "KC-070",
+        "ME-005"
+      ]
+    },
+    "J-G006": {
+      "facts": {
+        "job_number": "RJ-26-0827",
+        "part": "PRT-G03",
+        "status": "complete",
+        "started_on": "2026-08-27",
+        "shipped_on": "2026-08-30",
+        "machine": "m-dmu50",
+        "lead": "PER-02",
+        "quoted_hours": 5.5,
+        "actual_hours": 5.5,
+        "quoted_by": "PER-01",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": true,
+        "debrief": "Ran close to quote."
+      },
+      "referencedBy": [
+        "KC-078"
+      ]
+    },
+    "J-G046": {
+      "facts": {
+        "job_number": "RJ-26-0717",
+        "part": "PRT-G18",
+        "status": "complete",
+        "started_on": "2026-07-17",
+        "shipped_on": "2026-07-23",
+        "machine": "m-swiss",
+        "lead": "PER-04",
+        "quoted_hours": 11,
+        "actual_hours": 11.5,
+        "quoted_by": "PER-01",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": true,
+        "debrief": "Routine job; setup as planned."
+      },
+      "referencedBy": [
+        "DOC-SS-15",
+        "KC-079",
+        "KC-087",
+        "KC-089"
+      ]
+    },
+    "J-G002": {
+      "facts": {
+        "job_number": "RJ-26-0523",
+        "part": "PRT-G01",
+        "status": "complete",
+        "started_on": "2026-05-23",
+        "shipped_on": "2026-05-27",
+        "machine": "m-dmu50",
+        "lead": "PER-02",
+        "quoted_hours": 6,
+        "actual_hours": 6,
+        "quoted_by": "PER-01",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": true,
+        "debrief": "Routine job; setup as planned."
+      },
+      "referencedBy": [
+        "KC-080"
+      ]
+    },
+    "J-G063": {
+      "facts": {
+        "job_number": "RJ-26-0824",
+        "part": "PRT-G25",
+        "status": "in_process",
+        "started_on": "2026-08-23",
+        "shipped_on": null,
+        "machine": "m-vf4",
+        "lead": "PER-02",
+        "quoted_hours": 21.5,
+        "actual_hours": null,
+        "quoted_by": "PER-05",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": null,
+        "debrief": ""
+      },
+      "referencedBy": [
+        "DOC-SS-02",
+        "KC-088"
+      ]
+    },
+    "PRT-G25": {
+      "facts": {
+        "part_number": "QRL-178413",
+        "description": "Plate, gas distribution",
+        "material": "mat-6061",
+        "family": "plate",
+        "features": "cleanroom",
+        "customer": "CUS-04"
+      },
+      "referencedBy": [
+        "DOC-SS-02"
+      ]
+    },
+    "PRT-G36": {
+      "facts": {
+        "part_number": "GDS-5200-252",
+        "description": "Housing, gimbal",
+        "material": "mat-7075",
+        "family": "housing",
+        "features": "five_axis+anodize",
+        "customer": "CUS-05"
+      },
+      "referencedBy": [
+        "DOC-SS-03"
+      ]
+    },
+    "J-G090": {
+      "facts": {
+        "job_number": "RJ-26-0612",
+        "part": "PRT-G36",
+        "status": "complete",
+        "started_on": "2026-06-12",
+        "shipped_on": "2026-06-17",
+        "machine": "m-vf4",
+        "lead": "PER-02",
+        "quoted_hours": 8,
+        "actual_hours": 8,
+        "quoted_by": "PER-05",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": true,
+        "debrief": "No surprises; shipped on time."
+      },
+      "referencedBy": [
+        "DOC-SS-03"
+      ]
+    },
+    "PRT-G12": {
+      "facts": {
+        "part_number": "HFC-77012",
+        "description": "Housing, sensor boss",
+        "material": "mat-174ph",
+        "family": "housing",
+        "features": "heat_treat+tight_tolerance",
+        "customer": "CUS-02"
+      },
+      "referencedBy": [
+        "DOC-SS-06"
+      ]
+    },
+    "J-G034": {
+      "facts": {
+        "job_number": "RJ-26-0823",
+        "part": "PRT-G12",
+        "status": "complete",
+        "started_on": "2026-08-23",
+        "shipped_on": "2026-08-30",
+        "machine": "m-dmu50",
+        "lead": "PER-02",
+        "quoted_hours": 16.5,
+        "actual_hours": 16.5,
+        "quoted_by": "PER-01",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": true,
+        "debrief": "Ran close to quote."
+      },
+      "referencedBy": [
+        "DOC-SS-06"
+      ]
+    },
+    "PRT-G37": {
+      "facts": {
+        "part_number": "GDS-0985-526",
+        "description": "Housing, connector",
+        "material": "mat-7075",
+        "family": "housing",
+        "features": "anodize",
+        "customer": "CUS-05"
+      },
+      "referencedBy": [
+        "DOC-SS-07"
+      ]
+    },
+    "J-G093": {
+      "facts": {
+        "job_number": "RJ-25-0909",
+        "part": "PRT-G37",
+        "status": "complete",
+        "started_on": "2025-09-09",
+        "shipped_on": "2025-09-25",
+        "machine": "m-dmu50",
+        "lead": "PER-02",
+        "quoted_hours": 88,
+        "actual_hours": 82.5,
+        "quoted_by": "PER-01",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": true,
+        "debrief": "Routine job; setup as planned."
+      },
+      "referencedBy": [
+        "DOC-SS-07"
+      ]
+    },
+    "PRT-G17": {
+      "facts": {
+        "part_number": "HFC-59583",
+        "description": "Shaft, pivot",
+        "material": "mat-174ph",
+        "family": "shaft",
+        "features": "heat_treat+tight_tolerance",
+        "customer": "CUS-02"
+      },
+      "referencedBy": [
+        "DOC-SS-12"
+      ]
+    },
+    "PRT-G18": {
+      "facts": {
+        "part_number": "SUR-756-096",
+        "description": "Instrument, probe tip",
+        "material": "mat-316",
+        "family": "instrument",
+        "features": "passivation",
+        "customer": "CUS-03"
+      },
+      "referencedBy": [
+        "DOC-SS-15"
+      ]
+    },
+    "PRT-G23": {
+      "facts": {
+        "part_number": "SUR-039-525",
+        "description": "Insulator, cap",
+        "material": "mat-peek",
+        "family": "insulator",
+        "features": "",
+        "customer": "CUS-03"
+      },
+      "referencedBy": [
+        "DOC-SS-16"
+      ]
+    },
+    "PRT-G15": {
+      "facts": {
+        "part_number": "HFC-24136",
+        "description": "Fitting, adapter",
+        "material": "mat-316",
+        "family": "fitting",
+        "features": "thread_milling",
+        "customer": "CUS-02"
+      },
+      "referencedBy": [
+        "DOC-SS-18"
+      ]
+    },
+    "PRT-G29": {
+      "facts": {
+        "part_number": "QRL-529695",
+        "description": "Insulator, lift pin",
+        "material": "mat-peek",
+        "family": "insulator",
+        "features": "cleanroom",
+        "customer": "CUS-04"
+      },
+      "referencedBy": [
+        "DOC-SS-19"
+      ]
+    },
+    "J-G039": {
+      "facts": {
+        "job_number": "RJ-25-1228",
+        "part": "PRT-G15",
+        "status": "complete",
+        "started_on": "2025-12-26",
+        "shipped_on": "2026-01-04",
+        "machine": "m-st20",
+        "lead": "PER-04",
+        "quoted_hours": 18.5,
+        "actual_hours": 19,
+        "quoted_by": "PER-01",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": true,
+        "debrief": "Ran close to quote."
+      },
+      "referencedBy": [
+        "ME-004"
+      ]
+    },
+    "J-G004": {
+      "facts": {
+        "job_number": "RJ-26-0830",
+        "part": "PRT-G02",
+        "status": "in_process",
+        "started_on": "2026-08-30",
+        "shipped_on": null,
+        "machine": "m-dmu50",
+        "lead": "PER-02",
+        "quoted_hours": 6.5,
+        "actual_hours": null,
+        "quoted_by": "PER-01",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": null,
+        "debrief": ""
+      },
+      "referencedBy": [
+        "ME-008"
+      ]
+    },
+    "J-G047": {
+      "facts": {
+        "job_number": "RJ-25-1110",
+        "part": "PRT-G19",
+        "status": "complete",
+        "started_on": "2025-11-10",
+        "shipped_on": "2025-11-19",
+        "machine": "m-swiss",
+        "lead": "PER-04",
+        "quoted_hours": 11,
+        "actual_hours": 10.5,
+        "quoted_by": "PER-01",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": true,
+        "debrief": "No surprises; shipped on time."
+      },
+      "referencedBy": [
+        "ME-015"
+      ]
+    },
+    "J-G076": {
+      "facts": {
+        "job_number": "RJ-26-0306",
+        "part": "PRT-G30",
+        "status": "complete",
+        "started_on": "2026-03-03",
+        "shipped_on": "2026-03-10",
+        "machine": "m-swiss",
+        "lead": "PER-04",
+        "quoted_hours": 7,
+        "actual_hours": 7.5,
+        "quoted_by": "PER-05",
+        "scrap_qty": 0,
+        "ncr_count": 0,
+        "on_time": true,
+        "debrief": "Ran close to quote."
+      },
+      "referencedBy": [
+        "ME-016"
+      ]
+    }
   }
 }

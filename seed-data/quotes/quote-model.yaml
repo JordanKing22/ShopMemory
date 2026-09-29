@@ -35,7 +35,7 @@ debriefs:
   titanium: ["Tool wear ran higher than planned.", "Slower finishing than quoted in titanium."]
   inconel: ["Insert life shorter than planned; extra tool changes.", "Work hardening slowed the finish passes."]
   five_axis: ["Extra time proving out the 5-axis program.", "Fixture changes between ops took longer than planned."]
-  tight_tolerance: ["Extra inspection loops to hold the tight bores.", "Thermal growth forced a re-measure and offset."]
+  tight_tolerance: ["Extra inspection loops to hold the tight bores.", "Size wandered mid-run; re-measured and offset."]
   new_customer: ["Extra first-article questions from a new customer.", "Source inspection added a day."]
   first_article: ["First article took an extra CMM cycle.", "Balloon drawing needed a revision before approval."]
 reserved_combinations:   # the generator must never create these (anchors only)

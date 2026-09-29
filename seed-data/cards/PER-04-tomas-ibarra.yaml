@@ -30,7 +30,7 @@
   evidence:
     - { turn: INT-07-T016, quote: "Mike the bar before you set the guide bushing. Three places on a bar, a couple of bars from the bundle. I do it every time we open a new bundle.", confidence: true }
     - { turn: INT-07-T016, quote: "If the bar varies more than about two tenths from end to end, it's not going to run right in the bushing. That's why we buy ground bar for anything tight now." }
-    - { turn: INT-07-T014, quote: "You set the bushing to the bar you've got, not to the size on the tag." }
+    - { turn: INT-07-T014, quote: "The bushing is what holds the part while you cut it. If the bushing is loose on the bar, the part moves. If it's too tight, the bar galls and sticks. You set the bushing to the bar you've got, not to the size on the tag." }
     - { turn: INT-07-T018, quote: "Loose work, where nothing on the part is tighter than a couple of thou." }
   approved: { by: PER-04, on: "2026-07-21", mode: self }
   created_on: "2026-07-16"
@@ -69,7 +69,7 @@
     the tools sharp so they cut instead of pushing a fuzzy burr, set the sub-spindle grip light on the pick-off,
     and usually let the parts sit ten minutes before you measure a diameter.
   applies_when: ["PEEK parts on the Swiss"]
-  does_not_apply_when: []
+  does_not_apply_when: ["final inspection on the CMM — that follows Linda's soak rule"]
   rationale: "A dull tool makes heat, and heat makes PEEK grow and burr."
   cues: ["a fuzzy burr instead of a clean edge", "a diameter measuring big right out of the catcher"]
   actions: ["keep the tools sharp", "set the sub-spindle grip light on the pick-off", "let parts sit ten minutes before measuring a diameter"]
@@ -118,12 +118,12 @@
   status: approved
   title: "Small Swiss parts: quote the handling as its own time, not just the cycle"
   statement: >-
-    When you quote small parts on the Swiss, the cycle time is the easy part. Usually price the handling as its own
+    When you quote small parts on the Swiss, don't stop at the cycle time. Usually price the handling as its own
     time per part: deburr under the scope, measure after they cool, bag and count. On PEEK sleeves and spacers the
     handling after the machine takes longer than the cycle.
   applies_when: ["small parts on the Swiss", "PEEK sleeves and spacers"]
   does_not_apply_when: []
-  rationale: "The machine runs by itself; the deburr, measuring and bagging are people time."
+  rationale: "What people miss is the handling: deburr under the scope, measure after they cool, bag and count."
   cues: ["parts that need deburr under the scope", "parts that must cool before they're measured"]
   actions: ["price deburr, measuring, bagging and counting as their own time per part"]
   common_mistake: "Quoting a small Swiss part from the cycle time alone."
@@ -133,7 +133,7 @@
   links: { jobs: [J-G054], machine: m-swiss, material: mat-peek }
   source: { kind: interview, interview: INT-07 }
   evidence:
-    - { turn: INT-07-T028, quote: "When I quote small parts on the Swiss, the cycle time is the easy part. What people miss is the handling: deburr under the scope, measure after they cool, bag and count." }
+    - { turn: INT-07-T028, quote: "When I quote small parts on the Swiss, everybody looks at the cycle time. What people miss is the handling: deburr under the scope, measure after they cool, bag and count." }
     - { turn: INT-07-T028, quote: "On the PEEK sleeves and spacers the handling after the machine takes longer than the cycle." }
     - { turn: INT-07-T028, quote: "I usually price the handling as its own time per part.", confidence: true }
   approved: { by: PER-04, on: "2026-07-21", mode: self }
@@ -151,7 +151,7 @@
     changes.
   applies_when: ["Inconel 718 rings on the Integrex"]
   does_not_apply_when: []
-  rationale: "Insert changes on Inconel are stops at the machine that a cutting-time multiplier doesn't include."
+  rationale: "Ray's number is right for the cutting. It doesn't see the tool changes."
   cues: []
   actions: ["take three times the 17-4 cycle for the cutting", "price the insert changes on top, counted per ring"]
   common_mistake: "Letting the cutting-time multiplier stand in for the insert changes."
@@ -176,7 +176,7 @@
     traveler.
   applies_when: ["repeat Inconel ring job"]
   does_not_apply_when: []
-  rationale: "Insert life on Inconel rings has run shorter than planned twice; the traveler shows what really happened."
+  rationale: "The last job's actuals beat anything I can figure from a catalog."
   cues: ["a repeat ring job coming in to be priced"]
   actions: ["pull the old traveler and count the inserts used", "write every insert change on the traveler"]
   common_mistake: "Pricing insert life from a catalog instead of the last job."
@@ -204,7 +204,7 @@
     pass so the notch doesn't wear in the same spot, and keep flood coolant right at the edge.
   applies_when: ["turning Inconel 718 on the Integrex"]
   does_not_apply_when: []
-  rationale: "Inconel work hardens; a stopped feed or a light pass leaves a hard skin that the next pass rides on and the edge fails."
+  rationale: "If the feed stops in the cut, even for a second, it work hardens right there and the next pass hits a hard spot."
   cues: ["the cut going from a hiss to a squeal", "chip color changing"]
   actions:
     - "keep the feed on through the corners"
@@ -446,7 +446,7 @@
     how many parts you get out of one bar and quote whole bars, rounded up.
   applies_when: ["small parts from bar on the Swiss"]
   does_not_apply_when: []
-  rationale: "On short parts the cut-off and the remnant are a big share of every bar."
+  rationale: "Every bar leaves a remnant the machine can't use, and on the short PEEK caps that adds up fast."
   cues: ["short parts, like PEEK caps"]
   actions: ["count parts per bar including the cut-off and facing stock", "quote whole bars and round up"]
   common_mistake: "Figuring material from part length times quantity."

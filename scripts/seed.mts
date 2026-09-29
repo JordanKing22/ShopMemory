@@ -4,13 +4,13 @@ import "./lib/load-env.mts";
 import path from "node:path";
 import { resetDatabase, countSeededRows } from "@/db/reset";
 import { buildSeedBundle } from "@/lib/seed/build";
-import { archiveAuditRows, readSeedSources, writeBundle } from "@/lib/seed/files";
+import { archiveAuditRows, readLock, readSeedSources, writeBundle } from "@/lib/seed/files";
 import { openAndMigrate } from "./lib/db-setup.mts";
 import { out } from "./lib/out";
 import { printIssues } from "./lib/seed-report.mts";
 
 const started = performance.now();
-const result = buildSeedBundle(readSeedSources());
+const result = buildSeedBundle(readSeedSources(), { lockedGeneratedRefs: readLock()?.generated_refs });
 printIssues(result, { showWarnings: false });
 if (!result.bundle) {
   out.error("\nseed failed: seed-data/ has errors (run npm run seed:check for details). The database was not changed.");

@@ -2,12 +2,12 @@
 // On success it writes data/seed-bundle.json, the last valid bundle that `npm run seed` and Reset demo replay.
 import "./lib/load-env.mts";
 import { buildSeedBundle } from "@/lib/seed/build";
-import { readSeedSources, writeBundle } from "@/lib/seed/files";
+import { readLock, readSeedSources, writeBundle } from "@/lib/seed/files";
 import { out } from "./lib/out";
 import { printIssues, printReport } from "./lib/seed-report.mts";
 
 const started = performance.now();
-const result = buildSeedBundle(readSeedSources());
+const result = buildSeedBundle(readSeedSources(), { lockedGeneratedRefs: readLock()?.generated_refs });
 printIssues(result);
 printReport(result);
 const ms = Math.round(performance.now() - started);

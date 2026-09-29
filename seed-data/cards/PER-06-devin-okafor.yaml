@@ -13,12 +13,12 @@
     the parts at, then cut the pocket. Cut them open and loose and the jaws close up different on the part.
   applies_when: ["cutting soft jaws in the VF-4 vise"]
   does_not_apply_when: []
-  rationale: "The jaws move when you crank down; cutting them clamped matches how they'll hold the part."
+  rationale: "Cut them open and loose and the jaws close up different when you crank down on a part."
   cues: ["parts sitting crooked in fresh soft jaws"]
   actions: ["clamp a spacer at run pressure before cutting the jaw pocket"]
   common_mistake: "Cutting the jaw pocket with the vise open."
   expert_confidence: always
-  topics: [t-m-vf4, t-5ax-workholding, t-mat-7075]
+  topics: [t-m-vf4, t-mat-7075]
   tags: [workholding, vf4, aluminum]
   links: { jobs: [J-A09], machine: m-vf4 }
   source:
@@ -41,7 +41,7 @@
     it go.
   applies_when: ["large 6061 plate flipped for a second op on the VF-4"]
   does_not_apply_when: ["small, thick plates that don't move in the clamps"]
-  rationale: "A plate held only at the edges bows under the cutter and springs back when it's let go."
+  rationale: "Clamp just the edges and the plate bows up into the cutter, then springs back when you let it go."
   cues: ["plate rocking or bowing when it's clamped at the edges"]
   actions:
     - "put jack screws under the middle of the plate before clamping for the second op"
@@ -49,7 +49,7 @@
     - "indicate the middle of the plate while you clamp"
   common_mistake: "Cranking the jacks up like another clamp."
   expert_confidence: always
-  topics: [t-m-vf4, t-5ax-workholding, t-cus-04]
+  topics: [t-m-vf4, t-mat-6061, t-cus-04]
   tags: [workholding, vf4, aluminum, semiconductor]
   links: { jobs: [J-A11], customer: CUS-04, machine: m-vf4 }
   source:
@@ -72,7 +72,7 @@
     the same way for the next lot.
   applies_when: ["bored soft jaws on the ST-20 that get saved for the next lot"]
   does_not_apply_when: []
-  rationale: "Jaws bored in one set of slots only hold true in those slots."
+  rationale: "So they go back on the same way for the next lot."
   cues: ["a box of bored jaws on the shelf for a repeat job"]
   actions:
     - "mark each jaw with the chuck slot it was bored in"
@@ -101,7 +101,7 @@
     the cut unless you bend them over. Always aim every nozzle at the cut by hand before cycle start.
   applies_when: ["RP-M01 with the rotary table on and the vise at the left end"]
   does_not_apply_when: []
-  rationale: "With the vise out at the left end, this machine's nozzles fall short and chips pack into the cut."
+  rationale: "The flood nozzles on this machine don't reach that far unless you bend them over."
   cues: ["chips packing in a pocket", "aluminum welding to the end mill"]
   actions: ["aim every flood nozzle at the cut by hand before cycle start"]
   common_mistake: "Trusting the nozzles where the last job left them."
@@ -145,5 +145,5 @@
       know. I only touched off the tools I'd loaded myself. First part, the drill came down long and went into the
       soft jaw. Nobody hurt, the spindle checked out fine, one jaw scrapped. Now I re-touch every tool in the
       program unless the tool sheet says it hasn't changed since the last job.
-    note: Entered by Devin the week after; waiting on Marv's review.
+    note: Entered by Devin two days after the crash; waiting on Marv's review.
   created_on: "2026-08-12"

@@ -22,7 +22,7 @@ created_on: "2026-08-22"
 - The caps are short. The mesh liner goes in the chip pan under the catcher before the first bar goes in. [KC-050]
 
 ## Inspection
-- Let the caps sit ten minutes before you measure a diameter. Right out of the catcher they measure big. [KC-049]
+- At the machine, let the caps sit ten minutes before you measure a diameter. Right out of the catcher they measure big. Final inspection on the CMM follows Linda's soak rule. [KC-049]
 
 ## Cautions
 - In August the liner was left out and short caps turned up dinged in the chip pan. [KC-050]

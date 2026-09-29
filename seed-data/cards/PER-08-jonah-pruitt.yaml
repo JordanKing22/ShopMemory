@@ -14,7 +14,7 @@
     sub-spindle Z from that touch, not from the nominal. A chip on the stop and the part seats short.
   applies_when: ["parts handed off to the Integrex sub-spindle for back work"]
   does_not_apply_when: []
-  rationale: "The stop only sets the depth if nothing is trapped between it and the part."
+  rationale: "Get a chip on the stop and the part seats short."
   cues: ["back-face length wandering part to part"]
   actions:
     - "post a probe touch on the part face after the hand-off"
@@ -40,12 +40,12 @@
   status: approved
   title: "DMU 50 tool library: the stickout goes in the tool name"
   statement: >-
-    Every tool in the DMU 50 CAM library carries its stickout in the name, and the setup sheet prints it. The
-    toolpath was checked at that stickout: load the tool at that length, and ask for a re-post before you run a
-    different stickout.
+    Every tool in the DMU 50 CAM library carries its stickout in the name, and the setup sheet prints it. That's
+    the shortest stickout that clears, so it's also Ray's shortest stickout: load the tool at that length, and ask
+    for a re-post before you run a different stickout, shorter or longer.
   applies_when: ["programs for the DMU 50"]
   does_not_apply_when: []
-  rationale: "Load a tool shorter than the toolpath was checked at and the holder can hit the part or the fixture."
+  rationale: "The toolpath was checked for collisions at that stickout and no shorter."
   cues: ["stickout in the tool name on the setup sheet"]
   actions:
     - "put the stickout in the tool name in the CAM library"
@@ -62,7 +62,8 @@
       I always put the stickout in the tool name in our CAM library for the DMU 50, like 'EM 3/8 x 1.25 SO'. The
       toolpath was checked for collisions at that stickout and no shorter, so the setup sheet prints the name and
       whoever loads the tool knows the shortest stickout that clears. Marv asked for it after a holder rubbed a
-      fixture. If you have to run a different stickout, tell me and I re-post.
+      fixture. If you have to run a different stickout, tell me and I re-post. Ray's shortest-stickout rule still
+      holds: the name is the shortest that clears; if you want it shorter, tell me and I re-post.
     note: Entered by Jonah.
   approved: { by: PER-08, on: "2025-10-08", mode: self }
   created_on: "2025-10-06"
@@ -76,7 +77,7 @@
     thou over what the program expects, alarm out instead of taking a full-depth first cut.
   applies_when: ["saw-cut blanks on the Genos"]
   does_not_apply_when: []
-  rationale: "An oversize blank turns the first roughing pass into a heavy bite."
+  rationale: "We had blanks come in long from the saw and the first pass took a heavy bite."
   cues: ["saw-cut blanks that vary in size"]
   actions:
     - "post a blank-size probe check before roughing"
@@ -117,7 +118,7 @@
     - "have the post write the offset as a comment at the top of the program"
   common_mistake: "Reusing whatever offset an old program happened to use."
   expert_confidence: always
-  topics: [t-m-vf4, t-cam, t-5ax-workholding]
+  topics: [t-m-vf4, t-cam]
   tags: [vf4, cam, workholding]
   links: { machine: m-vf4 }
   source:
@@ -171,7 +172,7 @@
     at the start of every month.
   applies_when: ["programs posted for RP-M06"]
   does_not_apply_when: []
-  rationale: "This machine came with the standard program memory, and it runs a lot of small jobs."
+  rationale: "It carries programs for a lot of small jobs, and its memory fills up."
   cues: ["memory-full alarm partway through a program transfer"]
   actions:
     - "post with canned cycles and subprograms instead of long strings of short moves"
@@ -184,7 +185,7 @@
   source:
     kind: manual
     text: >-
-      Our Swiss, RP-M06, came in 2018 with the standard program memory, and it fills up. A long program posted as
+      Our Swiss, RP-M06, carries programs for a lot of small jobs, and its memory fills up. A long program posted as
       strings of short moves won't load next to the other jobs, and the control throws a memory-full alarm partway
       through the transfer. I always post the Swiss from CAM with canned cycles and subprograms, not long strings of
       short moves, and I back up and clear the old programs off it at the start of every month.
@@ -196,26 +197,32 @@
 - id: KC-087
   type: customer_quirk
   status: approved
-  title: "Sutrella 316 instruments: program a deburr pass on every cross hole"
+  title: "Sutrella: once a first article is approved, the program doesn't change without their OK"
   statement: >-
-    Sutrella checks every cross hole under a scope and a burr is a reject. On their 316 instruments, always program
-    a back-chamfer or deburr toolpath on every cross hole so nobody has to hand-deburr.
-  applies_when: ["Sutrella 316 instrument parts with cross holes"]
+    Sutrella wants the program number and revision on the traveler for every lot, and once they've approved a first
+    article the CAM program doesn't change without their OK, not even a small edit at the control. Post any edit as
+    a new program rev, keep the old one in the folder, and Linda tells them before it runs on their parts.
+  applies_when: ["Sutrella parts with an approved first article"]
   does_not_apply_when: []
-  rationale: "Hand deburring those holes is where the rejects came from."
-  cues: ["cross holes on a Sutrella print"]
-  actions: ["program a back-chamfer or deburr toolpath on every cross hole"]
-  common_mistake: "Leaving cross-hole burrs for hand deburr."
+  rationale: null
+  cues: ["an edit to a program for a Sutrella part", "a request to tweak a Sutrella program at the control"]
+  actions:
+    - "put the program number and revision on the traveler for every Sutrella lot"
+    - "post any edit as a new program rev and keep the old one in the folder"
+    - "have Linda tell Sutrella before the new rev runs on their parts"
+  common_mistake: "Making a small edit to a Sutrella program at the control without a new rev."
   expert_confidence: always
-  topics: [t-cus-03, t-mat-316, t-cam]
-  tags: [medical, deburr, stainless, cam]
+  topics: [t-cus-03, t-cam]
+  tags: [medical, cam, traceability]
   links: { customer: CUS-03, jobs: [J-G046] }
   source:
     kind: manual
     text: >-
-      Sutrella checks every cross hole under a scope at incoming, and a burr is a reject. On their 316 instruments I
-      always program a back-chamfer or deburr toolpath on every cross hole, in the machine, so nobody has to
-      hand-deburr. Tomás told me hand work on those holes is where the rejects came from before.
+      Sutrella wants the program number and revision on the traveler for every lot. Once they've approved a first
+      article, the CAM program doesn't change without their OK, not even a small edit at the control. I always post
+      an edit as a new program rev and keep the old one in the folder, and Linda tells them before it runs on their
+      parts. When I added the back-chamfer toolpath to the probe tips after the July lot, that went in as a new rev,
+      and Linda is getting their OK before the next lot.
     note: Entered by Jonah after the probe tip lot.
   approved: { by: PER-08, on: "2026-07-27", mode: self }
   created_on: "2026-07-24"
@@ -223,28 +230,31 @@
 - id: KC-088
   type: customer_quirk
   status: pending_review
-  title: "Quantrel: no hand blending on sealing surfaces, so finish grooves in one pass"
+  title: "Quantrel sealing faces: circular lay only, no tool marks running across the seal"
   statement: >-
-    Quantrel doesn't allow rework without their approval, and that includes hand blending a sealing surface. On
-    their 6061 plates, program the O-ring groove finishing toolpath as one continuous pass with a fresh tool.
-  applies_when: ["Quantrel 6061 plates with O-ring grooves or sealing faces"]
-  does_not_apply_when: []
-  rationale: "A stop mark in a groove can't be blended out without their approval."
-  cues: ["O-ring grooves on a Quantrel print"]
+    Quantrel's drawings call for a circular lay on the O-ring sealing faces, and their incoming rejects a face with
+    tool marks running across the seal. On their 6061 plates, finish those faces with a circular toolpath that
+    follows the groove, never a zigzag or a raster across it.
+  applies_when: ["Quantrel 6061 plates with O-ring sealing faces"]
+  does_not_apply_when: ["faces with no seal on them, which can be faced any way"]
+  rationale: "To them a mark across the seal is a leak path."
+  cues: ["a lay note on a sealing face of a Quantrel print"]
   actions:
-    - "finish O-ring grooves in one continuous pass with a fresh tool"
-    - "send any groove that needs a touch-up to Linda first"
-  common_mistake: "Blending a stop mark out by hand."
+    - "finish O-ring sealing faces with a circular toolpath that follows the groove"
+    - "never zigzag or raster across a sealing face"
+  common_mistake: "Facing the whole plate with one raster toolpath, sealing faces included."
   expert_confidence: not_stated
   topics: [t-cus-04, t-mat-6061, t-cam]
-  tags: [semiconductor, aluminum, cam, rework]
+  tags: [semiconductor, aluminum, cam]
   links: { customer: CUS-04, jobs: [J-G063] }
   source:
     kind: manual
     text: >-
-      Quantrel doesn't allow rework without their approval, and that includes hand blending on a sealing surface. So
-      on their 6061 plates I program the O-ring groove finishing toolpath as one continuous pass with a fresh tool,
-      no stop marks. If a groove needs a touch-up, it goes to Linda first, not to the bench.
+      Quantrel's drawings call for a circular lay on the O-ring sealing faces, and their incoming rejects a face
+      with tool marks running across the seal. To them a mark across the seal is a leak path. So on their 6061
+      plates I finish those faces with a circular toolpath that follows the groove, never a zigzag or a raster
+      across it. The rest of the plate can be faced any way. I want Linda to confirm how their incoming checks the
+      lay before this goes out.
     note: Entered by Jonah during the gas distribution plate job; waiting on Linda's review.
   created_on: "2026-08-26"
 
@@ -287,7 +297,7 @@
     have hidden it.
   applies_when: ["a feature reported off on a first piece or a first article"]
   does_not_apply_when: []
-  rationale: "A part made right to the old rev looks like a machining error on a report built from the new one."
+  rationale: "The model was a rev behind and the part was right to the old rev."
   cues: ["a CMM report that flags a feature on the first piece"]
   actions:
     - "check the CAM model rev against the drawing rev on the report"

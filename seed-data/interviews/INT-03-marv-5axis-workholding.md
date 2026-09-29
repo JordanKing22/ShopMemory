@@ -22,7 +22,7 @@ summary: Marv on holding parts on the DMU 50, the dovetail fixture plate, cleara
 You're the expert here. I don't know your shop, so I'll ask a lot of how and why questions. Nothing becomes shop knowledge until you approve it. Should we focus on 5-axis workholding and fixtures, or something else?
 
 ## T002 expert
-Workholding is right. On the DMU 50 the program is the easy part. How you hold the part decides whether the tool can even get to it.
+Workholding is right. On the DMU 50 the program's not where it goes wrong. How you hold the part decides whether the tool can even get to it.
 
 ## T003 interviewer (task_map) [TASK_MAP]
 If you broke holding a new part on the DMU 50 into three to six big steps, what would they be?
@@ -52,7 +52,7 @@ Cutting the plate on the VF-4 was about six hours with the setup. Then I put it 
 Here's what I have: you cut the plate on the VF-4 in about six hours, put it on the DMU and dry ran the program, the holder clipped the corner of the plate at full tilt because the sim still had the old vise, you put the real plate in the sim and moved two toolpaths, and the first real part ran clean the next morning. What did I miss or get out of order?
 
 ## T012 expert
-That's it. It clipped because I trusted the sim. Nobody checked what fixture was in it.
+Yeah. It clipped because I trusted the sim. Nobody checked what fixture was in it.
 
 ## T013 interviewer (deepen) [ASK_WHY]
 Why does the dovetail plate let you reach more of the part than the vise did?
@@ -94,7 +94,7 @@ Every time the plate goes back on the table, I probe it. The bore in the middle 
 Why the bore and the top face?
 
 ## T026 expert
-The bore gives me X and Y, the top face gives me Z, and the plate is the one thing that sits the same way every time. Then I probe the blank too, because saw-cut blanks are never the same height. If the dovetail on a blank got cut shallow, the whole part sits low and your clearance is gone.
+The bore gives me X and Y, the top face gives me Z, and once it's probed the plate is the one thing I trust. Then I probe the blank too, because saw-cut blanks are never the same height. If the dovetail on a blank got cut shallow, the whole part sits low and your clearance is gone.
 
 ## T027 interviewer (deepen) [KA_PROBE]
 Does any of this show up when a job gets quoted?
@@ -118,7 +118,7 @@ Measuring the clearance to the bottom of the blank instead of the lowest feature
 Let me say it back as a rule: on the dovetail plate, leave the blank tall enough that the part sits at least 3/4 inch above the jaws, and probe the plate every time it goes on the table. What did I get wrong or leave out?
 
 ## T034 expert
-It's 3/4 inch to the lowest feature you cut, not to the part. And probe the blank too, not just the plate. Otherwise that's right.
+Close. It's 3/4 inch to the lowest feature you cut, not to the part. And probe the blank too, not just the plate.
 
 ## T035 interviewer (wrap) [WRAP]
 What should I have asked that I didn't?

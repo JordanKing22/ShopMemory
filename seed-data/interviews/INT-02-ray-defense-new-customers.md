@@ -43,13 +43,13 @@ The Velmont housing. First lot for a brand-new customer, eight pieces, titanium,
 Walk me through that job from when it landed on your desk to when it shipped.
 
 ## T010 expert
-I quoted the parts and put in an allowance for the first article. They came back with two rounds of questions on the balloon drawing. Then their source inspector came out before we could ship. One housing got scrapped for a wall under minimum. It shipped two weeks late and way over the hours.
+I quoted it as a pilot. The parts, the first article, and a paperwork allowance on its own line. It still wasn't enough. They came back with two rounds of questions on the balloon drawing. Then their source inspector came out before we could ship. One housing got scrapped for a wall under minimum. It shipped late and way over the hours.
 
 ## T011 interviewer (timeline) [TIMELINE]
-Here's what I have: you quoted the parts plus a first article allowance, two rounds of questions, a source inspection visit, one housing scrapped for a wall under minimum, and it shipped two weeks late. What did I miss or get out of order?
+Here's what I have: you quoted it as a pilot with a paperwork allowance, then two rounds of questions, a source inspection visit, one housing scrapped for a wall under minimum, and it still shipped late and over the hours. What did I miss or get out of order?
 
 ## T012 expert
-You got it. The scrap was the machining side. The rest was all paperwork and waiting.
+You got it. The scrap was the machining side. The rest was paperwork and waiting, a lot more of it than I'd allowed for.
 
 ## T013 interviewer (deepen) [ASK_WHY]
 Why does the paperwork side cost so much more on a first lot?
@@ -67,7 +67,7 @@ New customer, and a defense or space customer with a real quality department. A 
 How do you handle that in the quote now?
 
 ## T018 expert
-With a brand-new defense customer I usually quote the first lot as a pilot. I price the first article, the source inspection and a paperwork allowance as their own lines, and I tell them the second lot will come down.
+With a brand-new defense customer I usually quote the first lot as a pilot. I price the first article, the source inspection and a paperwork allowance as their own lines, and I tell them the second lot will come down. After Velmont I make the paperwork allowance bigger than feels right.
 
 ## T019 interviewer (deepen) [KA_PROBE]
 Is there something about a particular customer that tripped someone up?

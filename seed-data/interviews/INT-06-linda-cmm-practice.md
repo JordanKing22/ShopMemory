@@ -22,7 +22,7 @@ summary: Linda on CMM practice — letting parts soak to room temperature, holdi
 You're the expert here. I don't know your shop, so I'll ask a lot of how and why questions. Nothing becomes shop knowledge until you approve it. Should we focus on the CMM, or something else?
 
 ## T002 expert
-The CMM. It's the machine everybody trusts and nobody questions. It'll give you a number to four places whether the number means anything or not.
+The CMM. Everybody believes whatever it prints. It'll give you a number to four places whether it means anything or not.
 
 ## T003 interviewer (task_map) [TASK_MAP]
 If you broke checking a part on the CMM into three to six big steps, what would they be?
@@ -52,7 +52,7 @@ The machinist held it on the bottom face and did the top and the bores in one op
 Here's what I have: the part was held on the bottom face, the program was aligned to the top face and the first bore, every part passed here, the customer checked from the bottom face and a third of the lot was out, and the lot was made again. What did I miss or get out of order?
 
 ## T012 expert
-You missed why. The top face wasn't parallel to the bottom. My program couldn't see that, because it started from the top face. Otherwise that's it.
+You missed why. It never sat down flat in the vise, so the top face came out not parallel to the bottom and the bores leaned with it. My program couldn't see that, because it started from the top face.
 
 ## T013 interviewer (deepen) [ASK_WHY]
 Why did aligning to the top face hide it?

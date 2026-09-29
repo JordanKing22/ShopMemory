@@ -21,7 +21,7 @@ summary: Linda on first articles for Aerovance — ballooning to their character
 You're the expert here. I don't know your shop, so I'll ask a lot of how and why questions. Nothing becomes shop knowledge until you approve it. Should we focus on first articles, or something else?
 
 ## T002 expert
-First articles. On most jobs the machining is the part everybody watches. The first article is where a good part still gets sent back.
+First articles. You can make a perfect part and still get the package kicked back.
 
 ## T003 interviewer (task_map) [TASK_MAP]
 If you broke a first article into three to six big steps, what would they be?
@@ -33,7 +33,7 @@ Get the customer's drawing and make sure it's the right revision. Balloon it, ev
 Which of those steps takes the most experience to get right?
 
 ## T006 expert
-Ballooning. Deciding what counts as a characteristic. The dimensions are easy. The notes are where people miss things — edge breaks, marking, the finish note, the material spec. Every one of those is a characteristic and gets a balloon.
+Ballooning. Deciding what counts as a characteristic. Nobody forgets the dimensions. The notes are where people miss things — edge breaks, marking, the finish note, the material spec. Every one of those is a characteristic and gets a balloon.
 
 ## T007 interviewer (incident) [INCIDENT]
 Think of a specific recent job where the ballooning really mattered. Which job comes to mind?
@@ -111,7 +111,7 @@ Trust the old folder. And think the CMM report is the whole job. They'll measure
 Let me say it back as a rule: on a new rev, balloon the new drawing from scratch and check the numbers against their characteristic list before the CMM program gets touched. What did I get wrong or leave out?
 
 ## T032 expert
-Add the notes. Every note gets a balloon and a result, not just the dimensions. Otherwise that's right.
+Mostly. You left out the notes. Every note gets a balloon and a result, not just the dimensions.
 
 ## T033 interviewer (wrap) [WRAP]
 What should I have asked that I didn't?

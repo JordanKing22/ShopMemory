@@ -15,7 +15,7 @@
     tell by looking at what changed whether they renumbered.
   applies_when: ["new revision of a part we've run before"]
   does_not_apply_when: ["repeat order on the same rev"]
-  rationale: "A customer can renumber every characteristic after a change, and nothing about the change tells you."
+  rationale: "You can't tell by looking at what changed. That's the trap."
   cues: ["a new rev letter on a part with an old job folder"]
   actions:
     - "balloon the new drawing from scratch"
@@ -67,20 +67,20 @@
 - id: KC-032
   type: customer_quirk
   status: approved
-  title: "Aerovance: no partial first article on a new rev; raw CMM printout behind the form"
+  title: "Aerovance FAI: raw CMM printout behind their form, features named by balloon"
   statement: >-
-    Aerovance won't take a partial first article on a new revision, even if the only change is a note: every
-    characteristic gets measured again and reported, every time. They want the raw CMM printout behind their form,
-    with our balloon numbers on the printout too, so name the CMM features by balloon number.
-  applies_when: ["Aerovance part", "new revision"]
+    Aerovance wants the raw CMM printout behind their first article form, with our balloon numbers on the printout
+    too, so name the features in the CMM program by balloon number. A printout that doesn't match the form is another
+    kickback. And on a new revision they won't take a partial: every characteristic gets measured again and reported.
+  applies_when: ["Aerovance first article package"]
   does_not_apply_when: ["repeat order on the same rev"]
-  rationale: "Their receiving inspection loads our numbers against their characteristic list; if they don't line up, they stop reading."
+  rationale: "Their receiving inspection loads our numbers against their characteristic list."
   cues: ["a printout that says circle twelve where the form says balloon twenty-one"]
   actions:
-    - "do a full first article on every new rev, even when only a note changed"
     - "attach the raw CMM printout behind their form"
     - "name the features in the CMM program by balloon number"
-  common_mistake: "Sending a partial first article because the rev only changed a note."
+    - "do a full first article on every new rev, even when only a note changed"
+  common_mistake: "Sending a printout with the CMM's own feature names, so it doesn't line up with their form."
   expert_confidence: always
   topics: [t-cus-01, t-fai-cmm]
   tags: [first-article, cmm]
@@ -89,7 +89,7 @@
   evidence:
     - { turn: INT-05-T018, quote: "But a new rev, even if the only change is a note, gets a full first article. Aerovance won't take a partial first article on a new revision. Every characteristic gets measured again and reported, every time.", confidence: true }
     - { turn: INT-05-T022, quote: "And they want the raw CMM printout behind the form, with our balloon numbers on the printout too." }
-    - { turn: INT-05-T022, quote: "So I name the features in the CMM program by balloon number." }
+    - { turn: INT-05-T022, quote: "If the printout says circle twelve and the form says balloon twenty-one, that's another kickback. So I name the features in the CMM program by balloon number." }
     - { turn: INT-05-T014, quote: "Their receiving inspection loads our numbers against their characteristic list." }
   approved: { by: PER-03, on: "2026-06-26", mode: self }
   created_on: "2026-06-25"
@@ -105,7 +105,7 @@
     quote the first article as its own time.
   applies_when: ["part that needs a first article"]
   does_not_apply_when: ["repeat order on the same rev"]
-  rationale: "Ballooning and checking the numbers take longer than the CMM run itself."
+  rationale: "Ballooning and checking the numbers is an hour of that. The CMM run is the short part."
   cues: ["a first article callout on the PO or the drawing"]
   actions:
     - "ask quality for the balloon count and whether a CMM program exists"
@@ -122,6 +122,7 @@
   source: { kind: interview, interview: INT-05 }
   evidence:
     - { turn: INT-05-T024, quote: "When it goes right, a first article like the harness clip is about three hours all in, and that's with a CMM program we could edit from rev C." }
+    - { turn: INT-05-T024, quote: "Ballooning and checking the numbers is an hour of that. The CMM run is the short part." }
     - { turn: INT-05-T024, quote: "A new part number with no program, figure a full day. The time usually goes with the balloon count, not the size of the part. The harness clip is small and it has sixty-three balloons.", confidence: true }
     - { turn: INT-05-T026, quote: "I tell him the balloon count and whether we already have a program. He quotes the first article as its own time, not buried in the cycle." }
   approved: { by: PER-03, on: "2026-06-26", mode: self }
@@ -136,7 +137,7 @@
     Measured in the fixture, it lies.
   applies_when: ["thin walls"]
   does_not_apply_when: []
-  rationale: "Clamping holds the wall where you want it; it moves once it's free."
+  rationale: "In the fixture it lies."
   cues: ["a wall that passes in the fixture and fails at final"]
   actions: ["unclamp and let the part sit before measuring"]
   common_mistake: "Measuring wall thickness in the fixture."
@@ -206,6 +207,7 @@
   links: { machine: m-cmm }
   source: { kind: interview, interview: INT-06 }
   evidence:
+    - { turn: INT-06-T020, quote: "Parts come off the machine warm, from the cut and the coolant." }
     - { turn: INT-06-T020, quote: "So I let parts soak on the granite until they're at room temperature before I measure anything tight. For a small aluminum part that's usually an hour. A big stainless block, I leave it overnight." }
     - { turn: INT-06-T022, quote: "On a two-inch aluminum bore straight off the machine, I've seen two tenths big." }
     - { turn: INT-06-T024, quote: "Anything under a thou of total tolerance always soaks, no arguments.", confidence: true }
@@ -323,6 +325,7 @@
   links: { machine: m-cmm }
   source: { kind: interview, interview: INT-06 }
   evidence:
+    - { turn: INT-06-T004, quote: "Hold it so it can't move but isn't squeezed." }
     - { turn: INT-06-T026, quote: "As lightly as it'll let you. Clay, a couple of light clamps, the fixture plate with the rests. It has to sit the way the print datums say, datum A down on the rests if you can." }
     - { turn: INT-06-T026, quote: "Never clamp across a feature you're measuring, and never clamp hard enough to pull the part flat.", confidence: true }
     - { turn: INT-06-T026, quote: "If it's a part we'll see again, I take a photo of the setup and put it in the program folder, so the next run sits the same way." }
@@ -505,7 +508,7 @@
     the stylus only reaches in so far. Do the final check after passivation, at room temperature.
   applies_when: ["small, long bores like the drill guide's guide bore"]
   does_not_apply_when: []
-  rationale: "A long bore can check fine at the top and be tight at the other end."
+  rationale: "The stylus only reaches in so far."
   cues: ["a long bore that checks fine at the top on the CMM"]
   actions:
     - "check the guide bore with gauge pins from both ends"
@@ -520,8 +523,9 @@
     text: >-
       Sutrella drill guide — check the guide bore with gauge pins from both ends, not just the CMM from the top. The
       stylus only reaches in so far. On the July lot the bore checked fine on the CMM at the top, and the pin wouldn't
-      go from the other end. Between that and thermal growth on the Swiss that morning, we re-measured everything and
-      offset. I always pin these from both ends now, after passivation, at room temperature.
+      go from the other end. Between that and the undersize bundle Tomás found that week, we re-measured everything
+      and offset. On a bore with a tolerance that tight, I always pin these from both ends now, after passivation, at
+      room temperature.
     note: Entered by Linda after the drill guide job.
   approved: { by: PER-03, on: "2025-07-23", mode: self }
   created_on: "2025-07-21"

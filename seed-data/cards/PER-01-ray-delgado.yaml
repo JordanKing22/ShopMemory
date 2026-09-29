@@ -13,7 +13,7 @@
     down in light passes, not from the volume of stock removed. The software's removal-rate number usually comes in low.
   applies_when: ["titanium bracket", "thin walls"]
   does_not_apply_when: ["thick walls that don't need light finishing passes"]
-  rationale: "Light passes on tall thin walls take time that a removal-rate estimate doesn't see."
+  rationale: "The removal-rate number the software gives usually comes in low."
   cues: ["tall thin walls on the print"]
   actions: ["quote finishing from total wall height"]
   common_mistake: "Quoting finishing from the volume removed."
@@ -27,8 +27,8 @@
       Titanium brackets with thin walls: I quote finish time off the total wall height I have to walk down in light
       passes, not off how much stock comes out. The removal-rate number the software gives usually comes in low.
     note: From Ray's quoting binder.
-  approved: { by: PER-01, on: "2025-03-04", mode: self }
-  created_on: "2025-03-01"
+  approved: { by: PER-01, on: "2026-03-12", mode: self }
+  created_on: "2026-03-09"
 
 - id: KC-002
   type: setup_tip
@@ -39,7 +39,7 @@
     the part allows. A worn finisher pushes the wall and you chase size all day.
   applies_when: ["thin titanium walls", "finish pass on the DMU 50"]
   does_not_apply_when: []
-  rationale: "A worn finisher pushes a thin wall away instead of cutting it."
+  rationale: "A worn finisher pushes the wall and you chase size all day."
   cues: ["wall size drifting part to part"]
   actions: ["use a fresh end mill for the finish pass", "use the shortest stickout the part allows"]
   common_mistake: "Running the finisher until it looks worn."
@@ -52,9 +52,9 @@
     text: >-
       DMU 50, thin titanium walls: always finish with a fresh end mill and the shortest stickout the part lets you
       get away with. A worn finisher pushes the wall and you chase size all day.
-    note: From Ray's quoting binder (his machining years).
-  approved: { by: PER-01, on: "2025-03-04", mode: self }
-  created_on: "2025-03-01"
+    note: From Ray's quoting binder (what he tells the 5-axis crew on titanium work).
+  approved: { by: PER-01, on: "2025-12-15", mode: self }
+  created_on: "2025-12-13"
 
 - id: KC-003
   type: customer_quirk
@@ -79,8 +79,8 @@
       Aerovance always wants the first article package in their template. If the balloon numbers don't match the
       characteristic IDs on their drawing, they kick the whole package back.
     note: From Ray's quoting binder.
-  approved: { by: PER-01, on: "2025-03-04", mode: self }
-  created_on: "2025-03-01"
+  approved: { by: PER-01, on: "2026-03-12", mode: self }
+  created_on: "2026-03-09"
 
 - id: KC-004
   type: quoting_rule
@@ -91,7 +91,7 @@
     tool changes into the quote instead of hoping the inserts last.
   applies_when: ["Inconel 718 part"]
   does_not_apply_when: []
-  rationale: "Inconel eats inserts and punishes rubbing cuts."
+  rationale: "I quote the extra tool changes instead of hoping the inserts last."
   cues: []
   actions: ["figure about three times the 17-4 cycle time", "plan extra tool changes into the quote"]
   common_mistake: "Quoting Inconel from a stainless cycle time."
@@ -104,7 +104,7 @@
     text: >-
       Inconel 718 — I usually figure about three times the cycle time of the same part in 17-4, and I quote the extra
       tool changes instead of hoping the inserts last.
-    note: From Ray's quoting binder, updated after the seal carrier rings.
+    note: From Ray's quoting binder, updated while the seal carrier rings were running over.
   approved: { by: PER-01, on: "2026-04-02", mode: self }
   created_on: "2026-04-01"
 
@@ -153,6 +153,7 @@
   evidence:
     - { turn: INT-02-T018, quote: "With a brand-new defense customer I usually quote the first lot as a pilot. I price the first article, the source inspection and a paperwork allowance as their own lines, and I tell them the second lot will come down.", confidence: true }
     - { turn: INT-02-T016, quote: "New customer, and a defense or space customer with a real quality department. A commercial customer with a simple PO, not so much." }
+    - { turn: INT-02-T014, quote: "Nobody on either side knows the other one yet. Every question goes back and forth twice." }
   approved: { by: PER-01, on: "2026-07-10", mode: self }
   created_on: "2026-07-08"
 
@@ -165,7 +166,7 @@
     first parts grow as the spindle warms.
   applies_when: ["RP-M04 Genos", "bores under ±0.0005"]
   does_not_apply_when: []
-  rationale: "This spindle grows as it warms since the rebuild."
+  rationale: "Since the 2023 spindle rebuild, the first parts grow as the spindle warms up."
   cues: ["first bores of the morning measuring small"]
   actions: ["run the warm-up program first"]
   common_mistake: "Starting tight bores on a cold machine."
@@ -192,7 +193,7 @@
     and we don't eat a re-quote.
   applies_when: ["Aerovance 7075 bracket with anodize"]
   does_not_apply_when: []
-  rationale: "Finish callouts change late on these parts."
+  rationale: "The anodize callout sometimes changes after the PO."
   cues: ["anodize note on an Aerovance bracket"]
   actions: ["quote anodize as a separate line"]
   common_mistake: "Burying the anodize cost in the part price."
@@ -206,8 +207,8 @@
       Aerovance 7075 brackets: the anodize callout sometimes changes after the PO. Quote anodize as its own line so
       we don't eat a re-quote.
     note: From Ray's quoting binder.
-  approved: { by: PER-01, on: "2026-03-01", mode: self }
-  created_on: "2026-02-27"
+  approved: { by: PER-01, on: "2026-03-25", mode: self }
+  created_on: "2026-03-23"
 
 - id: KC-009
   type: setup_tip
@@ -218,7 +219,7 @@
     Any chip in a port is a reject.
   applies_when: ["Quantrel chamber part in 6061"]
   does_not_apply_when: []
-  rationale: "Cleanliness is part of the spec on chamber parts."
+  rationale: "Any chip in a port is a reject."
   cues: ["ported chamber plate"]
   actions: ["deburr and bag in the clean area before parts leave the machine"]
   common_mistake: "Letting parts sit in the open tote."
@@ -232,8 +233,8 @@
       Quantrel 6061 chamber plates — always deburr and bag in the clean area before they leave the machine. Any chip
       in a port is a reject.
     note: From Ray's binder.
-  approved: { by: PER-01, on: "2025-08-18", mode: self }
-  created_on: "2025-08-15"
+  approved: { by: PER-01, on: "2026-07-01", mode: self }
+  created_on: "2026-06-29"
 
 - id: KC-010
   type: quoting_rule
@@ -244,7 +245,7 @@
     over the phone isn't a quote, and the lead time is what bites.
   applies_when: ["any job with heat treat, passivation or other outside processing"]
   does_not_apply_when: []
-  rationale: "Vendor lead time drives the ship date more than the vendor price drives the quote."
+  rationale: "When I skip that, the lead time is what bites."
   cues: ["a process callout on the print"]
   actions: ["get vendor price and lead time in writing before quoting", "add travel days both ways"]
   common_mistake: "Treating outside processing as a line item instead of a step in the job."
@@ -281,7 +282,7 @@
     text: >-
       RP-M07 wire EDM: after a wire break on thick stock, usually check the auto-threading didn't restart on the
       wrong start hole before you walk away.
-    note: From Ray's binder; waiting on Marv to confirm it still happens.
+    note: From Ray's binder; Marv hit it again on 2026-08-19 (ME-022). Waiting on his review.
   classification: general
   approved: null
   created_on: "2026-08-20"

@@ -22,7 +22,7 @@ summary: Tomás on setting up small parts on the Swiss, the guide bushing and ba
 You're the expert here. I don't know your shop, so I'll ask a lot of how and why questions. Nothing becomes shop knowledge until you approve it. Should we focus on the Swiss, or something else?
 
 ## T002 expert
-The Swiss is good. Small parts, mostly medical. It looks easy because it runs by itself all night, but the setup is where you win or lose.
+The Swiss is good. Small parts, mostly medical. It runs by itself all night, so people think it's easy. If the setup's off, it makes bad parts all night too.
 
 ## T003 interviewer (task_map) [TASK_MAP]
 If you broke setting up a new small part on the Swiss into three to six big steps, what would they be?
@@ -40,13 +40,13 @@ The bar and the bushing. Everybody wants to jump to the program. But if the bush
 Think of a specific recent job where the bar and the bushing really mattered. Which job comes to mind?
 
 ## T008 expert
-The 316 drill guides last July. A long run, a hundred and twenty-five pieces, with one tight diameter on each.
+A long run of 316 medical parts last July, with one tight diameter on each.
 
 ## T009 interviewer (timeline) [TIMELINE]
 Walk me through that job from setup to when it shipped.
 
 ## T010 expert
-The first bundle of bar ran great. The second day we opened a new bundle and nobody miked it. It was on the small side, so the bushing was loose on it. The parts started to chatter and the tight diameter wandered, a couple tenths one way, then the other. The night guy kept chasing it with offsets. Next morning I miked the bar, it was small, I reset the bushing, and it settled right down. We lost most of a shift.
+The first bundle of bar ran great. The second day we opened a new bundle and nobody miked it. It was on the small side, so the bushing was loose on it. The parts started to chatter and the tight diameter wandered, a couple tenths one way, then the other. The night guy kept chasing it with offsets. Next morning I miked the bar, it was small, I reset the bushing, and it settled right down. We lost a couple of hours.
 
 ## T011 interviewer (timeline) [TIMELINE]
 Here's what I have: the first bundle ran fine, a new bundle came in small and wasn't checked, the bushing was loose, the parts chattered and the diameter wandered, offsets chased it overnight, and resetting the bushing fixed it. What did I miss or get out of order?
@@ -100,13 +100,13 @@ Overall length, yes. Longer than that, the catcher grabs them fine. Shorter, you
 You price a lot of the turned work. What do people miss on a small Swiss part?
 
 ## T028 expert
-When I quote small parts on the Swiss, the cycle time is the easy part. What people miss is the handling: deburr under the scope, measure after they cool, bag and count. On the PEEK sleeves and spacers the handling after the machine takes longer than the cycle. I usually price the handling as its own time per part.
+When I quote small parts on the Swiss, everybody looks at the cycle time. What people miss is the handling: deburr under the scope, measure after they cool, bag and count. On the PEEK sleeves and spacers the handling after the machine takes longer than the cycle. I usually price the handling as its own time per part.
 
 ## T029 interviewer (what_if) [WHAT_IF]
-If the new bundle had been checked before it was loaded, how would the drill guide job have gone?
+If the new bundle had been checked before it was loaded, how would that July run have gone?
 
 ## T030 expert
-It would have been a boring job, which is what you want. Ten minutes to mike the bar and reset the bushing, instead of most of a shift chasing offsets.
+It would have been a boring job, which is what you want. Ten minutes to mike the bar and reset the bushing, instead of a night of chasing offsets.
 
 ## T031 interviewer (novice_gap) [NOVICE_GAP]
 What would a new setup person most likely get wrong on the Swiss?
@@ -118,7 +118,7 @@ They trust the tag on the bar. And when size moves they reach for the offset ins
 Let me say it back as a rule: mike every new bundle before you set the guide bushing, set the bushing to the bar you've got, and break the chip on 316. What did I get wrong or leave out?
 
 ## T034 expert
-Add the part catcher on short parts. Otherwise that's right. And when size wanders, don't touch the offset until you've looked at the bushing.
+You forgot the part catcher on short parts. And when size wanders, don't touch the offset until you've looked at the bushing.
 
 ## T035 interviewer (wrap) [WRAP]
 Who else here knows this well?

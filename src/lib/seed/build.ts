@@ -95,16 +95,26 @@ export interface SeedReport {
   counts: Record<string, number>;
   classificationMix: Record<string, Record<Classification, number>>;
   invariants: InvariantReport | null;
+  /** Facts of every generated record that hand-written content links to (recorded in seed.lock.json). */
+  generatedRefs: GeneratedRefs;
+}
+
+/** Generated record id → the facts hand-written stories may lean on (plus who references it). */
+export type GeneratedRefs = Record<string, { facts: Record<string, string | number | boolean | null>; referencedBy: string[] }>;
+
+export interface BuildOptions {
+  /** `generated_refs` from seed-data/seed.lock.json: a referenced generated record whose facts changed is an error. */
+  lockedGeneratedRefs?: GeneratedRefs;
 }
 
 const GENERATED_FILE = "parts/families.yaml (generated)";
 const noon = (date: string) => `${date}T12:00:00Z`;
 const emptyMix = (): Record<Classification, number> => ({ general: 0, internal: 0, customer_confidential: 0, export_controlled: 0 });
 
-export function buildSeedBundle(sources: SeedSources): BuildResult {
+export function buildSeedBundle(sources: SeedSources, opts: BuildOptions = {}): BuildResult {
   const issues = new IssueList();
   const p = parseSeedSources(sources, issues);
-  const report: SeedReport = { counts: {}, classificationMix: {}, invariants: null };
+  const report: SeedReport = { counts: {}, classificationMix: {}, invariants: null, generatedRefs: {} };
   if (!p.shop || !p.families || !p.quoteModel || !p.matrix || !p.anchors || !p.rayLive) {
     return { bundle: null, issues: issues.items, report };
   }
@@ -623,6 +633,13 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
       if (c.approved.on > demoToday) issues.error(file, `${c.id}: approved after DEMO_TODAY.`, "date", line);
     }
     if (c.created_on > demoToday) issues.error(file, `${c.id}: created after DEMO_TODAY.`, "date", line);
+    // A card can't cite a job or quote from its own future.
+    for (const l of linkList(c)) {
+      const started = l.kind === "job" ? jobs.get(l.id)?.value.started_on : l.kind === "quote" ? quotes.get(l.id)?.value.quoted_on : null;
+      if (started && c.created_on < started) {
+        issues.error(file, `${c.id}: created ${c.created_on}, before its linked ${l.kind} ${l.id} (${started}).`, "date", line);
+      }
+    }
     const hire = people.get(personId)?.value.hire_date;
     if (hire && c.created_on < hire) issues.error(file, `${c.id}: created before ${personId} was hired.`, "date", line);
     for (const t of c.thresholds) {
@@ -856,6 +873,16 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
     const firstSection = new Map<string, DocSectionKey>();
     for (const s of sections) for (const it of s.items) for (const id of it.cardIds) if (!firstSection.has(id)) firstSection.set(id, s.key);
     for (const id of fm.source_cards) {
+      const approvedOn = cards.get(id)?.card.approved?.on;
+      if (approvedOn && fm.created_on < approvedOn) {
+        issues.error(file, `${fm.id}: created ${fm.created_on}, before its source card ${id} was approved (${approvedOn}).`, "date", 2);
+      }
+    }
+    const docJobStart = fm.job ? jobs.get(fm.job)?.value.started_on : null;
+    if (docJobStart && fm.created_on < docJobStart) issues.error(file, `${fm.id}: created before job ${fm.job} started.`, "date", 2);
+    if (fm.approved_on && fm.approved_on < fm.created_on) issues.error(file, `${fm.id}: approved before it was created.`, "date", 2);
+    if ((fm.approved_on ?? fm.created_on) > demoToday) issues.error(file, `${fm.id}: dated after DEMO_TODAY.`, "date", 2);
+    for (const id of fm.source_cards) {
       if (!cards.has(id)) continue;
       docCardRows.push({ documentId: fm.id, cardId: id, cardVersion: 1, section: firstSection.get(id) ?? "cautions", sort: sort++ });
     }
@@ -898,6 +925,9 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
       if (ev.job && !jobs.has(ev.job)) issues.error(file, `${ev.id}: job ${ev.job} doesn't exist.`, "fk", line);
       if (ev.person && !people.has(ev.person)) issues.error(file, `${ev.id}: person ${ev.person} doesn't exist.`, "fk", line);
       if (ev.on > demoToday) issues.error(file, `${ev.id}: dated after DEMO_TODAY.`, "date", line);
+      const evJob = ev.job ? jobs.get(ev.job)?.value : undefined;
+      if (evJob?.started_on && ev.on < evJob.started_on) issues.error(file, `${ev.id}: dated before job ${ev.job} started.`, "date", line);
+      if (evJob && evJob.actual_machine && evJob.actual_machine !== m.id) issues.error(file, `${ev.id}: job ${ev.job} ran on ${evJob.actual_machine}, not ${m.id}.`, "fk", line);
       const floor = maxClass("internal", ev.job ? (jobClass.get(ev.job) ?? "export_controlled") : "internal", textFloor(ev.summary).floor);
       const res = resolveClassification({ floor, defaultClass: floor, declared: ev.classification, subject: "machine event" });
       if (res.error) issues.error(file, `${ev.id}: ${res.error}`, "classification", line);
@@ -1351,6 +1381,56 @@ export function buildSeedBundle(sources: SeedSources): BuildResult {
     issues,
   });
   report.invariants = inv.report;
+
+  // Hand-written cards, sheets, events, logs and interviews may tell stories about generated records ("ran an
+  // hour over"). Record those records' facts; if the generator ever changes them, say which content to re-read.
+  const refs: GeneratedRefs = {};
+  const refer = (id: string | null | undefined, by: string) => {
+    if (!id || !/^(PRT-G|Q-G|J-G)/.test(id)) return;
+    const facts = generatedFacts(id);
+    if (!facts) return;
+    (refs[id] ??= { facts, referencedBy: [] }).referencedBy.push(by);
+  };
+  const generatedFacts = (id: string): GeneratedRefs[string]["facts"] | null => {
+    const j = jobs.get(id)?.value;
+    if (j) {
+      const q = j.quoteId ? quotes.get(j.quoteId)?.value : undefined;
+      return {
+        job_number: j.job_number, part: j.partId, status: j.status, started_on: j.started_on, shipped_on: j.shipped_on,
+        machine: j.actual_machine, lead: j.lead, quoted_hours: q?.quoted_hours ?? null, actual_hours: j.actual_hours,
+        quoted_by: q?.quoted_by ?? null, scrap_qty: j.scrap_qty, ncr_count: j.ncr_count, on_time: j.on_time, debrief: j.debrief,
+      };
+    }
+    const q = quotes.get(id)?.value;
+    if (q) return { quote_number: q.quote_number, part: q.part, quoted_on: q.quoted_on, quoted_by: q.quoted_by, qty: q.qty, quoted_hours: q.quoted_hours, machine: q.primary_machine, outcome: q.outcome };
+    const pt = parts.get(id)?.value;
+    if (pt) return { part_number: pt.part_number, description: pt.description, material: pt.material, family: pt.family, features: pt.features.join("+"), customer: pt.customer };
+    return null;
+  };
+  for (const ci of cardList) for (const l of linkList(ci.card)) refer(l.id, ci.card.id);
+  for (const d of docRows) {
+    refer(d.partId, d.id);
+    refer(d.jobId, d.id);
+  }
+  for (const e of eventRows) refer(e.jobId, e.id);
+  for (const l of qrlRows) refer(l.quoteId, l.id);
+  for (const i of interviewRows) for (const id of [i.contextQuoteId, i.contextJobId, i.contextPartId]) refer(id, i.id);
+  for (const r of Object.values(refs)) r.referencedBy = [...new Set(r.referencedBy)].sort();
+  report.generatedRefs = refs;
+  for (const [id, locked] of Object.entries(opts.lockedGeneratedRefs ?? {})) {
+    const now = refs[id];
+    if (!now) continue; // no longer referenced
+    const changed = Object.keys(locked.facts).filter((k) => JSON.stringify(locked.facts[k]) !== JSON.stringify(now.facts[k]));
+    if (changed.length > 0) {
+      issues.error(
+        FILES.families,
+        `Generated record ${id} changed (${changed.map((k) => `${k}: ${JSON.stringify(locked.facts[k])} → ${JSON.stringify(now.facts[k])}`).join("; ")}). ` +
+          `Re-read ${now.referencedBy.join(", ")} (they may describe the old values), then run npm run seed:lock.`,
+        "generated_ref",
+      );
+    }
+  }
+
   tables.coverageSnapshots = inv.baseline.map((b) => ({ ...b, takenAt: noon(demoToday), reason: "seed_baseline" as const }));
 
   // Counts (warnings only) and the classification mix.

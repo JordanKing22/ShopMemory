@@ -21,6 +21,9 @@ const lock = {
   demoToday: result.bundle.demoToday,
   seed: result.bundle.seed,
   rows: bundleRowCounts(result.bundle),
+  // Generated records that cards, sheets, events and logs link to, with the facts their stories may rely on.
+  // If the generator changes one of these, seed:check names the content to re-read.
+  generated_refs: result.report.generatedRefs,
 };
 fs.writeFileSync(LOCK_FILE, JSON.stringify(lock, null, 2) + "\n", "utf8");
 out.line(`seed-data/seed.lock.json updated: bundle ${result.bundle.hash.slice(0, 12)}.`);

@@ -6,6 +6,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { isSeedBundle, type SeedBundle } from "./bundle";
+import type { GeneratedRefs } from "./build";
 import { normalizeText, type SeedSources } from "./source";
 
 export const SEED_DIR = path.join(process.cwd(), "seed-data");
@@ -59,4 +60,23 @@ export function archiveAuditRows(rows: Record<string, unknown>[], nowIso: string
   const file = path.join(AUDIT_ARCHIVE_DIR, `audit-${nowIso.replace(/[:.]/g, "-")}.jsonl`);
   fs.writeFileSync(file, rows.map((r) => JSON.stringify(r)).join("\n") + "\n", "utf8");
   return file;
+}
+
+export interface SeedLock {
+  hash: string;
+  demoToday: string;
+  seed: number;
+  rows: Record<string, number>;
+  generated_refs?: GeneratedRefs;
+}
+
+/** Reads seed-data/seed.lock.json, or null when it is missing or unreadable. */
+export function readLock(file: string = LOCK_FILE): SeedLock | null {
+  if (!fs.existsSync(file)) return null;
+  try {
+    const parsed = JSON.parse(normalizeText(fs.readFileSync(file, "utf8"))) as SeedLock;
+    return typeof parsed.hash === "string" ? parsed : null;
+  } catch {
+    return null;
+  }
 }

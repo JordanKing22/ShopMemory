@@ -151,5 +151,7 @@ comes from, like `[KC-002, KC-021]`. Cite CAM program numbers, never speeds or f
   seed-data/cards/PER-03-linda-marchetti.yaml:31  error  Card KC-038: topics[0] (t-fai-cmm) has no support — it needs a mention, a matching link or the session topic.
 ```
 
-Open the file at that line, fix it, and run `npm run seed:check` again. Warnings (for example record counts that differ
+Open the file at that line, fix it, and run `npm run seed:check` again. If it says a **generated record changed**
+(because someone edited `quotes/quote-model.yaml` or `parts/families.yaml`), re-read the cards it names — they may tell
+a story about the old numbers — fix them if needed, then run `npm run seed:lock`. Warnings (for example record counts that differ
 from the brief) don't block anything.

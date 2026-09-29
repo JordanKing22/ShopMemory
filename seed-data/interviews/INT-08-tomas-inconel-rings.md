@@ -22,7 +22,7 @@ summary: Tomás on turning Inconel 718 rings on the Integrex, insert life, never
 You're the expert here. I don't know your shop, so I'll ask a lot of how and why questions. Nothing becomes shop knowledge until you approve it. Should we focus on the Inconel rings, or something else?
 
 ## T002 expert
-The Inconel rings. Everybody knows Inconel is slow. What they don't know is where the time actually goes.
+The Inconel rings. It's slow, sure. It's the inserts that got me on the last batch.
 
 ## T003 interviewer (task_map) [TASK_MAP]
 If you broke running a batch of those rings into three to six big steps, what would they be?
@@ -46,13 +46,13 @@ The seal carrier rings in March. Sixteen rings, Inconel 718, on the Integrex, wi
 Walk me through that job from when you priced it to when it shipped.
 
 ## T010 expert
-I priced it at thirty hours. I used Ray's three times the 17-4 cycle for the cutting and put in one finishing insert per ring. On the first ring the finishing insert was done before I got across the sealing face. We ended up at three inserts a ring, two extra changes on every ring. The rings were good, no scrap, and they shipped on time. It came in at thirty-four hours.
+I priced it at thirty hours. I used Ray's three times the 17-4 cycle for the cutting and put in one finishing insert per ring. On the first ring the finishing insert was done before I got through the seal bore. We ended up at three inserts a ring, two extra changes on every ring. The rings were good, no scrap, and they shipped on time. It came in at thirty-four hours.
 
 ## T011 interviewer (timeline) [TIMELINE]
 Here's what I have: priced at thirty hours with three times the 17-4 cycle and one finishing insert per ring, the insert didn't last a ring, you ended up at three a ring, no scrap, and it shipped on time at thirty-four hours. What did I miss or get out of order?
 
 ## T012 expert
-That's it. The cutting time was right. The insert changes were what I missed. Every change is seven, eight minutes by the time you index it, touch it off and take a check cut. Two extra a ring is fifteen minutes. Sixteen rings, that's the four hours.
+Yep. The cutting time was right. The insert changes were what I missed. Every change is seven, eight minutes by the time you index it, touch it off and take a check cut. Two extra a ring is fifteen minutes. Sixteen rings, that's the four hours.
 
 ## T013 interviewer (deepen) [ASK_WHY]
 Why does an insert go that fast on this material?
@@ -112,7 +112,7 @@ They'd take a light spring pass to clean up the finish, like on stainless. On In
 Let me say it back as a rule: on these rings, never let the tool dwell, take at least ten thou on the finish pass, and add the insert changes on top of the cutting time. What did I get wrong or leave out?
 
 ## T032 expert
-Add the count. Change the finishing insert on a count, not when it squeals. Otherwise that's right.
+That's most of it. Add the count: change the finishing insert on a count, not when it squeals.
 
 ## T033 interviewer (wrap) [WRAP]
 Who else here knows this well?

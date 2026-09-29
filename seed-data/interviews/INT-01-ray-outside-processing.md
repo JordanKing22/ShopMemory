@@ -20,7 +20,7 @@ summary: Ray on quoting heat treat and passivation, and the end cap whose bores 
 You're the expert here. I don't know your shop, so I'll ask a lot of how and why questions. Nothing becomes shop knowledge until you approve it. Should we focus on outside processing, or something else?
 
 ## T002 expert
-Outside processing is good. It's where a quote looks fine on paper and then the job loses money after it leaves the building.
+Outside processing is good. A quote can look fine and the job still loses money once it leaves the building.
 
 ## T003 interviewer (task_map) [TASK_MAP]
 If you broke quoting a job with outside processing into three to six big steps, what would they be?
@@ -92,7 +92,7 @@ They'd take the vendor price and forget the sequence. Or they'd forget the trave
 Let me say it back as a rule: anything tight on 17-4 that gets heat treated, you leave stock and finish it after, and you get the outside processing quote in writing before ours goes out — price and lead time. What did I get wrong or leave out?
 
 ## T026 expert
-Add the travel days. Otherwise that's right. The end cap is the story I tell every new quoter.
+Yeah, but add the travel days, both ways. The end cap is the story I tell every new quoter.
 
 ## T027 interviewer (wrap) [WRAP]
 What should I have asked that I didn't?

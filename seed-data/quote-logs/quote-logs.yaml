@@ -12,7 +12,7 @@
   person: PER-01
   main_driver: >-
     The walls. The sensor mount has walls down around forty-five thou and about an inch and a quarter tall, in
-    titanium. Roughing it is the easy part. Walking those walls down to size is the job.
+    titanium. Roughing it out goes quick. Walking those walls down to size is the job.
   machine_rationale: >-
     DMU 50. It's where our titanium runs, it has the probe, and with five axes I get most of the features in two ops
     instead of four setups on a three-axis machine. Marv owns that machine and he's run brackets like this before.
@@ -34,9 +34,9 @@
   confidence_1to5: 4
   variance_review: >-
     Added after the job shipped. Came in at 33.5 hours against 32 quoted, about five percent over: half an hour long on
-    setup and about an hour on run time. Marv's first piece had a tapered wall from a finisher run one part too long,
-    and it was caught at first article. After that the finisher went on a schedule and the walls held size. I'd quote
-    it the same way.
+    setup and about an hour on run time. Marv's first piece had a tapered wall because it was finished with the end
+    mill left in from prove-out, and it was caught at first article. After that the finisher went on a schedule and
+    the walls held size. I'd quote it the same way.
   created_at: "2025-11-13T15:30:00Z"
 
 - id: QRL-02
@@ -44,7 +44,7 @@
   person: PER-05
   main_driver: >-
     Flatness on a 12-inch lid, and the clean-and-bag. The tightest callout is a thou, and it's a chamber part, so it
-    has to leave the machine clean. Any chip in a port is a reject.
+    has to leave the machine clean, down to the last port.
   machine_rationale: >-
     VF-4. The 12 by 12 plate fits, it's where our 6061 plates run, and nothing on it needs five axes. Two ops, and the
     flip is where the flatness gets made or lost.

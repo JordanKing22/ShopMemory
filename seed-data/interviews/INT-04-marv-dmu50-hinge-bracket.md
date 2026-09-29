@@ -118,7 +118,7 @@ Cutting to the model instead of the print notes. The model is nominal size. It d
 Let me say it back as a rule: on 7075 that gets anodized, finish tight bores on the high side by what the coat takes off the diameter. What did I get wrong or leave out?
 
 ## T034 expert
-Only if the bore isn't masked, and the number comes from the anodizer for that callout, not from me. And set it before the first piece, not after Linda asks. Otherwise that's right.
+Pretty close. Only if the bore isn't masked, and the number comes from the anodizer for that callout, not from me. And set it before the first piece, not after Linda asks.
 
 ## T035 interviewer (wrap) [WRAP]
 Who else here knows this well?

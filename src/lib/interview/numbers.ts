@@ -582,17 +582,36 @@ function escapeRegExp(s: string): string {
  */
 export function findTermSpans(text: string, terms: readonly string[]): TextSpan[] {
   const spans: TextSpan[] = [];
+  const lower = text.toLowerCase();
   for (const term of terms) {
-    const t = term.trim();
-    if (t === "") continue;
-    const body = t.split(/\s+/).map(escapeRegExp).join("\\s+");
-    const lead = ALNUM_RE.test(t[0]) ? "(?<![\\p{L}\\p{N}])" : "";
-    const trail = ALNUM_RE.test(t[t.length - 1]) ? "(?![\\p{L}\\p{N}])" : "";
-    const re = new RegExp(`${lead}${body}${trail}`, "giu");
-    for (const m of text.matchAll(re)) {
+    const compiled = termPattern(term);
+    // Cheap pre-filter: most terms don't occur in a given text at all.
+    if (!compiled || !lower.includes(compiled.firstWord)) continue;
+    compiled.re.lastIndex = 0;
+    for (const m of text.matchAll(compiled.re)) {
       const start = m.index ?? 0;
       spans.push({ start, end: start + m[0].length });
     }
   }
   return spans.sort((a, b) => a.start - b.start || a.end - b.end);
+}
+
+const TERM_CACHE = new Map<string, { re: RegExp; firstWord: string } | null>();
+
+/** Compiled (and cached) word-edge pattern for one protected term; null for a blank term. */
+function termPattern(term: string): { re: RegExp; firstWord: string } | null {
+  const cached = TERM_CACHE.get(term);
+  if (cached !== undefined) return cached;
+  const t = term.trim();
+  let out: { re: RegExp; firstWord: string } | null = null;
+  if (t !== "") {
+    const words = t.split(/\s+/);
+    const body = words.map(escapeRegExp).join("\\s+");
+    const lead = ALNUM_RE.test(t[0]) ? "(?<![\\p{L}\\p{N}])" : "";
+    const trail = ALNUM_RE.test(t[t.length - 1]) ? "(?![\\p{L}\\p{N}])" : "";
+    out = { re: new RegExp(`${lead}${body}${trail}`, "giu"), firstWord: words[0].toLowerCase() };
+  }
+  if (TERM_CACHE.size > 5000) TERM_CACHE.clear();
+  TERM_CACHE.set(term, out);
+  return out;
 }

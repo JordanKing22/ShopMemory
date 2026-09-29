@@ -30,7 +30,7 @@ created_on: "2025-12-16"
 - First piece: check wall thickness at the top and bottom of each wall. A taper means the finisher is going. [KC-021]
 
 ## Cautions
-- Don't stretch the finisher to save a tool change; the first piece of this job came out tapered. [KC-021]
+- Load a fresh finisher after prove-out. The first piece of this job was finished with the end mill left in from prove-out and came out tapered. [KC-021]
 
 ## Checklist
 - Fresh finisher loaded and its offset checked. [KC-002]

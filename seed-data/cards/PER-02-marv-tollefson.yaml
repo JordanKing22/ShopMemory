@@ -11,7 +11,7 @@
     above the top of the jaws. That's what our holders need to clear the jaws at the steepest tilt we run.
   applies_when: ["part held in the dovetail plate on the DMU 50", "features that need a steep tilt"]
   does_not_apply_when: ["every feature is on top and nothing needs a steep tilt", "a tall part — make a fixture instead"]
-  rationale: "Less clearance and you're betting on the sim; a lot more and the part sings on the finish passes."
+  rationale: "Less than that and you're betting on the sim. A lot more than that and the part starts to sing on the finish passes."
   cues: ["low features that need a steep tilt"]
   actions:
     - "measure from the top of the jaws to the lowest feature you cut, not to the bottom of the blank"
@@ -26,6 +26,7 @@
   source: { kind: interview, interview: INT-03 }
   evidence:
     - { turn: INT-03-T018, quote: "I want the part at least 3/4 inch above the top of the jaws. That's what our holders need to clear the jaws at the steepest tilt we run." }
+    - { turn: INT-03-T018, quote: "Less than that and you're betting on the sim. A lot more than that and the part starts to sing on the finish passes." }
     - { turn: INT-03-T020, quote: "From the top of the dovetail jaws to the lowest feature you have to cut on the part. Not to the bottom of the blank." }
     - { turn: INT-03-T022, quote: "Most of the time I stick to it.", confidence: true }
     - { turn: INT-03-T022, quote: "If every feature is on top and nothing needs a steep tilt, I'll grab it lower so I can run shorter tools. And if the part is tall, I'd rather make a fixture than leave it hanging up in the air on an eighth of an inch of dovetail." }
@@ -43,7 +44,7 @@
     on the same dowels.
   applies_when: ["the dovetail plate goes back on the DMU 50"]
   does_not_apply_when: []
-  rationale: "The plate sits the same way every time; saw-cut blanks are never the same height, and a shallow dovetail drops the part and eats your clearance."
+  rationale: "Once it's probed, the plate is the one thing I trust. Saw-cut blanks are never the same height."
   cues: ["the plate just went back on the table", "a new batch of saw-cut blanks"]
   actions: ["probe the center bore for X and Y", "probe the top face for Z", "probe each blank before cutting"]
   common_mistake: "Trusting the old work offset because the plate went back on the same dowels."
@@ -55,7 +56,7 @@
   evidence:
     - { turn: INT-03-T024, quote: "Every time the plate goes back on the table, I probe it.", confidence: true }
     - { turn: INT-03-T024, quote: "The bore in the middle and the top face, before the first part. I never trust the old work offset, even if the plate went back on the same dowels." }
-    - { turn: INT-03-T026, quote: "The bore gives me X and Y, the top face gives me Z, and the plate is the one thing that sits the same way every time. Then I probe the blank too, because saw-cut blanks are never the same height." }
+    - { turn: INT-03-T026, quote: "The bore gives me X and Y, the top face gives me Z, and once it's probed the plate is the one thing I trust. Then I probe the blank too, because saw-cut blanks are never the same height." }
   approved: { by: PER-02, on: "2026-07-24", mode: self }
   created_on: "2026-07-22"
 
@@ -121,7 +122,7 @@
     anodizer's coat closed a bore up about four tenths on the diameter.
   applies_when: ["7075 part where dimensions apply after anodize", "tight bore with no masking note"]
   does_not_apply_when: ["bores masked for anodize — finish to print", "a different finish, like chem film — ask again"]
-  rationale: "The coat grows in from all the way around a bore, so the diameter loses twice what the coat grows on one side."
+  rationale: "In a bore it grows in from all the way around, so the diameter loses twice what the coat grows on one side."
   cues: ["a finish note that says after anodize or after finish", "no masking note on the bores"]
   actions:
     - "get the growth number from the anodizer for that callout"
@@ -154,7 +155,7 @@
     six minutes a part to under two.
   applies_when: ["part held in the dovetail on the DMU 50", "edges the chamfer mill can reach at tilt"]
   does_not_apply_when: []
-  rationale: "At tilt the chamfer mill reaches the back side of the hinge lugs, where hand tools ding the bores. Once the part is off the dovetail you've lost your locating."
+  rationale: "At tilt the chamfer mill gets to the back side of the hinge lugs. By hand you can't reach in there without dinging a bore."
   cues: ["edges on the back side of the lugs"]
   actions:
     - "put the edge breaks in the CAM program with a small chamfer mill"
@@ -233,16 +234,16 @@
 - id: KC-021
   type: failure_story
   status: approved
-  title: "Sensor-mount bracket first piece: finisher ran one part too long, wall tapered"
+  title: "Sensor-mount bracket first piece: finished with the prove-out end mill, wall tapered"
   statement: >-
-    On the first piece of the titanium sensor-mount bracket I let the finisher go one part too long and the wall
-    came out tapered. We caught it at first article.
+    On the first piece of the titanium sensor-mount bracket I finished with the end mill left in from prove-out,
+    and the wall came out tapered. We caught it at first article.
   applies_when: []
   does_not_apply_when: []
   rationale: null
   cues: ["taper on a finished wall"]
   actions: []
-  common_mistake: "Stretching a finisher to save a tool change in titanium."
+  common_mistake: "Finishing the first piece with the end mill that was left in from prove-out."
   expert_confidence: not_stated
   topics: [t-mat-ti64]
   tags: [titanium, tool-wear, first-article]
@@ -250,8 +251,8 @@
   source:
     kind: manual
     text: >-
-      First piece on the titanium sensor-mount bracket — I let the finisher go one part too long and the wall came out
-      tapered. Caught it at first article.
+      First piece on the titanium sensor-mount bracket — I finished it with the end mill left in from prove-out, and
+      the wall came out tapered. Caught it at first article.
     note: Entered by Marv after the job.
   approved: { by: PER-02, on: "2025-12-15", mode: self }
   created_on: "2025-12-12"
@@ -266,7 +267,7 @@
     comes out a few tenths off location.
   applies_when: ["RP-M03 on a winter morning", "features cut at compound angles"]
   does_not_apply_when: []
-  rationale: "This machine sits by the dock door and runs cold first thing."
+  rationale: "It sits closest to the dock door, and on winter mornings the first part comes out off location until the machine warms up."
   cues: ["the first compound-angle part of the morning is off location"]
   actions: ["run the axis warm-up program for twenty minutes", "probe the part before the first cut"]
   common_mistake: "Cutting the first compound-angle part on a cold machine."
@@ -381,7 +382,7 @@
     open first, the drill walks when it breaks through.
   applies_when: ["17-4 manifold with cross-drilled ports and deep pockets"]
   does_not_apply_when: []
-  rationale: "An open pocket gives the drill nothing to break through into cleanly."
+  rationale: "Open the pockets first and the drill walks when it breaks through."
   cues: ["cross ports that break into a pocket"]
   actions: ["drill the cross ports before opening the deep pockets"]
   common_mistake: "Roughing all the pockets first because it's faster."
@@ -408,7 +409,7 @@
     slower than the book. When it breaks wire on thick 17-4, it's usually the flushing, not the wire.
   applies_when: ["RP-M07 wire EDM", "17-4 over two inches thick"]
   does_not_apply_when: []
-  rationale: "The lower flush on this unit can't clear the gap on thick stock unless the part seals against it."
+  rationale: "When it breaks wire on thick 17-4, it's usually the flushing, not the wire."
   cues: ["wire breaks on thick 17-4"]
   actions:
     - "set the flattest face down on the lower nozzle"

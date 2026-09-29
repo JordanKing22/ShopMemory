@@ -138,7 +138,8 @@
     scrap_qty: 0
     ncr_count: 0
     on_time: true
-    debrief: Came in slightly under quote. Separate rough and finish ops.
+    debrief: Came in slightly under quote. Separate rough and finish ops. FAI package kicked back for rev D renumbering
+      and redone; shipped on time.
 - id: Q-A05
   quote_number: RQ-26-0217
   part: PRT-A05
@@ -283,7 +284,7 @@
     status: complete
     started_on: '2025-10-27'
     shipped_on: '2025-12-05'
-    lead: PER-03
+    lead: PER-02
     actual_machine: m-genos
     actual_setup_hours: 3.5
     actual_run_hours: 29.5

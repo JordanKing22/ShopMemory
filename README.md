@@ -7,7 +7,7 @@ Shop, setup sheets, training), with a visible privacy layer for shops that handl
 **Everything in this demo is fictional**: the shop ("Ridgeline Precision (fictional)"), its people, customers, parts
 and jobs. Don't enter real customer, CUI or export-controlled data.
 
-> Status: **Phase 1a** (schema, seed engine, demo-critical seed data). The screens arrive in Phase 2. See
+> Status: **Phase 1 complete** (schema, seed engine, all seed data). The screens arrive in Phase 2. See
 > [PLAN.md](PLAN.md) §13 for the phase plan and §19 for the progress log.
 
 ## Quick start (Windows or Ubuntu)

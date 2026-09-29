@@ -13,7 +13,7 @@
     fifteen minutes a plate on the chamber lid. The floor does it every time, whether the quote has it or not.
   applies_when: ["Quantrel 6061 chamber plate with a cleaning and bagging requirement"]
   does_not_apply_when: ["plates with no cleaning or bagging requirement"]
-  rationale: "The clean-area work is real floor time that the machining estimate doesn't show."
+  rationale: "The floor does it every time whether the quote has it or not."
   cues: ["cleaning and bagging requirement in the RFQ package"]
   actions:
     - "add deburr, clean and bag as its own step in the hours"
@@ -39,31 +39,30 @@
   status: rejected
   title: "Repeat Aerovance parts: skip the first article if an earlier lot already had it"
   statement: >-
-    On repeat Aerovance parts, leave the first article out of the new quote when an earlier lot already had a first
-    article. It was done once and they already have the package.
+    On repeat Aerovance parts, like the 17-4 tube-end fitting, leave the first article out of the new quote when an
+    earlier lot already had a first article. It was done once and they already have the package.
   applies_when: ["repeat Aerovance part"]
   does_not_apply_when: []
-  rationale: "The first article was done once and they have the package."
+  rationale: "It was done once and they have the package."
   cues: ["the part number has shipped before"]
   actions: ["leave the first article out of the repeat quote"]
   common_mistake: null
   expert_confidence: not_stated
-  topics: [t-quoting, t-cus-01, t-mat-6061]
-  tags: [quoting, first-article, aluminum]
-  links: { jobs: [J-G025], customer: CUS-01 }
+  topics: [t-quoting, t-cus-01]
+  tags: [quoting, first-article, stainless]
+  links: { quotes: [Q-G017], customer: CUS-01 }
   source:
     kind: manual
     text: >-
-      Repeat Aerovance parts, like the 6061 mounting plate: if an earlier lot already had a first article, I leave
+      Repeat Aerovance parts, like the 17-4 tube-end fitting: if an earlier lot already had a first article, I leave
       the first article out of the new quote. It was done once and they have the package.
-    note: Entered by Maya after quoting the repeat mounting plate.
+    note: Entered by Maya after quoting the repeat tube-end fitting.
   review_notes: >-
-    Rejected by Ray. An old first article only carries over when the revision hasn't changed and the part hasn't
-    sat idle for a long time. A rev change, or a gap of about two years since the last lot, means a new first
-    article, and on a new rev Aerovance wants a full one, not a partial. Check the rev and the last ship date against
-    the old package before you leave it out, and ask Linda when you're not sure. On the mounting plate it made no
-    difference because the order didn't call for a first article at all.
-  created_on: "2026-03-18"
+    Rejected by Ray. A first article on an earlier lot doesn't settle it. A repeat part still needs a new first
+    article when the revision changed since the last one, or when the customer's quality clauses on the new PO call
+    for one. Before you leave it out, check the rev on the RFQ against the old package and read the PO's quality
+    clauses. If you're not sure, ask Linda, and quote it in.
+  created_on: "2026-04-27"
 
 - id: KC-066
   type: quoting_rule
@@ -74,7 +73,7 @@
     If the print masks threads or a bore and nobody asked, the masking gets done here and it's not in the hours.
   applies_when: ["7075 bracket with an anodize callout", "masked threads or bores on the print"]
   does_not_apply_when: ["no masking on the print"]
-  rationale: "Masking falls between our quote and the vendor's, so nobody counts it."
+  rationale: "Somebody here ends up doing the masking and it's not in the hours."
   cues: ["masking note on the anodize callout"]
   actions:
     - "ask the anodizer in writing whether masking is included"
@@ -104,7 +103,7 @@
     handling time, so it goes in the quote.
   applies_when: ["Sutrella instrument or insulator parts"]
   does_not_apply_when: []
-  rationale: "One part, one bag, one label adds up fast on a big lot."
+  rationale: "One part, one bag, one label, and on a big lot that's real handling time."
   cues: ["Sutrella packaging spec in the RFQ package"]
   actions: ["quote bagging and labeling time for every part"]
   common_mistake: "Treating Sutrella packaging like a bulk tote."
@@ -116,7 +115,7 @@
     kind: manual
     text: >-
       Sutrella always wants every part bagged on its own and labeled with the lot number. One part, one bag, one
-      label. On a lot of a couple hundred that's real handling time, and it has to be in the quote. Ray told me that
-      before my first Sutrella quote went out.
+      label. On a lot of a couple hundred that's real handling time, and it has to be in the quote. Tomás told me
+      that before my first Sutrella quote went out.
     note: Entered by Maya after the insulator quote; waiting on Linda to confirm the labeling requirement.
   created_on: "2026-08-28"

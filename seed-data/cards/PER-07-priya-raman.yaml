@@ -15,7 +15,7 @@
     face can change when the face does.
   applies_when: ["a face is re-cut after it has been inspected, for example after heat treat"]
   does_not_apply_when: []
-  rationale: "Features measured from a re-cut face can shift even when the face itself checks flat."
+  rationale: "Anything measured from those faces can change when the faces do."
   cues: ["an extra finish pass on a sealing or datum face"]
   actions: ["re-run the full CMM program after any face is re-cut"]
   common_mistake: "Re-checking only the flatness of the face that was re-cut."
@@ -43,7 +43,7 @@
     the scan and re-run it, or check it point by point, before you call a flatness reject.
   applies_when: ["scanning flatness on a large face, like a 12-inch 6061 plate", "flatness held to about a thou"]
   does_not_apply_when: []
-  rationale: "At the default speed the scan picks up more than the part; slowed down, it agreed with a point-by-point check."
+  rationale: "A fast scan reads worse than the part is."
   cues: ["flatness out on a fast scan of a big face"]
   actions:
     - "slow the scan way down and re-run it before calling a flatness reject"
@@ -74,7 +74,7 @@
     before the next part.
   applies_when: ["hole positions all off in the same direction on the CMM"]
   does_not_apply_when: []
-  rationale: "A bumped stylus throws no alarm; it moves every point it takes by the same amount."
+  rationale: "A bumped stylus doesn't throw an alarm, it just shifts every point it takes."
   cues: ["every hole position off the same direction by about the same amount"]
   actions:
     - "re-qualify the stylus after any bump or stylus change"
@@ -163,17 +163,19 @@
 - id: KC-078
   type: customer_quirk
   status: approved
-  title: "Aerovance first articles: a measured number on every line, never just \"OK\""
+  title: "Aerovance first articles: a real result on every line, never just \"OK\""
   statement: >-
     Aerovance always kicks back a first article if any characteristic says OK or pass instead of a measured
-    number. Even a hole checked with a pin gauge gets the go and no-go pin sizes written in.
+    number. Even a hole checked with a pin gauge gets the go and no-go pin sizes written in. For a note you can only
+    check by eye, write what you saw, like marking present and legible, never just OK.
   applies_when: ["Aerovance first article package"]
   does_not_apply_when: []
   rationale: null
   cues: ["a characteristic checked with a gauge instead of on the CMM"]
   actions:
-    - "write a measured value on every characteristic"
+    - "write a measured value on every characteristic you can measure"
     - "record the go and no-go pin sizes for holes checked with pins"
+    - "for a note checked by eye, write what you saw"
     - "check every line of the form before it goes to Linda"
   common_mistake: "Writing \"OK\" for attribute checks."
   expert_confidence: always
@@ -186,7 +188,8 @@
       Aerovance always kicks back a first article if any characteristic says OK or pass instead of a measured
       number. Even a hole I check with a pin gauge gets the go and no-go pin sizes written in, the pin that went and
       the one that didn't. Linda had a package come back for that before I started, so she has me check every line
-      of the form before it goes to her.
+      of the form before it goes to her. For a note I can only check by eye, I write what I saw, like marking present
+      and legible, never just OK.
     note: Entered by Priya after the stiffener bracket first article.
   approved: { by: PER-07, on: "2026-09-03", mode: self }
   created_on: "2026-09-01"
@@ -200,7 +203,7 @@
     sheets too, not just the cover sheet. Put the lot number in the CMM report header before you print.
   applies_when: ["Sutrella inspection reports"]
   does_not_apply_when: []
-  rationale: "A report page without the lot number breaks their lot traceability."
+  rationale: "They rejected a report once because one page of the CMM printout had only the part number."
   cues: ["a Sutrella lot going to final inspection"]
   actions:
     - "add the lot number to the CMM report header before printing"
@@ -223,10 +226,10 @@
 - id: KC-080
   type: failure_story
   status: pending_review
-  title: "My first solo FAI program: aligned off the easy edges, not the print datums"
+  title: "My first FAI program from scratch: aligned off the easy edges, not the print datums"
   statement: >-
-    On the clamp support bracket I built my first solo FAI alignment off the two machined edges that were easiest to
-    touch instead of datums B and C on the print. Everything passed. Linda caught it before she signed; off the
+    On the clamp support bracket, the first FAI program I wrote from scratch, I built the alignment off the two
+    machined edges that were easiest to touch instead of datums B and C on the print. Everything passed. Linda caught it before she signed; off the
     right datums one hole went from the middle of the tolerance to near the edge.
   applies_when: []
   does_not_apply_when: []
@@ -241,7 +244,7 @@
   source:
     kind: manual
     text: >-
-      The clamp support bracket in May was the first FAI program I wrote on my own. I built the alignment off the
+      The clamp support bracket in May was the first FAI program I wrote from scratch. I built the alignment off the
       two machined edges that were easiest to touch, not datums B and C on the print. Every hole position passed.
       Linda checked my alignment against the print before she signed and made me redo it. Off the right datums the
       parts still passed, but one hole went from the middle of the tolerance to near the edge. My first report was

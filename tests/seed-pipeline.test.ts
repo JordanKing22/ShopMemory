@@ -151,6 +151,26 @@ describe("seed:check catches broken edits", () => {
     expect(errorsOf(r).some((i) => i.code === "demo_invariant" && i.message.includes("top risk"))).toBe(true);
   });
 
+  it("rejects a card created before the job it links", () => {
+    const r = buildSeedBundle(withFile("cards/PER-02-marv-tollefson.yaml", (t) => t.replace('created_on: "2025-12-12"', 'created_on: "2025-11-01"').replace('on: "2025-12-15", mode: self }\n  created_on: "2025-11-01"', 'on: "2025-11-03", mode: self }\n  created_on: "2025-11-01"')));
+    expect(errorsOf(r).some((i) => i.code === "date" && i.message.includes("KC-021") && i.message.includes("J-A02"))).toBe(true);
+  });
+
+  it("rejects a setup sheet dated before one of its source cards was approved", () => {
+    const r = buildSeedBundle(withFile("documents/setup-sheets/DOC-SS-05-dmu50-sensor-mount-bracket.md", (t) => t.replace(/created_on: "[0-9-]+"/, 'created_on: "2025-11-30"')));
+    expect(errorsOf(r).some((i) => i.code === "date" && i.message.includes("DOC-SS-05"))).toBe(true);
+  });
+
+  it("names the cards to re-read when a generated record they rely on changes", () => {
+    const lock = JSON.parse(fs.readFileSync(LOCK_FILE, "utf8")) as { generated_refs: Record<string, { facts: Record<string, unknown>; referencedBy: string[] }> };
+    const [id, ref] = Object.entries(lock.generated_refs).find(([, r]) => typeof r.facts.actual_hours === "number")!;
+    expect(errorsOf(buildSeedBundle(sources, { lockedGeneratedRefs: lock.generated_refs as never }))).toEqual([]);
+    const tampered = { ...lock.generated_refs, [id]: { ...ref, facts: { ...ref.facts, actual_hours: (ref.facts.actual_hours as number) + 1 } } };
+    const e = errorsOf(buildSeedBundle(sources, { lockedGeneratedRefs: tampered as never })).find((i) => i.code === "generated_ref")!;
+    expect(e.message).toContain(id);
+    expect(e.message).toContain(ref.referencedBy[0]);
+  });
+
   it("rejects a reserved card ID", () => {
     const r = buildSeedBundle(withFile("cards/PER-02-marv-tollefson.yaml", (t) => t.replace("- id: KC-021", "- id: KC-091")));
     expect(errorsOf(r).some((i) => i.code === "reserved")).toBe(true);
