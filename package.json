@@ -26,6 +26,8 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@anthropic-ai/bedrock-sdk": "0.34.0",
+    "@anthropic-ai/sdk": "0.129.0",
     "better-sqlite3": "12.11.1",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
