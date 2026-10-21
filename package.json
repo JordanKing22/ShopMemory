@@ -16,6 +16,7 @@
     "test:e2e": "tsx scripts/e2e.mts",
     "test:e2e:server": "tsx scripts/e2e-server.mts",
     "check": "tsx scripts/check.mts",
+    "env:init": "tsx scripts/env-init.mts",
     "seed": "tsx scripts/seed.mts",
     "seed:check": "tsx scripts/seed-check.mts",
     "seed:lock": "tsx scripts/seed-lock.mts",

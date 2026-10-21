@@ -47,7 +47,13 @@ const EnvSchema = z.object({
   DEMO_LIVE_LOCAL: bool(false),
   DEMO_PIN: optionalString,
 
+  /** Resolved by getEnv(): FLOORWISE_ANTHROPIC_API_KEY wins over ANTHROPIC_API_KEY. */
   ANTHROPIC_API_KEY: optionalString,
+  /**
+   * App-specific name for the same key. Use it where ANTHROPIC_API_KEY is taken by another tool (for example a
+   * Claude Code cloud environment, which reserves that name for its own sign-in).
+   */
+  FLOORWISE_ANTHROPIC_API_KEY: optionalString,
   ANTHROPIC_MODEL: z
     .string()
     .optional()
@@ -97,7 +103,8 @@ export function getEnv(): Env {
       // Never echo values: they may be secrets.
       throw new Error(`Invalid environment configuration in: ${fields}`);
     }
-    cached = parsed.data;
+    const data = parsed.data;
+    cached = { ...data, ANTHROPIC_API_KEY: data.FLOORWISE_ANTHROPIC_API_KEY ?? data.ANTHROPIC_API_KEY };
   }
   return cached;
 }

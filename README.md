@@ -24,7 +24,10 @@ npm run build && npm start   # then open http://127.0.0.1:3000
 Use the persona menu in the header to switch roles: as Marv (machinist) or Devin (trainee), prices, win/loss and
 departure dates show a "Hidden for … role" pill instead of the value.
 
-Later phases need an Anthropic API key in `.env.local` (copy `.env.example`) to record the demo's cached answers.
+To record the demo's cached answers or call Claude live, put your Anthropic API key in `.env.local`: run
+`npm run env:init` (creates the file from `.env.example`; it is gitignored), open it in a text editor and fill in
+`ANTHROPIC_API_KEY=`. In a Claude Code cloud environment, where `ANTHROPIC_API_KEY` is reserved for Claude Code's own
+sign-in, add the key as an environment variable named `FLOORWISE_ANTHROPIC_API_KEY` instead.
 The scripted demo itself runs from those cached answers (`DEMO_MODE=true`) with no key and no network.
 
 ## Scripts
@@ -32,6 +35,7 @@ The scripted demo itself runs from those cached answers (`DEMO_MODE=true`) with 
 | Script | What it does |
 |---|---|
 | `npm run check` | The pre-commit gate: route types, ESLint, TypeScript, Vitest and `seed:check` |
+| `npm run env:init` | Creates `.env.local` from `.env.example` (never overwrites it) for your API key and settings |
 | `npm test` | Unit tests (Vitest) |
 | `npm run seed:check` | Validates `seed-data/` and explains problems as `file:line` (no database access) |
 | `npm run seed` | Validates, then resets the database to the seed data (safe while the app runs) |
