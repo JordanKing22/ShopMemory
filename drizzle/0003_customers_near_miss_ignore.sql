@@ -1,0 +1,1 @@
+ALTER TABLE `customers` ADD `near_miss_ignore` text DEFAULT '[]' NOT NULL;

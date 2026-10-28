@@ -84,7 +84,12 @@ export interface RoutingTarget {
   providerLabel: ProviderLabel;
   /** Configured model ID; "" when not configured (Bedrock without BEDROCK_MODEL_ID). */
   model: string;
-  /** Lower-cased hostname of the exact base URL the adapter will use; "" when it can't be derived. */
+  /**
+   * The exact base URL the adapter passes to its client (CLAUDE.md hard rule 3); "" when it can't be built. The
+   * provider descriptor (src/lib/ai/providers/factory.ts) takes it from here, so host and traffic always agree.
+   */
+  baseUrl: string;
+  /** Lower-cased hostname of `baseUrl`; "" when it can't be derived. */
   host: string;
   /** AWS region (Bedrock only, and only when valid). */
   region?: string;
@@ -152,10 +157,23 @@ function withClearance(t: Omit<RoutingTarget, "clearance">, opts: PolicyOptions)
   return { ...t, clearance: t.configured ? clearanceFor(t.targetClass, opts) : { ...NO_CLEARANCE } };
 }
 
-interface Built {
+/** One provider's routing target, the policy options its conditional matrix cells need, and its config problems. */
+export interface BuiltTarget {
   target: RoutingTarget;
   opts: PolicyOptions;
   problems: string[];
+}
+type Built = BuiltTarget;
+
+/**
+ * The routing target for one provider kind under the current env (no mode logic). The gateway's routing module
+ * (src/lib/ai/routing.ts) builds provider descriptors from these, so the header, the policy and the adapter all
+ * use the same base URL and host.
+ */
+export function routingTargetFor(kind: ProviderKind, env: RoutingEnv): BuiltTarget {
+  if (kind === "anthropic") return buildAnthropic(env);
+  if (kind === "bedrock") return buildBedrock(env);
+  return buildOllama(env);
 }
 
 function buildAnthropic(env: RoutingEnv): Built {
@@ -172,6 +190,7 @@ function buildAnthropic(env: RoutingEnv): Built {
       providerKind: "anthropic",
       providerLabel: PROVIDER_LABEL.anthropic,
       model,
+      baseUrl: ANTHROPIC_BASE_URL_DEFAULT,
       host: hostOf(ANTHROPIC_BASE_URL_DEFAULT) ?? "",
       isLoopback: false,
       isCloud: TARGET_IS_CLOUD.anthropic,
@@ -239,6 +258,7 @@ function buildBedrock(env: RoutingEnv): Built {
     providerKind: "bedrock",
     providerLabel: PROVIDER_LABEL.bedrock,
     model: modelId ?? "",
+    baseUrl: host && baseUrl ? baseUrl : "",
     host,
     isLoopback: false,
     isCloud: TARGET_IS_CLOUD[targetClass],
@@ -276,6 +296,7 @@ function buildOllama(env: RoutingEnv): Built {
       providerKind: "ollama",
       providerLabel: PROVIDER_LABEL.ollama,
       model: env.OLLAMA_MODEL,
+      baseUrl: hostOf(env.OLLAMA_BASE_URL) ? env.OLLAMA_BASE_URL : "",
       host: hostOf(env.OLLAMA_BASE_URL) ?? "",
       isLoopback: loc.isLoopback,
       isCloud: TARGET_IS_CLOUD.ollama_local,

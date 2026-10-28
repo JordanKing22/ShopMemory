@@ -128,3 +128,26 @@ export function envSummary(): Record<string, boolean> {
     ),
   };
 }
+
+/**
+ * Variables the provider SDKs read on their own (PLAN.md §4.1, docs/AI-GATEWAY.md §8). The adapters neutralise them
+ * with explicit options (baseURL, apiKey, authToken: null, logLevel, awsRegion) — except ANTHROPIC_CUSTOM_HEADERS,
+ * which the Anthropic SDK merges into its default headers. instrumentation.ts logs these NAMES at boot (never values)
+ * so the host shown, checked and audited is always where traffic goes. Presence only: no value is read into memory.
+ */
+const SDK_ENV_NAMES = [
+  "ANTHROPIC_BASE_URL",
+  "ANTHROPIC_BEDROCK_BASE_URL",
+  "ANTHROPIC_BEDROCK_MANTLE_BASE_URL",
+  "ANTHROPIC_AUTH_TOKEN",
+  "ANTHROPIC_CUSTOM_HEADERS",
+  "ANTHROPIC_LOG",
+  "ANTHROPIC_PROFILE",
+] as const;
+
+export function sdkEnvOverridesPresent(): string[] {
+  return SDK_ENV_NAMES.filter((name) => {
+    const v = process.env[name];
+    return typeof v === "string" && v.trim() !== "";
+  });
+}

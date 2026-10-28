@@ -3,9 +3,11 @@ import "server-only";
  * Error hygiene for Server Actions and route handlers (CLAUDE.md hard rule 2, PLAN.md §4.10).
  * Errors that leave a wrapped function are either a SafeError (fixed code + fixed, payload-free message) or a
  * generic "internal" SafeError. Raw error messages and stacks can carry payload snippets (V8 embeds input text,
- * SDK errors embed request bodies), so they are never logged, rethrown or shown. Phase 3 extends this for AIError.
+ * SDK errors embed request bodies), so they are never logged, rethrown or shown. AIError (src/lib/ai/errors.ts) passes
+ * through like SafeError: it too carries only a fixed code and safe message.
  */
 import { unstable_rethrow } from "next/navigation";
+import { isAIError } from "@/lib/ai/errors";
 import { log } from "@/lib/log";
 
 export class SafeError extends Error {
@@ -36,7 +38,7 @@ function errorCode(err: unknown): string {
 }
 
 /**
- * Wraps an async Server Action or route handler. SafeErrors pass through; Next.js control-flow errors
+ * Wraps an async Server Action or route handler. SafeErrors and AIErrors pass through; Next.js control-flow errors
  * (redirect(), notFound(), dynamic-rendering bailouts) are rethrown untouched; anything else is logged by code only
  * and replaced with SafeError("internal", "Something went wrong.").
  */
@@ -49,7 +51,7 @@ export function withSafeErrors<A extends unknown[], R>(
       return await fn(...args);
     } catch (err) {
       unstable_rethrow(err);
-      if (err instanceof SafeError) throw err;
+      if (err instanceof SafeError || isAIError(err)) throw err; // both carry only a fixed code + safe message
       log.error("action_failed", { code: errorCode(err), action: name });
       throw new SafeError("internal", "Something went wrong.");
     }

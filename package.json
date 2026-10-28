@@ -20,6 +20,8 @@
     "seed": "tsx scripts/seed.mts",
     "seed:check": "tsx scripts/seed-check.mts",
     "seed:lock": "tsx scripts/seed-lock.mts",
+    "demo:record": "tsx scripts/demo-record.mts",
+    "demo:verify": "tsx scripts/demo-verify.mts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx scripts/db-migrate.mts",
     "db:nuke": "tsx scripts/db-nuke.mts",

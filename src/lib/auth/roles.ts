@@ -3,7 +3,8 @@
  * (src/server/actor.ts); this module only answers "may this role see / do X?".
  *
  * Phase 2 covers the field gates that read-only screens need (prices, win/loss, contacts, departure) plus the
- * capabilities the shell shows. Phase 7 completes the full matrix (approvals, interviews, audit Reveal).
+ * capabilities the shell shows. Phase 3 adds the AI and audit capabilities (docs/AI-GATEWAY.md §4). Phase 7 completes
+ * the full matrix (approvals, interviews).
  */
 import { ROLES, type Role } from "@/db/schema/enums";
 
@@ -53,6 +54,11 @@ export const CAPABILITIES = [
   "fullDelete",
   "generateDocuments",
   "searchLibrary",
+  "useAi",
+  "testAiConnection",
+  "viewAudit",
+  "revealAudit",
+  "exportAudit",
 ] as const;
 export type Capability = (typeof CAPABILITIES)[number];
 
@@ -74,10 +80,18 @@ const CAPABILITY_MATRIX: Record<Capability, Record<Role, boolean>> = {
   generateDocuments: { owner: true, quoter: true, machinist: true, trainee: false },
   // Knowledge Library search (a read-only Server Action; results are role-projected by the data layer).
   searchLibrary: { owner: true, quoter: true, machinist: true, trainee: true },
+  // AI features in general (each task in src/lib/ai/tasks/ also names the capability it needs; docs/AI-GATEWAY.md).
+  useAi: { owner: true, quoter: true, machinist: true, trainee: true },
+  // Settings "Send test prompt", deep health probe and Ollama warm-up (opened by DEMO_OPEN_CONTROLS like routing).
+  testAiConnection: { owner: true, quoter: false, machinist: false, trainee: false },
+  // Audit log: every role views, reveals and exports its OWN rows; viewAll (owner) widens all three to every row.
+  viewAudit: { owner: true, quoter: true, machinist: true, trainee: true },
+  revealAudit: { owner: true, quoter: true, machinist: true, trainee: true },
+  exportAudit: { owner: true, quoter: true, machinist: true, trainee: true },
 };
 
 /** Capabilities that DEMO_OPEN_CONTROLS opens to every persona. Full export/delete never open up. */
-const OPEN_CONTROLS: ReadonlySet<Capability> = new Set<Capability>(["changeAiRouting", "resetDemo"]);
+const OPEN_CONTROLS: ReadonlySet<Capability> = new Set<Capability>(["changeAiRouting", "resetDemo", "testAiConnection"]);
 
 export function can(role: Role, cap: Capability, opts: CanOptions = {}): boolean {
   const row = CAPABILITY_MATRIX[cap];

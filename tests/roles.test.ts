@@ -20,19 +20,22 @@ const SEE: Record<Role, Record<GatedField, boolean>> = {
   trainee: { prices: false, winLoss: false, contacts: false, departure: false },
 };
 
+// Audit view / Reveal / export are open to every role (own rows); viewAll widens them to every row for the owner.
+const AI_AND_AUDIT = { useAi: true, viewAudit: true, revealAudit: true, exportAudit: true } as const;
+
 const CAN_CLOSED: Record<Role, Record<Capability, boolean>> = {
-  owner: { viewAll: true, switchPersona: true, changeAiRouting: true, resetDemo: true, fullExport: true, fullDelete: true, generateDocuments: true, searchLibrary: true },
-  quoter: { viewAll: false, switchPersona: true, changeAiRouting: false, resetDemo: false, fullExport: false, fullDelete: false, generateDocuments: true, searchLibrary: true },
-  machinist: { viewAll: false, switchPersona: true, changeAiRouting: false, resetDemo: false, fullExport: false, fullDelete: false, generateDocuments: true, searchLibrary: true },
-  trainee: { viewAll: false, switchPersona: true, changeAiRouting: false, resetDemo: false, fullExport: false, fullDelete: false, generateDocuments: false, searchLibrary: true },
+  owner: { viewAll: true, switchPersona: true, changeAiRouting: true, resetDemo: true, fullExport: true, fullDelete: true, generateDocuments: true, searchLibrary: true, testAiConnection: true, ...AI_AND_AUDIT },
+  quoter: { viewAll: false, switchPersona: true, changeAiRouting: false, resetDemo: false, fullExport: false, fullDelete: false, generateDocuments: true, searchLibrary: true, testAiConnection: false, ...AI_AND_AUDIT },
+  machinist: { viewAll: false, switchPersona: true, changeAiRouting: false, resetDemo: false, fullExport: false, fullDelete: false, generateDocuments: true, searchLibrary: true, testAiConnection: false, ...AI_AND_AUDIT },
+  trainee: { viewAll: false, switchPersona: true, changeAiRouting: false, resetDemo: false, fullExport: false, fullDelete: false, generateDocuments: false, searchLibrary: true, testAiConnection: false, ...AI_AND_AUDIT },
 };
 
-// DEMO_OPEN_CONTROLS=true opens only AI routing and Reset to every persona.
+// DEMO_OPEN_CONTROLS=true opens only AI routing, Reset and the AI connection test to every persona.
 const CAN_OPEN: Record<Role, Record<Capability, boolean>> = {
   owner: { ...CAN_CLOSED.owner },
-  quoter: { ...CAN_CLOSED.quoter, changeAiRouting: true, resetDemo: true },
-  machinist: { ...CAN_CLOSED.machinist, changeAiRouting: true, resetDemo: true },
-  trainee: { ...CAN_CLOSED.trainee, changeAiRouting: true, resetDemo: true },
+  quoter: { ...CAN_CLOSED.quoter, changeAiRouting: true, resetDemo: true, testAiConnection: true },
+  machinist: { ...CAN_CLOSED.machinist, changeAiRouting: true, resetDemo: true, testAiConnection: true },
+  trainee: { ...CAN_CLOSED.trainee, changeAiRouting: true, resetDemo: true, testAiConnection: true },
 };
 
 describe("roles", () => {
@@ -76,6 +79,10 @@ describe("roles", () => {
 
   it.each(ROLES.flatMap((r) => CAPABILITIES.map((c) => [r, c] as const)))("can(%s, %s) with DEMO_OPEN_CONTROLS", (role, cap) => {
     expect(can(role, cap, { demoOpenControls: true })).toBe(CAN_OPEN[role][cap]);
+  });
+
+  it("never opens viewAll (every audit row) to non-owners, even with DEMO_OPEN_CONTROLS", () => {
+    for (const r of ROLES.filter((x) => x !== "owner")) expect(can(r, "viewAll", { demoOpenControls: true })).toBe(false);
   });
 
   it("never opens full export or full delete to non-owners", () => {

@@ -134,6 +134,7 @@ export const MOVES = [
 ] as const;
 export const AI_MODES = ["cloud", "local", "hybrid"] as const;
 export const TARGET_CLASSES = ["anthropic", "bedrock_commercial", "bedrock_govcloud", "ollama_local"] as const;
+export type TargetClass = (typeof TARGET_CLASSES)[number];
 
 export const DOC_KINDS = ["setup_sheet", "work_instruction", "onboarding_checklist"] as const;
 export const DOC_STATUSES = ["draft", "expert_review", "approved", "superseded"] as const;
@@ -152,8 +153,17 @@ export const CAPTURE_STATUSES = ["pending_review", "approved", "rejected"] as co
 export const ASK_ROLES = ["user", "assistant"] as const;
 
 export const PROVIDER_KINDS = ["anthropic", "bedrock", "ollama"] as const;
+export type ProviderKind = (typeof PROVIDER_KINDS)[number];
+export type AIMode = (typeof AI_MODES)[number];
 export const AUDIT_DECISIONS = ["allow", "withheld_partial", "blocked", "held", "user_excluded_controlled"] as const;
-export const AUDIT_TRANSPORTS = ["live", "demo_replay_exact", "demo_replay_scenario", "demo_fallback", "none"] as const;
+export type AuditDecision = (typeof AUDIT_DECISIONS)[number];
+/**
+ * How a call's response was produced (docs/AI-GATEWAY.md §7). `none`: nothing was sent (blocked / held).
+ * `seeded`: a fictional example row from seed-data/audit/history.yaml (request_id "SEED-…"); never a real call, never
+ * archived by Reset. No DB CHECK constraint enforces these values (text enum), so adding one needs no migration.
+ */
+export const AUDIT_TRANSPORTS = ["live", "demo_replay_exact", "demo_replay_scenario", "demo_fallback", "none", "seeded"] as const;
+export type AuditTransport = (typeof AUDIT_TRANSPORTS)[number];
 export const AUDIT_OUTCOMES = [
   "pending",
   "ok",
@@ -165,8 +175,11 @@ export const AUDIT_OUTCOMES = [
   "aborted",
   "timeout",
 ] as const;
+export type AuditOutcome = (typeof AUDIT_OUTCOMES)[number];
 export const PAYLOAD_STORED_FORMS = ["as_sent_redacted", "redacted_for_storage"] as const;
+export type PayloadStoredForm = (typeof PAYLOAD_STORED_FORMS)[number];
 export const CASSETTE_PROVENANCE = ["recorded", "hand_authored"] as const;
+export type CassetteProvenance = (typeof CASSETTE_PROVENANCE)[number];
 export const EVENT_KINDS = [
   "consent",
   "consent_withdrawn",
@@ -186,7 +199,9 @@ export const EVENT_KINDS = [
   "demo_reset",
   "demo_fast_forward",
   "health_check",
+  "audit_reveal",
 ] as const;
+export type EventKind = (typeof EVENT_KINDS)[number];
 export const TOKEN_KINDS = [
   "CUSTOMER",
   "PERSON",
@@ -199,5 +214,6 @@ export const TOKEN_KINDS = [
   "PHONE",
   "AMOUNT",
 ] as const;
+export type TokenKind = (typeof TOKEN_KINDS)[number];
 export const SNAPSHOT_REASONS = ["seed_baseline", "cards_approved", "manual"] as const;
 export const SNAPSHOT_SCOPES = ["cell", "topic", "person"] as const;

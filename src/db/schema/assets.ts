@@ -42,6 +42,11 @@ export const customers = sqliteTable(
     partClassificationFloor: text("part_classification_floor", { enum: CLASSIFICATIONS }).notNull(),
     qualityRequirementsMd: text("quality_requirements_md"),
     redactionAliases: text("redaction_aliases", { mode: "json" }).$type<string[]>().notNull(),
+    /**
+     * Ordinary words one edit away from this customer's name that must not raise a near-miss suspicion signal
+     * ("Vermont" for Velmont). Stored so the runtime entity dictionary (src/lib/data/dictionary.ts) matches seed time.
+     */
+    nearMissIgnore: text("near_miss_ignore", { mode: "json" }).$type<string[]>().notNull().default([]),
     partNumberPattern: text("part_number_pattern").notNull(),
     sortOrder: integer("sort_order").notNull(),
     ...classificationColumns(),
