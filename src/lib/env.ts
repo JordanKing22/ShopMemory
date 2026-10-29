@@ -163,3 +163,8 @@ export function sdkEnvOverridesPresent(): string[] {
     return typeof v === "string" && v.trim() !== "";
   });
 }
+
+/** Next.js sets NEXT_RUNTIME ("nodejs" | "edge") for instrumentation; read here so no other module touches process.env. */
+export function nextRuntime(): string | undefined {
+  return process.env.NEXT_RUNTIME;
+}

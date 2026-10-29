@@ -1,0 +1,91 @@
+# Replay cassette smoke.local: smoke task, Local mode (Ollama). TOKENIZED: never write a real name, part, job or quote number.
+# provenance hand_authored = written by hand; the app labels it "REPLAY · scripted (not model output)".
+# After a prompt or seed change run: npm run demo:record -- --rekey && npm run demo:verify
+format: 1
+id: smoke.local
+task: smoke
+target_class: ollama_local
+prompt_version: smoke-v1
+provenance: hand_authored
+recorded_on: null
+entries:
+  - id: P-OWNER
+    payload_hash: 345b7c5f3000871aa30bd64589a2ba3c78692399fddfd73b74ab7551f15c25fc
+    scenario: smoke
+    turn_index: null
+    question: null
+    sources: []
+    note: Owner persona
+    response:
+      text: Received. The local model confirms the connectivity check.
+      data: null
+      stop_reason: end_turn
+      usage:
+        input_tokens: null
+        output_tokens: null
+      ttft_ms: 1500
+      latency_ms: 2600
+  - id: P-PER-01
+    payload_hash: a3bd10e846ebba52aec255a29e9f729681d5664b2e8f07369480a917c2f6fd29
+    scenario: smoke
+    turn_index: null
+    question: null
+    sources: []
+    note: Lead quoter persona
+    response:
+      text: Received. The local model confirms the connectivity check.
+      data: null
+      stop_reason: end_turn
+      usage:
+        input_tokens: null
+        output_tokens: null
+      ttft_ms: 1500
+      latency_ms: 2600
+  - id: P-PER-05
+    payload_hash: 5477fb275e3b3b3de0a28d43d1738c5a138551567e0e8046f6354a50b4f5e80f
+    scenario: smoke
+    turn_index: null
+    question: null
+    sources: []
+    note: Quoter persona
+    response:
+      text: Received. The local model confirms the connectivity check.
+      data: null
+      stop_reason: end_turn
+      usage:
+        input_tokens: null
+        output_tokens: null
+      ttft_ms: 1500
+      latency_ms: 2600
+  - id: P-PER-02
+    payload_hash: a34eb2860e095356fd9310cb7e4b04d1c15a69a2c4b4e70fe21351c78c859ffe
+    scenario: smoke
+    turn_index: null
+    question: null
+    sources: []
+    note: Machinist persona
+    response:
+      text: Received. The local model confirms the connectivity check.
+      data: null
+      stop_reason: end_turn
+      usage:
+        input_tokens: null
+        output_tokens: null
+      ttft_ms: 1500
+      latency_ms: 2600
+  - id: P-PER-06
+    payload_hash: f58374e54b5a83f13185752893d0a7d8a15c8f7f3a71484481c7c61b4b298547
+    scenario: smoke
+    turn_index: null
+    question: null
+    sources: []
+    note: Trainee persona
+    response:
+      text: Received. The local model confirms the connectivity check.
+      data: null
+      stop_reason: end_turn
+      usage:
+        input_tokens: null
+        output_tokens: null
+      ttft_ms: 1500
+      latency_ms: 2600

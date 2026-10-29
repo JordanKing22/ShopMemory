@@ -372,6 +372,8 @@ export interface SourceChip {
   classification: Classification;
   sent: boolean;
   reason?: WithheldReason;
+  /** Sent sources: "card:KC-091@<16 hex>" (hash of exactly what was sent; replay scenario matching and --rekey). */
+  fingerprint?: string;
 }
 
 /** The per-request "Routed to …" chip and replay label. */
@@ -476,6 +478,8 @@ export interface TransportLookup extends ReplayKeyInput {
   scenario: ScenarioContext | null;
   /** Fingerprints of the sources actually sent ("card:KC-091@<16 hex>"). */
   sentFingerprints: readonly string[];
+  /** Structured (JSON) task: replay latency is capped at 2 s. */
+  structured?: boolean;
 }
 
 export interface TransportPolicy {
@@ -601,7 +605,12 @@ export interface GatewayDeps {
   /** "req_" + UUID in production; deterministic in tests. */
   newRequestId: () => string;
   providers: ProviderFactory;
-  health: HealthSource;
+  /**
+   * Where provider health is cached (TTL in the contract §8). The gateway builds its HealthSource over it, because a
+   * probe needs the descriptor of the effective configuration. Default: a fresh map (tests); the app passes the
+   * per-process store.
+   */
+  healthStore?: Map<ProviderKind, { health: ProviderHealth; at: number }>;
   transports: TransportResolver;
   sleep: (ms: number, signal?: AbortSignal) => Promise<void>;
   /**
@@ -611,6 +620,14 @@ export interface GatewayDeps {
   routingOverride?: AiRoutingSetting;
   /** Scripts and tests only: e.g. demo:verify forces { demoMode: true, demoMiss: "offline", replaySpeed: "instant" }. */
   transportPolicyOverride?: Partial<TransportPolicy>;
+  /** Tests only: replace or add task definitions (typed in src/lib/ai/tasks/types.ts). */
+  tasks?: Partial<Record<TaskName, unknown>>;
+  /**
+   * P2 retrieval: the records a task's context budget touches beyond the pinned ones, in rank order, chosen IGNORING
+   * classification (PLAN.md §4.2). Phase 4 supplies the FTS retriever; until then (and by default) none. References
+   * only: the gateway loads, projects and classifies them.
+   */
+  retrieve?: (task: TaskName, query: { text: string; pinned: readonly RecordRef[]; role: Role }) => RecordRef[];
 }
 
 /** GET /api/health (and ?deep=1). Names of settings only; never values, prompts or provider error text. */

@@ -1,0 +1,91 @@
+# Replay cassette smoke.cloud: smoke task, Cloud mode. TOKENIZED: never write a real name, part, job or quote number.
+# provenance hand_authored = written by hand; the app labels it "REPLAY · scripted (not model output)".
+# After a prompt or seed change run: npm run demo:record -- --rekey && npm run demo:verify
+format: 1
+id: smoke.cloud
+task: smoke
+target_class: anthropic
+prompt_version: smoke-v1
+provenance: hand_authored
+recorded_on: null
+entries:
+  - id: P-OWNER
+    payload_hash: 990c001845ab9a021620857a647d70ae2ba15ba30ed6d2f4059279ddb739af73
+    scenario: smoke
+    turn_index: null
+    question: null
+    sources: []
+    note: Owner persona
+    response:
+      text: Received. This short reply confirms the connectivity check came through.
+      data: null
+      stop_reason: end_turn
+      usage:
+        input_tokens: null
+        output_tokens: null
+      ttft_ms: 700
+      latency_ms: 1200
+  - id: P-PER-01
+    payload_hash: da719affc75eb217abee9a47c6d49a6352cdae67200321092c28e1aa81993d2d
+    scenario: smoke
+    turn_index: null
+    question: null
+    sources: []
+    note: Lead quoter persona
+    response:
+      text: Received. This short reply confirms the connectivity check came through.
+      data: null
+      stop_reason: end_turn
+      usage:
+        input_tokens: null
+        output_tokens: null
+      ttft_ms: 700
+      latency_ms: 1200
+  - id: P-PER-05
+    payload_hash: a7b54dae5fa2f46eb92281b2012779277aaafe9022c90a33e056a197cb7f19bb
+    scenario: smoke
+    turn_index: null
+    question: null
+    sources: []
+    note: Quoter persona
+    response:
+      text: Received. This short reply confirms the connectivity check came through.
+      data: null
+      stop_reason: end_turn
+      usage:
+        input_tokens: null
+        output_tokens: null
+      ttft_ms: 700
+      latency_ms: 1200
+  - id: P-PER-02
+    payload_hash: 5d0397149d20cdbff793b299ff24d96069324bdd827dae892d6c0d2b36ea9fba
+    scenario: smoke
+    turn_index: null
+    question: null
+    sources: []
+    note: Machinist persona
+    response:
+      text: Received. This short reply confirms the connectivity check came through.
+      data: null
+      stop_reason: end_turn
+      usage:
+        input_tokens: null
+        output_tokens: null
+      ttft_ms: 700
+      latency_ms: 1200
+  - id: P-PER-06
+    payload_hash: f059b8a381a0547fc5aa9d763c215a70474b624123f771a6f19c2bf036687db5
+    scenario: smoke
+    turn_index: null
+    question: null
+    sources: []
+    note: Trainee persona
+    response:
+      text: Received. This short reply confirms the connectivity check came through.
+      data: null
+      stop_reason: end_turn
+      usage:
+        input_tokens: null
+        output_tokens: null
+      ttft_ms: 700
+      latency_ms: 1200

@@ -1,0 +1,84 @@
+# Every scripted request demo:verify must replay EXACTLY (npm run demo:verify). Each phase appends its requests.
+# expect = <cassette id>#<entry id>. After a prompt or seed change: npm run demo:record -- --rekey
+format: 1
+requests:
+  - id: smoke.cloud.owner
+    phase: 3
+    expect: smoke.cloud#P-OWNER
+    persona_id: P-OWNER
+    mode: cloud
+    cloud_provider: anthropic
+    task: smoke
+    feature: settings_test
+  - id: smoke.cloud.ray
+    phase: 3
+    expect: smoke.cloud#P-PER-01
+    persona_id: P-PER-01
+    mode: cloud
+    cloud_provider: anthropic
+    task: smoke
+    feature: settings_test
+  - id: smoke.cloud.maya
+    phase: 3
+    expect: smoke.cloud#P-PER-05
+    persona_id: P-PER-05
+    mode: cloud
+    cloud_provider: anthropic
+    task: smoke
+    feature: settings_test
+  - id: smoke.cloud.marv
+    phase: 3
+    expect: smoke.cloud#P-PER-02
+    persona_id: P-PER-02
+    mode: cloud
+    cloud_provider: anthropic
+    task: smoke
+    feature: settings_test
+  - id: smoke.cloud.devin
+    phase: 3
+    expect: smoke.cloud#P-PER-06
+    persona_id: P-PER-06
+    mode: cloud
+    cloud_provider: anthropic
+    task: smoke
+    feature: settings_test
+  - id: smoke.local.owner
+    phase: 3
+    expect: smoke.local#P-OWNER
+    persona_id: P-OWNER
+    mode: local
+    cloud_provider: anthropic
+    task: smoke
+    feature: settings_test
+  - id: smoke.local.ray
+    phase: 3
+    expect: smoke.local#P-PER-01
+    persona_id: P-PER-01
+    mode: local
+    cloud_provider: anthropic
+    task: smoke
+    feature: settings_test
+  - id: smoke.local.maya
+    phase: 3
+    expect: smoke.local#P-PER-05
+    persona_id: P-PER-05
+    mode: local
+    cloud_provider: anthropic
+    task: smoke
+    feature: settings_test
+  - id: smoke.local.marv
+    phase: 3
+    expect: smoke.local#P-PER-02
+    persona_id: P-PER-02
+    mode: local
+    cloud_provider: anthropic
+    task: smoke
+    feature: settings_test
+  - id: smoke.local.devin
+    phase: 3
+    expect: smoke.local#P-PER-06
+    persona_id: P-PER-06
+    mode: local
+    cloud_provider: anthropic
+    task: smoke
+    feature: settings_test
