@@ -64,7 +64,8 @@ A half-finished edit can never break the demo: if `seed:check` fails, Reset demo
 | `documents/setup-sheets/DOC-SS-nn-*.md` | Setup sheets |
 | `demo/ray-live-interview.yaml` | Ray's scripted answers for the live interview and the four cards it must produce |
 | `demo/anchors.yaml` | Demo-critical IDs, pinned values and the numbers the risk map must show |
-| `demo-cache/` | Cached AI answers for the scripted demo (checked by `demo:verify`, not by `seed:check`) |
+| `demo-cache/` | Cached AI answers for the scripted demo, tokenized (checked by `demo:verify`, not by `seed:check`; see `demo-cache/README.md`) |
+| `audit/history.yaml` | ~20 fictional example rows for the AI audit log (see below) |
 
 ## The expertise matrix (`expertise-matrix.csv`)
 
@@ -144,6 +145,18 @@ cites turns as `INT-01-T010`. If you edit an expert turn, run `seed:check`: any 
 Frontmatter lists the machine, part, job, status and `source_cards`. The body uses these sections: `## Workholding`,
 `## Tools`, `## Operations`, `## Inspection`, `## Cautions`, `## Checklist`. Each `- ` line may end with the cards it
 comes from, like `[KC-002, KC-021]`. Cite CAM program numbers, never speeds or feeds.
+
+## Example audit rows (`audit/history.yaml`)
+
+Fictional AI calls that fill the `/audit` page before anyone has used the demo. The app labels them **"Seeded example
+(fictional)"** and their answers **"scripted (not model output)"**; nothing in them came from a model.
+
+- Write everything **tokenized**: `[[CUSTOMER_36V4]]`, `[[PERSON_WV9N]]`, `[[JOB_SXV8]]` — never a name, part, job or quote
+  number. The codes come from the shop seed, so ask a developer to run the redactor when you need a new one.
+- `seed:check` rejects a name, a token the seed can't produce, a record that wouldn't be cleared for the provider in that row
+  (for example an export-controlled job "sent" to the Anthropic API), a blocked or held row that sends something, and dates on
+  or after `demo_today`.
+- IDs `SEED-0001…` are sequential, oldest first. A repair retry names its first attempt in `parent`.
 
 ## Reading `seed:check` output
 

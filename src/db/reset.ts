@@ -9,7 +9,7 @@
  */
 import type Database from "better-sqlite3";
 import { drizzle } from "drizzle-orm/better-sqlite3";
-import { eq, getTableName, type Table } from "drizzle-orm";
+import { and, eq, getTableName, notLike, type Table } from "drizzle-orm";
 import * as s from "@/db/schema";
 import { SEEDED_TABLES, type SeedBundle, type SeededTableName } from "@/lib/seed/bundle";
 import { rebuildFts } from "./fts";
@@ -92,7 +92,12 @@ export interface ResetResult {
 export function resetDatabase(sqlite: Database.Database, bundle: SeedBundle, opts: ResetOptions): ResetResult {
   const db = drizzle({ client: sqlite, schema: s });
   const run = sqlite.transaction((): ResetResult => {
-    const live = db.select().from(s.aiAuditLog).where(eq(s.aiAuditLog.transport, "live")).all();
+    // Seeded example rows (SEED-…) are never live calls; they are re-inserted from the bundle, not archived.
+    const live = db
+      .select()
+      .from(s.aiAuditLog)
+      .where(and(eq(s.aiAuditLog.transport, "live"), notLike(s.aiAuditLog.requestId, "SEED-%")))
+      .all();
     if (live.length > 0) {
       // Never delete a real call's audit trail unarchived (PLAN.md §4.7). If a later step rolls back, a retry
       // archives the same rows again: a duplicate archive file, never a lost one.

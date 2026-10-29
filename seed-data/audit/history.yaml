@@ -1,0 +1,657 @@
+# Fictional example rows for the /audit page (PLAN.md §4.7). The app shows them as "Seeded example (fictional)" and
+# their answers as "scripted (not model output)": nothing here was produced by a model or sent anywhere.
+# Everything is TOKENIZED: write [[CUSTOMER_…]] / [[PERSON_…]] / [[PART_…]] / [[JOB_…]] / [[QUOTE_…]] tokens, never a name or
+# a part, job or quote number (seed:check rejects names, unknown tokens and decisions that don't match the routing matrix).
+# Tokens are computed from the shop seed; to find one, ask a developer to run the redactor on the name.
+# One row per AI call, oldest first; ids SEED-0001… are sequential. After editing: npm run seed:check && npm run seed:lock
+- id: "SEED-0001"
+  created_at: "2026-08-24T14:00:12Z"
+  completed_at: "2026-08-24T14:00:14Z"
+  actor_persona: "P-OWNER"
+  feature: "settings_test"
+  task: "smoke"
+  prompt_version: "smoke-v1"
+  mode: "cloud"
+  decision: "allow"
+  provider_kind: "anthropic"
+  target_class: "anthropic"
+  model: "claude-sonnet-5-5"
+  endpoint_host: "api.anthropic.com"
+  region: null
+  cross_region: null
+  max_classification: "internal"
+  classifications_included: ["internal"]
+  records_sent: []
+  records_withheld: []
+  notice: null
+  user_input: null
+  request: {"system": "You are a connectivity check for a demo application. Reply with one short sentence. Do not repeat names or identifiers from the message.", "messages": [{"role": "user", "content": "This is a connectivity check from [[PERSON_09RC]] on the Settings page. Reply with one short sentence confirming you received it."}], "max_tokens": 1024, "output": {"kind": "text"}, "effort": "low"}
+  response: "Received. This short reply confirms the connectivity check came through."
+  usage: {"input_tokens": 61, "output_tokens": 14}
+  latency_ms: 1310
+  ttft_ms: 690
+  stop_reason: "end_turn"
+  outcome: "ok"
+  error_code: null
+  citations: {"valid": 0, "stripped": 0}
+  parent: null
+- id: "SEED-0002"
+  created_at: "2026-08-25T15:12:04Z"
+  completed_at: "2026-08-25T15:12:09Z"
+  actor_persona: "P-PER-05"
+  feature: "ask_shop"
+  task: "ask_shop"
+  prompt_version: "ask-v0"
+  mode: "cloud"
+  decision: "allow"
+  provider_kind: "anthropic"
+  target_class: "anthropic"
+  model: "claude-sonnet-5-5"
+  endpoint_host: "api.anthropic.com"
+  region: null
+  cross_region: null
+  max_classification: "customer_confidential"
+  classifications_included: ["customer_confidential"]
+  records_sent: ["card:KC-003", "card:KC-030"]
+  records_withheld: []
+  notice: null
+  user_input: "What does [[CUSTOMER_36V4]] expect on a first article for a new revision?"
+  request: {"system": "You answer questions for a machine shop using only the numbered sources below. Cite every claim as [S1], [S2]. If the sources don't answer it, say so.\n[S1] card \"[[CUSTOMER_36V4]]: first article package in their template, balloons matched to the drawing\" — contributed by [[PERSON_WV9N]]\n[S2] card \"New rev: balloon the new drawing from scratch, never from the old balloons\"", "messages": [{"role": "user", "content": "What does [[CUSTOMER_36V4]] expect on a first article for a new revision?"}], "max_tokens": 1500, "output": {"kind": "text"}, "effort": "medium"}
+  response: "[[CUSTOMER_36V4]] wants the first article in their own template, with balloons matched to the current drawing [S1]. For a new revision, balloon the new drawing from scratch rather than reusing the old balloons [S2]."
+  usage: {"input_tokens": 612, "output_tokens": 58}
+  latency_ms: 4120
+  ttft_ms: 840
+  stop_reason: "end_turn"
+  outcome: "ok"
+  error_code: null
+  citations: {"valid": 2, "stripped": 0}
+  parent: null
+- id: "SEED-0003"
+  created_at: "2026-08-27T13:40:51Z"
+  completed_at: "2026-08-27T13:40:57Z"
+  actor_persona: "P-PER-01"
+  feature: "ask_shop"
+  task: "ask_shop"
+  prompt_version: "ask-v0"
+  mode: "cloud"
+  decision: "allow"
+  provider_kind: "anthropic"
+  target_class: "anthropic"
+  model: "claude-sonnet-5-5"
+  endpoint_host: "api.anthropic.com"
+  region: null
+  cross_region: null
+  max_classification: "customer_confidential"
+  classifications_included: ["customer_confidential"]
+  records_sent: ["card:KC-010", "card:KC-008"]
+  records_withheld: []
+  notice: null
+  user_input: "How should outside processing show up on a quote?"
+  request: {"system": "You answer questions for a machine shop using only the numbered sources below. Cite every claim as [S1], [S2]. If the sources don't answer it, say so.\n[S1] card \"Always get outside processing quotes in writing, with lead time, first\"\n[S2] card \"[[CUSTOMER_36V4]] 7075 brackets: quote anodize as its own line\"", "messages": [{"role": "user", "content": "How should outside processing show up on a quote?"}], "max_tokens": 1500, "output": {"kind": "text"}, "effort": "medium"}
+  response: "Get every outside-processing quote in writing, with its lead time, before you price the job [S1]. Where a customer expects it, list finishing such as anodize as its own line [S2]."
+  usage: {"input_tokens": 540, "output_tokens": 47}
+  latency_ms: 5230
+  ttft_ms: 910
+  stop_reason: "end_turn"
+  outcome: "ok"
+  error_code: null
+  citations: {"valid": 2, "stripped": 0}
+  parent: null
+- id: "SEED-0004"
+  created_at: "2026-08-28T19:05:33Z"
+  completed_at: "2026-08-28T19:05:37Z"
+  actor_persona: "P-PER-02"
+  feature: "ask_shop"
+  task: "ask_shop"
+  prompt_version: "ask-v0"
+  mode: "cloud"
+  decision: "allow"
+  provider_kind: "anthropic"
+  target_class: "anthropic"
+  model: "claude-sonnet-5-5"
+  endpoint_host: "api.anthropic.com"
+  region: null
+  cross_region: null
+  max_classification: "internal"
+  classifications_included: ["internal"]
+  records_sent: ["card:KC-040"]
+  records_withheld: []
+  notice: null
+  user_input: "How hard should I clamp a thin part on the CMM?"
+  request: {"system": "You answer questions for a machine shop using only the numbered sources below. Cite every claim as [S1], [S2]. If the sources don't answer it, say so.\n[S1] card \"Hold parts on the CMM lightly, sitting the way the print datums say\" — contributed by [[PERSON_VYB7]]", "messages": [{"role": "user", "content": "How hard should I clamp a thin part on the CMM?"}], "max_tokens": 1500, "output": {"kind": "text"}, "effort": "medium"}
+  response: "Lightly: hold it just enough to keep it still, sitting on the datums the print calls out [S1]."
+  usage: {"input_tokens": 402, "output_tokens": 24}
+  latency_ms: 3010
+  ttft_ms: 760
+  stop_reason: "end_turn"
+  outcome: "ok"
+  error_code: null
+  citations: {"valid": 1, "stripped": 0}
+  parent: null
+- id: "SEED-0005"
+  created_at: "2026-09-01T16:22:10Z"
+  completed_at: "2026-09-01T16:22:14Z"
+  actor_persona: "P-PER-06"
+  feature: "ask_shop"
+  task: "ask_shop"
+  prompt_version: "ask-v0"
+  mode: "cloud"
+  decision: "allow"
+  provider_kind: "anthropic"
+  target_class: "anthropic"
+  model: "claude-sonnet-5-5"
+  endpoint_host: "api.anthropic.com"
+  region: null
+  cross_region: null
+  max_classification: "general"
+  classifications_included: ["general"]
+  records_sent: ["card:KC-060"]
+  records_withheld: []
+  notice: null
+  user_input: "Why does the chip conveyor keep jamming on 316 jobs?"
+  request: {"system": "You answer questions for a machine shop using only the numbered sources below. Cite every claim as [S1], [S2]. If the sources don't answer it, say so.\n[S1] card \"Chip conveyor jams on stringy 316 chips: break the chip, check the conveyor\" — contributed by [[PERSON_4CMF_F]]", "messages": [{"role": "user", "content": "Why does the chip conveyor keep jamming on 316 jobs?"}], "max_tokens": 1500, "output": {"kind": "text"}, "effort": "medium"}
+  response: "Stringy 316 chips wrap up in the conveyor. Change the cut so the chip breaks, and check the conveyor during the run [S1]."
+  usage: {"input_tokens": 388, "output_tokens": 31}
+  latency_ms: 2890
+  ttft_ms: 690
+  stop_reason: "end_turn"
+  outcome: "ok"
+  error_code: null
+  citations: {"valid": 1, "stripped": 0}
+  parent: null
+- id: "SEED-0006"
+  created_at: "2026-09-02T16:48:23Z"
+  completed_at: "2026-09-02T16:48:28Z"
+  actor_persona: "P-OWNER"
+  feature: "ask_shop"
+  task: "ask_shop"
+  prompt_version: "ask-v0"
+  mode: "cloud"
+  decision: "allow"
+  provider_kind: "bedrock"
+  target_class: "bedrock_commercial"
+  model: "global.anthropic.claude-sonnet-5-5"
+  endpoint_host: "bedrock-runtime.us-east-1.amazonaws.com"
+  region: "us-east-1"
+  cross_region: "global"
+  max_classification: "customer_confidential"
+  classifications_included: ["customer_confidential"]
+  records_sent: ["card:KC-030"]
+  records_withheld: []
+  notice: null
+  user_input: "What changes when a drawing gets a new revision?"
+  request: {"system": "You answer questions for a machine shop using only the numbered sources below. Cite every claim as [S1], [S2]. If the sources don't answer it, say so.\n[S1] card \"New rev: balloon the new drawing from scratch, never from the old balloons\"", "messages": [{"role": "user", "content": "What changes when a drawing gets a new revision?"}], "max_tokens": 1500, "output": {"kind": "text"}, "effort": "medium"}
+  response: "Balloon the new revision from scratch instead of carrying the old balloons forward [S1]."
+  usage: {"input_tokens": 366, "output_tokens": 22}
+  latency_ms: 3870
+  ttft_ms: 940
+  stop_reason: "end_turn"
+  outcome: "ok"
+  error_code: null
+  citations: {"valid": 1, "stripped": 0}
+  parent: null
+- id: "SEED-0007"
+  created_at: "2026-09-03T14:47:29Z"
+  completed_at: "2026-09-03T14:47:35Z"
+  actor_persona: "P-OWNER"
+  feature: "ask_shop"
+  task: "ask_shop"
+  prompt_version: "ask-v0"
+  mode: "cloud"
+  decision: "allow"
+  provider_kind: "anthropic"
+  target_class: "anthropic"
+  model: "claude-sonnet-5-5"
+  endpoint_host: "api.anthropic.com"
+  region: null
+  cross_region: null
+  max_classification: "customer_confidential"
+  classifications_included: ["customer_confidential"]
+  records_sent: ["card:KC-034", "card:KC-021"]
+  records_withheld: []
+  notice: null
+  user_input: "What did we learn about measuring thin walls since [[PERSON_X0QA_F]] changed the process?"
+  request: {"system": "You answer questions for a machine shop using only the numbered sources below. Cite every claim as [S1], [S2]. If the sources don't answer it, say so.\n[S1] card \"Thin walls: measure after the part has sat unclamped, never in the fixture\"\n[S2] card \"Sensor-mount bracket first piece: finished with the prove-out end mill\"", "messages": [{"role": "user", "content": "What did we learn about measuring thin walls since [[PERSON_X0QA_F]] changed the process?"}], "max_tokens": 1500, "output": {"kind": "text"}, "effort": "medium"}
+  response: "Measure thin walls only after the part has sat unclamped; a measurement in the fixture hides the spring-back [S1]. The first piece of the sensor-mount bracket also showed the finish pass matters [S2]."
+  usage: {"input_tokens": 655, "output_tokens": 52}
+  latency_ms: 4480
+  ttft_ms: 880
+  stop_reason: "end_turn"
+  outcome: "ok"
+  error_code: null
+  citations: {"valid": 2, "stripped": 0}
+  parent: null
+- id: "SEED-0008"
+  created_at: "2026-09-04T12:10:02Z"
+  completed_at: "2026-09-04T12:10:06Z"
+  actor_persona: "P-PER-05"
+  feature: "ask_shop"
+  task: "ask_shop"
+  prompt_version: "ask-v0"
+  mode: "cloud"
+  decision: "allow"
+  provider_kind: "anthropic"
+  target_class: "anthropic"
+  model: "claude-sonnet-5-5"
+  endpoint_host: "api.anthropic.com"
+  region: null
+  cross_region: null
+  max_classification: "customer_confidential"
+  classifications_included: ["customer_confidential"]
+  records_sent: ["card:KC-001", "card:KC-002"]
+  records_withheld: []
+  notice: null
+  user_input: "Where does the finish time come from on titanium brackets like [[PART_Y46B]]?"
+  request: {"system": "You answer questions for a machine shop using only the numbered sources below. Cite every claim as [S1], [S2]. If the sources don't answer it, say so.\n[S1] card \"Titanium brackets: quote finish time from wall height, not stock removal\" — contributed by [[PERSON_WV9N]]\n[S2] card \"Thin Ti walls on the DMU: fresh finisher, shortest stickout\"", "messages": [{"role": "user", "content": "Where does the finish time come from on titanium brackets like [[PART_Y46B]]?"}], "max_tokens": 1500, "output": {"kind": "text"}, "effort": "medium"}
+  response: "Quote the finish time from the wall height, not from the stock you remove [S1], and plan the finishing setup with a fresh finisher at the shortest stickout [S2]."
+  usage: {"input_tokens": 701, "output_tokens": 44}
+  latency_ms: 3920
+  ttft_ms: 800
+  stop_reason: "end_turn"
+  outcome: "ok"
+  error_code: null
+  citations: {"valid": 2, "stripped": 0}
+  parent: null
+- id: "SEED-0009"
+  created_at: "2026-09-05T15:31:44Z"
+  completed_at: "2026-09-05T15:31:50Z"
+  actor_persona: "P-PER-05"
+  feature: "ask_shop"
+  task: "ask_shop"
+  prompt_version: "ask-v0"
+  mode: "cloud"
+  decision: "withheld_partial"
+  provider_kind: "anthropic"
+  target_class: "anthropic"
+  model: "claude-sonnet-5-5"
+  endpoint_host: "api.anthropic.com"
+  region: null
+  cross_region: null
+  max_classification: "customer_confidential"
+  classifications_included: ["customer_confidential"]
+  records_sent: ["card:KC-001", "job:J-A02"]
+  records_withheld: [{"ref": "job:J-A06", "classification": "export_controlled", "reason": "not_cleared_for_target"}]
+  notice: {"key": "withheld_records", "params": {"count": 1, "recordKinds": "job", "classification": "export_controlled", "mode": "cloud", "providerKind": "anthropic", "model": "claude-sonnet-5-5"}}
+  user_input: "Which thin-wall jobs ran over their quoted hours?"
+  request: {"system": "You answer questions for a machine shop using only the numbered sources below. Cite every claim as [S1], [S2]. If the sources don't answer it, say so.\n[S1] card \"Titanium brackets: quote finish time from wall height, not stock removal\" — contributed by [[PERSON_WV9N]]\n[S2] job [[JOB_75PT]]: quoted vs actual hours, sensor-mount bracket", "messages": [{"role": "user", "content": "Which thin-wall jobs ran over their quoted hours?"}], "max_tokens": 1500, "output": {"kind": "text"}, "effort": "medium"}
+  response: "The sensor-mount bracket job ran over its quoted hours [S2]; the rule that explains why is to quote finishing from wall height [S1]. One related job wasn't available to this answer."
+  usage: {"input_tokens": 890, "output_tokens": 49}
+  latency_ms: 4660
+  ttft_ms: 910
+  stop_reason: "end_turn"
+  outcome: "ok"
+  error_code: null
+  citations: {"valid": 2, "stripped": 0}
+  parent: null
+- id: "SEED-0010"
+  created_at: "2026-09-08T17:02:19Z"
+  completed_at: "2026-09-08T17:02:24Z"
+  actor_persona: "P-PER-01"
+  feature: "ask_shop"
+  task: "ask_shop"
+  prompt_version: "ask-v0"
+  mode: "cloud"
+  decision: "withheld_partial"
+  provider_kind: "anthropic"
+  target_class: "anthropic"
+  model: "claude-sonnet-5-5"
+  endpoint_host: "api.anthropic.com"
+  region: null
+  cross_region: null
+  max_classification: "customer_confidential"
+  classifications_included: ["customer_confidential"]
+  records_sent: ["card:KC-010"]
+  records_withheld: [{"ref": "card:KC-004", "classification": "export_controlled", "reason": "not_cleared_for_target"}]
+  notice: {"key": "withheld_records", "params": {"count": 1, "recordKinds": "card", "classification": "export_controlled", "mode": "cloud", "providerKind": "anthropic", "model": "claude-sonnet-5-5"}}
+  user_input: "How do we price Inconel 718 against 17-4 PH?"
+  request: {"system": "You answer questions for a machine shop using only the numbered sources below. Cite every claim as [S1], [S2]. If the sources don't answer it, say so.\n[S1] card \"Always get outside processing quotes in writing, with lead time, first\"", "messages": [{"role": "user", "content": "How do we price Inconel 718 against 17-4 PH?"}], "max_tokens": 1500, "output": {"kind": "text"}, "effort": "medium"}
+  response: "The sources sent don't compare the two alloys directly; they only cover pricing outside processing [S1]."
+  usage: {"input_tokens": 420, "output_tokens": 29}
+  latency_ms: 3340
+  ttft_ms: 770
+  stop_reason: "end_turn"
+  outcome: "ok"
+  error_code: null
+  citations: {"valid": 1, "stripped": 0}
+  parent: null
+- id: "SEED-0011"
+  created_at: "2026-09-09T13:15:06Z"
+  completed_at: "2026-09-09T13:15:06Z"
+  actor_persona: "P-PER-05"
+  feature: "ask_shop"
+  task: "ask_shop"
+  prompt_version: "ask-v0"
+  mode: "cloud"
+  decision: "blocked"
+  provider_kind: "anthropic"
+  target_class: "anthropic"
+  model: "claude-sonnet-5-5"
+  endpoint_host: "api.anthropic.com"
+  region: null
+  cross_region: null
+  max_classification: "export_controlled"
+  classifications_included: ["export_controlled"]
+  records_sent: []
+  records_withheld: []
+  notice: {"key": "blocked_request_controlled", "params": {"recordIds": "J-A10", "classification": "export_controlled", "providerKind": "anthropic", "model": "claude-sonnet-5-5"}}
+  user_input: "What went wrong on [[JOB_SXV8]]?"
+  request: null
+  response: null
+  usage: null
+  latency_ms: 0
+  ttft_ms: null
+  stop_reason: null
+  outcome: "blocked"
+  error_code: null
+  citations: {"valid": 0, "stripped": 0}
+  parent: null
+- id: "SEED-0012"
+  created_at: "2026-09-10T18:44:52Z"
+  completed_at: "2026-09-10T18:44:52Z"
+  actor_persona: "P-PER-02"
+  feature: "ask_shop"
+  task: "ask_shop"
+  prompt_version: "ask-v0"
+  mode: "cloud"
+  decision: "blocked"
+  provider_kind: "anthropic"
+  target_class: "anthropic"
+  model: "claude-sonnet-5-5"
+  endpoint_host: "api.anthropic.com"
+  region: null
+  cross_region: null
+  max_classification: "export_controlled"
+  classifications_included: ["export_controlled"]
+  records_sent: []
+  records_withheld: []
+  notice: {"key": "blocked_request_controlled", "params": {"recordIds": "PRT-A10", "classification": "export_controlled", "providerKind": "anthropic", "model": "claude-sonnet-5-5"}}
+  user_input: "Setup notes for [[PART_QN00]]?"
+  request: null
+  response: null
+  usage: null
+  latency_ms: 0
+  ttft_ms: null
+  stop_reason: null
+  outcome: "blocked"
+  error_code: null
+  citations: {"valid": 0, "stripped": 0}
+  parent: null
+- id: "SEED-0013"
+  created_at: "2026-09-11T14:20:37Z"
+  completed_at: "2026-09-11T14:20:37Z"
+  actor_persona: "P-PER-05"
+  feature: "ask_shop"
+  task: "ask_shop"
+  prompt_version: "ask-v0"
+  mode: "cloud"
+  decision: "held"
+  provider_kind: "anthropic"
+  target_class: "anthropic"
+  model: "claude-sonnet-5-5"
+  endpoint_host: "api.anthropic.com"
+  region: null
+  cross_region: null
+  max_classification: "internal"
+  classifications_included: ["internal"]
+  records_sent: []
+  records_withheld: []
+  notice: {"key": "held_looks_controlled", "params": {"triggers": "numeric_core", "canSendAnyway": 0, "providerKind": "anthropic"}}
+  user_input: "How many hours did the 4410 manifold run?"
+  request: null
+  response: null
+  usage: null
+  latency_ms: 0
+  ttft_ms: null
+  stop_reason: null
+  outcome: "held"
+  error_code: null
+  citations: {"valid": 0, "stripped": 0}
+  parent: null
+- id: "SEED-0014"
+  created_at: "2026-09-11T16:03:12Z"
+  completed_at: "2026-09-11T16:03:17Z"
+  actor_persona: "P-PER-01"
+  feature: "ask_shop"
+  task: "ask_shop"
+  prompt_version: "ask-v0"
+  mode: "cloud"
+  decision: "withheld_partial"
+  provider_kind: "anthropic"
+  target_class: "anthropic"
+  model: "claude-sonnet-5-5"
+  endpoint_host: "api.anthropic.com"
+  region: null
+  cross_region: null
+  max_classification: "customer_confidential"
+  classifications_included: ["customer_confidential"]
+  records_sent: ["card:KC-034"]
+  records_withheld: [{"ref": "card:KC-006", "classification": "export_controlled", "reason": "not_cleared_for_target"}, {"ref": "job:J-A07", "classification": "export_controlled", "reason": "not_cleared_for_target"}]
+  notice: {"key": "sent_after_hold", "params": {"withheldCount": 2, "triggers": "retrieval"}}
+  user_input: "What should a new customer's first lot look like?"
+  request: {"system": "You answer questions for a machine shop using only the numbered sources below. Cite every claim as [S1], [S2]. If the sources don't answer it, say so.\n[S1] card \"Thin walls: measure after the part has sat unclamped, never in the fixture\"", "messages": [{"role": "user", "content": "What should a new customer's first lot look like?"}], "max_tokens": 1500, "output": {"kind": "text"}, "effort": "medium"}
+  response: "The one source sent is about measuring thin walls after unclamping [S1]; it doesn't cover first lots for new customers."
+  usage: {"input_tokens": 377, "output_tokens": 30}
+  latency_ms: 3550
+  ttft_ms: 820
+  stop_reason: "end_turn"
+  outcome: "ok"
+  error_code: null
+  citations: {"valid": 1, "stripped": 0}
+  parent: null
+- id: "SEED-0015"
+  created_at: "2026-09-12T15:27:45Z"
+  completed_at: "2026-09-12T15:27:50Z"
+  actor_persona: "P-PER-05"
+  feature: "ask_shop"
+  task: "ask_shop"
+  prompt_version: "ask-v0"
+  mode: "hybrid"
+  decision: "user_excluded_controlled"
+  provider_kind: "anthropic"
+  target_class: "anthropic"
+  model: "claude-sonnet-5-5"
+  endpoint_host: "api.anthropic.com"
+  region: null
+  cross_region: null
+  max_classification: "customer_confidential"
+  classifications_included: ["customer_confidential"]
+  records_sent: ["card:KC-001", "job:J-A02"]
+  records_withheld: [{"ref": "job:J-A06", "classification": "export_controlled", "reason": "user_excluded"}]
+  notice: {"key": "user_excluded_controlled", "params": {"count": 1}}
+  user_input: "Compare our thin-wall bracket jobs."
+  request: {"system": "You answer questions for a machine shop using only the numbered sources below. Cite every claim as [S1], [S2]. If the sources don't answer it, say so.\n[S1] card \"Titanium brackets: quote finish time from wall height, not stock removal\" — contributed by [[PERSON_WV9N]]\n[S2] job [[JOB_75PT]]: quoted vs actual hours, sensor-mount bracket", "messages": [{"role": "user", "content": "Compare our thin-wall bracket jobs."}], "max_tokens": 1500, "output": {"kind": "text"}, "effort": "medium"}
+  response: "Only one bracket job was included: it ran over its quote [S2], which matches the rule to quote finishing from wall height [S1]."
+  usage: {"input_tokens": 845, "output_tokens": 41}
+  latency_ms: 4210
+  ttft_ms: 860
+  stop_reason: "end_turn"
+  outcome: "ok"
+  error_code: null
+  citations: {"valid": 2, "stripped": 0}
+  parent: null
+- id: "SEED-0016"
+  created_at: "2026-09-12T19:08:31Z"
+  completed_at: "2026-09-12T19:08:58Z"
+  actor_persona: "P-OWNER"
+  feature: "ask_shop"
+  task: "ask_shop"
+  prompt_version: "ask-v0"
+  mode: "local"
+  decision: "allow"
+  provider_kind: "ollama"
+  target_class: "ollama_local"
+  model: "qwen3.5:4b"
+  endpoint_host: "127.0.0.1"
+  region: null
+  cross_region: null
+  max_classification: "export_controlled"
+  classifications_included: ["export_controlled"]
+  records_sent: ["job:J-A10"]
+  records_withheld: []
+  notice: null
+  user_input: "What went wrong on [[JOB_SXV8]]?"
+  request: {"system": "You answer questions for a machine shop using only the numbered sources below. Cite every claim as [S1], [S2]. If the sources don't answer it, say so.\n[S1] job [[JOB_SXV8]]: hydraulic manifold for [[CUSTOMER_KZMK]], quoted vs actual hours and debrief", "messages": [{"role": "user", "content": "What went wrong on [[JOB_SXV8]]?"}], "max_tokens": 1500, "output": {"kind": "text"}}
+  response: "The debrief for [[JOB_SXV8]] points to the setup taking longer than quoted [S1]."
+  usage: {"input_tokens": 1020, "output_tokens": 36}
+  latency_ms: 26840
+  ttft_ms: 21900
+  stop_reason: "stop"
+  outcome: "ok"
+  error_code: null
+  citations: {"valid": 1, "stripped": 0}
+  parent: null
+- id: "SEED-0017"
+  created_at: "2026-09-13T13:55:40Z"
+  completed_at: "2026-09-13T13:56:02Z"
+  actor_persona: "P-PER-05"
+  feature: "ask_shop"
+  task: "ask_shop"
+  prompt_version: "ask-v0"
+  mode: "local"
+  decision: "allow"
+  provider_kind: "ollama"
+  target_class: "ollama_local"
+  model: "qwen3.5:4b"
+  endpoint_host: "127.0.0.1"
+  region: null
+  cross_region: null
+  max_classification: "export_controlled"
+  classifications_included: ["customer_confidential", "export_controlled"]
+  records_sent: ["card:KC-001", "job:J-A06"]
+  records_withheld: []
+  notice: null
+  user_input: "How do we quote thin-wall Ti brackets for [[CUSTOMER_36V4]]?"
+  request: {"system": "You answer questions for a machine shop using only the numbered sources below. Cite every claim as [S1], [S2]. If the sources don't answer it, say so.\n[S1] card \"Titanium brackets: quote finish time from wall height, not stock removal\" — contributed by [[PERSON_WV9N]]\n[S2] job [[JOB_A21J]]: thin-wall sensor housing for [[CUSTOMER_KY3E]], quoted vs actual hours", "messages": [{"role": "user", "content": "How do we quote thin-wall Ti brackets for [[CUSTOMER_36V4]]?"}], "max_tokens": 1500, "output": {"kind": "text"}}
+  response: "Quote finishing from the wall height [S1]. A thin-wall housing job ran well over its hours, so leave margin for spring-back [S2]."
+  usage: {"input_tokens": 1188, "output_tokens": 40}
+  latency_ms: 21760
+  ttft_ms: 17400
+  stop_reason: "stop"
+  outcome: "ok"
+  error_code: null
+  citations: {"valid": 2, "stripped": 0}
+  parent: null
+- id: "SEED-0018"
+  created_at: "2026-09-13T17:31:09Z"
+  completed_at: "2026-09-13T17:31:20Z"
+  actor_persona: "P-PER-02"
+  feature: "ask_shop"
+  task: "ask_shop"
+  prompt_version: "ask-v0"
+  mode: "local"
+  decision: "allow"
+  provider_kind: "ollama"
+  target_class: "ollama_local"
+  model: "qwen3.5:4b"
+  endpoint_host: "127.0.0.1"
+  region: null
+  cross_region: null
+  max_classification: "internal"
+  classifications_included: ["internal"]
+  records_sent: ["card:KC-050"]
+  records_withheld: []
+  notice: null
+  user_input: "Short parts keep falling past the catcher on the Swiss. Ideas?"
+  request: {"system": "You answer questions for a machine shop using only the numbered sources below. Cite every claim as [S1], [S2]. If the sources don't answer it, say so.\n[S1] card \"Part catcher misses short parts: run the mesh liner, check it at the start of the shift\" — contributed by [[PERSON_4CMF_F]]", "messages": [{"role": "user", "content": "Short parts keep falling past the catcher on the Swiss. Ideas?"}], "max_tokens": 1500, "output": {"kind": "text"}}
+  response: "Run the mesh liner in the part catcher for short parts and check it at the start of the shift [S1]."
+  usage: {"input_tokens": 402, "output_tokens": 27}
+  latency_ms: 11020
+  ttft_ms: 8900
+  stop_reason: "stop"
+  outcome: "ok"
+  error_code: null
+  citations: {"valid": 1, "stripped": 0}
+  parent: null
+- id: "SEED-0019"
+  created_at: "2026-09-14T13:02:55Z"
+  completed_at: "2026-09-14T13:03:55Z"
+  actor_persona: "P-PER-01"
+  feature: "ask_shop"
+  task: "ask_shop"
+  prompt_version: "ask-v0"
+  mode: "cloud"
+  decision: "allow"
+  provider_kind: "anthropic"
+  target_class: "anthropic"
+  model: "claude-sonnet-5-5"
+  endpoint_host: "api.anthropic.com"
+  region: null
+  cross_region: null
+  max_classification: "customer_confidential"
+  classifications_included: ["customer_confidential"]
+  records_sent: ["card:KC-008"]
+  records_withheld: []
+  notice: null
+  user_input: "Does [[CUSTOMER_36V4]] accept anodize on the same line as the part?"
+  request: {"system": "You answer questions for a machine shop using only the numbered sources below. Cite every claim as [S1], [S2]. If the sources don't answer it, say so.\n[S1] card \"[[CUSTOMER_36V4]] 7075 brackets: quote anodize as its own line\"", "messages": [{"role": "user", "content": "Does [[CUSTOMER_36V4]] accept anodize on the same line as the part?"}], "max_tokens": 1500, "output": {"kind": "text"}, "effort": "medium"}
+  response: null
+  usage: null
+  latency_ms: 60000
+  ttft_ms: null
+  stop_reason: null
+  outcome: "timeout"
+  error_code: "provider_timeout"
+  citations: {"valid": 0, "stripped": 0}
+  parent: null
+- id: "SEED-0020"
+  created_at: "2026-09-14T15:20:01Z"
+  completed_at: "2026-09-14T15:20:05Z"
+  actor_persona: "P-PER-05"
+  feature: "document_generator"
+  task: "doc_generate"
+  prompt_version: "doc-v0"
+  mode: "cloud"
+  decision: "allow"
+  provider_kind: "anthropic"
+  target_class: "anthropic"
+  model: "claude-sonnet-5-5"
+  endpoint_host: "api.anthropic.com"
+  region: null
+  cross_region: null
+  max_classification: "customer_confidential"
+  classifications_included: ["internal", "customer_confidential"]
+  records_sent: ["card:KC-034", "card:KC-040"]
+  records_withheld: []
+  notice: null
+  user_input: "Draft the inspection section of a setup sheet from the sources."
+  request: {"system": "You answer questions for a machine shop using only the numbered sources below. Cite every claim as [S1], [S2]. If the sources don't answer it, say so.\n[S1] card \"Thin walls: measure after the part has sat unclamped, never in the fixture\"\n[S2] card \"Hold parts on the CMM lightly, sitting the way the print datums say\"", "messages": [{"role": "user", "content": "Draft the inspection section of a setup sheet from the sources."}], "max_tokens": 2000, "output": {"kind": "json", "schema_name": "setup_sheet_section", "json_schema": {"type": "object", "properties": {"heading": {"type": "string"}, "lines": {"type": "array", "items": {"type": "string"}}}, "required": ["heading", "lines"], "additionalProperties": false}}, "effort": "medium"}
+  response: "Inspection: measure after unclamping [S1]"
+  usage: {"input_tokens": 702, "output_tokens": 12}
+  latency_ms: 3890
+  ttft_ms: 820
+  stop_reason: "end_turn"
+  outcome: "invalid_output"
+  error_code: "invalid_output"
+  citations: {"valid": 0, "stripped": 0}
+  parent: null
+- id: "SEED-0021"
+  created_at: "2026-09-14T15:20:05Z"
+  completed_at: "2026-09-14T15:20:09Z"
+  actor_persona: "P-PER-05"
+  feature: "document_generator"
+  task: "doc_generate"
+  prompt_version: "doc-v0"
+  mode: "cloud"
+  decision: "allow"
+  provider_kind: "anthropic"
+  target_class: "anthropic"
+  model: "claude-sonnet-5-5"
+  endpoint_host: "api.anthropic.com"
+  region: null
+  cross_region: null
+  max_classification: "customer_confidential"
+  classifications_included: ["internal", "customer_confidential"]
+  records_sent: ["card:KC-034", "card:KC-040"]
+  records_withheld: []
+  notice: null
+  user_input: "Draft the inspection section of a setup sheet from the sources."
+  request: {"system": "You answer questions for a machine shop using only the numbered sources below. Cite every claim as [S1], [S2]. If the sources don't answer it, say so.\n[S1] card \"Thin walls: measure after the part has sat unclamped, never in the fixture\"\n[S2] card \"Hold parts on the CMM lightly, sitting the way the print datums say\"", "messages": [{"role": "user", "content": "Draft the inspection section of a setup sheet from the sources."}, {"role": "assistant", "content": "Inspection: measure after unclamping [S1]"}, {"role": "user", "content": "That output was not valid JSON for the required schema. Reply again with only the JSON object, matching the schema exactly."}], "max_tokens": 2000, "output": {"kind": "json", "schema_name": "setup_sheet_section", "json_schema": {"type": "object", "properties": {"heading": {"type": "string"}, "lines": {"type": "array", "items": {"type": "string"}}}, "required": ["heading", "lines"], "additionalProperties": false}}, "effort": "medium"}
+  response: "{\"heading\":\"Inspection\",\"lines\":[\"Measure thin walls only after the part has sat unclamped [S1].\",\"Hold the part lightly on the CMM, sitting on the print datums [S2].\"]}"
+  usage: {"input_tokens": 760, "output_tokens": 46}
+  latency_ms: 4120
+  ttft_ms: 880
+  stop_reason: "end_turn"
+  outcome: "ok"
+  error_code: null
+  citations: {"valid": 2, "stripped": 0}
+  parent: "SEED-0020"

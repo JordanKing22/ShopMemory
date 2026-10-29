@@ -137,8 +137,10 @@ describe("seed:check catches broken edits", () => {
 
   it("raises a job whose debrief names an export-controlled job", () => {
     const r = buildSeedBundle(withFile("quotes/anchors.yaml", (t) => t.replace("debrief: Ran close to quote. Finisher changed on a schedule; walls held size.", "debrief: Ran close to quote, same fixture as RJ-26-0310.")));
-    expect(errorsOf(r)).toEqual([]);
-    expect(r.bundle!.tables.jobs.find((j) => j.id === "J-A02")).toMatchObject({ classification: "export_controlled" });
+    // The only errors are seeded audit rows that "sent" J-A02 (or cards raised with it) to the cloud: now
+    // export-controlled, those rows would describe a leak, so seed:check makes the SME edit them too.
+    expect(errorsOf(r).filter((i) => i.code !== "audit_history")).toEqual([]);
+    expect(errorsOf(r).some((i) => /job:J-A02 is export_controlled, which anthropic isn't cleared for/.test(i.message))).toBe(true);
   });
 
   it("warns about a seed file the loader doesn't read", () => {
@@ -248,7 +250,8 @@ describe("resetDatabase", () => {
     const archived: Record<string, unknown>[] = [];
     resetDatabase(db.$client, bundle, { nowIso: "2026-09-29T00:02:00Z", archiveLiveAudit: (rows) => archived.push(...rows) });
     expect(archived).toHaveLength(1);
-    expect(db.select().from(aiAuditLog).all()).toHaveLength(0);
+    // Only the seeded example rows (SEED-…) come back.
+    expect(db.select().from(aiAuditLog).all().filter((r) => !r.requestId.startsWith("SEED-"))).toHaveLength(0);
   });
 
   it("refuses to delete live-call audit rows without an archiver", () => {
@@ -272,7 +275,7 @@ describe("resetDatabase", () => {
       })
       .run();
     expect(() => resetDatabase(db.$client, bundle, { nowIso: "2026-09-29T00:03:00Z" })).toThrow(ResetError);
-    expect(db.select().from(aiAuditLog).all()).toHaveLength(1);
+    expect(db.select().from(aiAuditLog).all().filter((r) => !r.requestId.startsWith("SEED-"))).toHaveLength(1);
     resetDatabase(db.$client, bundle, { nowIso: "2026-09-29T00:04:00Z", archiveLiveAudit: () => {} });
   });
 

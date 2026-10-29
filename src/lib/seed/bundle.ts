@@ -37,6 +37,8 @@ export const SEEDED_TABLES = {
   documents: s.documents,
   documentCards: s.documentCards,
   coverageSnapshots: s.coverageSnapshots,
+  // Last: fictional example audit rows (seed-data/audit/history.yaml), which reference personas and people.
+  aiAuditLog: s.aiAuditLog,
 } as const;
 
 export type SeededTableName = keyof typeof SEEDED_TABLES;

@@ -41,6 +41,7 @@ import {
   type SeedSources,
   type YamlDoc,
 } from "./source";
+import { AuditHistoryFile, type LocatedAuditRow } from "./audit-history";
 
 type Inf<S extends z.ZodType> = z.infer<S>;
 type Item<S> = S extends z.ZodArray<infer E> ? z.infer<E> : never;
@@ -116,6 +117,8 @@ export interface ParsedSeed {
   rayLive: RayLiveSeed | null;
   rayLiveDoc: YamlDoc | null;
   anchors: AnchorsSeed | null;
+  /** seed-data/audit/history.yaml (optional): fictional example rows for the /audit page. */
+  auditHistory: LocatedAuditRow[];
 }
 
 export const FILES = {
@@ -138,6 +141,7 @@ export const FILES = {
   quoteModel: "quotes/quote-model.yaml",
   rayLive: "demo/ray-live-interview.yaml",
   anchors: "demo/anchors.yaml",
+  auditHistory: "audit/history.yaml",
 } as const;
 
 const OPTIONAL_DIRS = { cards: "cards/", interviews: "interviews/", quoteLogs: "quote-logs/", setupSheets: "documents/setup-sheets/" };
@@ -199,6 +203,7 @@ export function parseSeedSources(sources: SeedSources, issues: IssueList): Parse
     rayLive: rayLiveDoc ? validate(FILES.rayLive, rayLiveDoc, RayLiveFile, issues) : null,
     rayLiveDoc,
     anchors: single(FILES.anchors, AnchorsFile),
+    auditHistory: sources[FILES.auditHistory] === undefined ? [] : list(FILES.auditHistory, AuditHistoryFile),
   };
 
   const consumed = new Set<string>(Object.values(FILES));

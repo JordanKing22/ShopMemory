@@ -5,6 +5,7 @@
  * Pure: `buildSeedBundle()` takes file texts and returns rows + issues. `seed:check` prints the issues and writes
  * data/seed-bundle.json on success; `npm run seed` and Reset demo replay that bundle.
  */
+import { buildAuditHistory } from "./audit-history";
 import type { Classification, JudgmentDriver } from "@/db/schema/enums";
 import { CARD_TYPES, CLASS_RANK, DOC_SECTIONS, MOVES, maxClass } from "@/db/schema/enums";
 import type { DocBody, DocSectionKey } from "@/db/schema/documents";
@@ -1264,6 +1265,7 @@ export function buildSeedBundle(sources: SeedSources, opts: BuildOptions = {}): 
     documents: docRows,
     documentCards: docCardRows,
     coverageSnapshots: [],
+    aiAuditLog: [],
   };
 
   const cardList = [...cards.values()].sort((a, b) => (a.card.id < b.card.id ? -1 : a.card.id > b.card.id ? 1 : 0));
@@ -1436,6 +1438,7 @@ export function buildSeedBundle(sources: SeedSources, opts: BuildOptions = {}): 
   }
 
   tables.coverageSnapshots = inv.baseline.map((b) => ({ ...b, takenAt: noon(demoToday), reason: "seed_baseline" as const }));
+  tables.aiAuditLog = buildAuditHistory(p.auditHistory, tables, demoToday, issues);
 
   // Counts (warnings only) and the classification mix.
   const count = (name: string, actual: number, target: number) => {
