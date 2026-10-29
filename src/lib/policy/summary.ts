@@ -3,18 +3,20 @@
  * parsed env as an argument (only src/lib/env.ts reads process.env) and derives everything from matrix.ts and
  * the base-URL builders in src/lib/ai/endpoints.ts, so the host shown is the host the adapter will call.
  *
- * Precedence in Phase 2: env only — AI_MODE (default: local if LLM_PROVIDER=ollama, else cloud) and
- * LLM_PROVIDER (cloud side: anthropic or bedrock; with LLM_PROVIDER=ollama, HYBRID_CLOUD_PROVIDER).
- * Phase 3 adds the in-app ai_routing setting and AI_SETTINGS_LOCKED.
+ * Precedence (PLAN.md §4.11, resolveEffectiveRouting()): AI_SETTINGS_LOCKED=true → env only; else the in-app
+ * ai_routing setting (app_settings) when valid; else env — AI_MODE (default: local if LLM_PROVIDER=ollama, else cloud)
+ * and LLM_PROVIDER (cloud side: anthropic or bedrock; with LLM_PROVIDER=ollama, HYBRID_CLOUD_PROVIDER).
  *
- * Availability here comes from configuration only (as in DEMO_MODE with DEMO_LIVE_LOCAL=false); Phase 3 adds
- * live health. A target that is not usable is cleared for nothing (fail closed).
+ * Availability comes from configuration, plus live provider health when the caller passes it (opts.health): a target
+ * whose probe says unreachable / model missing / model not allowed is cleared for nothing (fail closed).
  *
  * Never returns secret values: the API key is only tested for presence, and configProblems name settings,
  * never their values.
  */
 import type { Classification } from "@/db/schema/enums";
 import type { Env } from "@/lib/env";
+import type { ProviderHealthStatus } from "@/lib/ai/types";
+import type { AiRoutingSetting, CloudProviderKind, EffectiveRouting, RoutingSource } from "@/lib/policy/types";
 import {
   ANTHROPIC_BASE_URL_DEFAULT,
   hostOf,
@@ -58,6 +60,7 @@ export const PROVIDER_LABEL: Readonly<Record<ProviderKind, ProviderLabel>> = {
 export type RoutingEnv = Pick<
   Env,
   | "LLM_PROVIDER"
+  | "AI_SETTINGS_LOCKED"
   | "AI_MODE"
   | "HYBRID_CLOUD_PROVIDER"
   | "HYBRID_EC_TARGET"
@@ -109,8 +112,10 @@ export interface RoutingTarget {
   govCloud?: { qualified: boolean; failed: GovCloudCheck[] };
   /** Ollama only: this_computer (loopback) · on_prem · on_prem_unencrypted · not_local. */
   locality?: OllamaLocality;
-  /** What this target alone is cleared for (all false when not configured). */
+  /** What this target alone is cleared for (all false when not configured or when its live health is bad). */
   clearance: Record<Classification, boolean>;
+  /** Live health status when the caller passed one (Settings, the header in live mode). */
+  health?: ProviderHealthStatus;
 }
 
 /**
@@ -138,8 +143,8 @@ export interface RoutingSummary {
   demoMode: boolean;
   /** Setting names that need attention. Never contains values. */
   configProblems: string[];
-  /** Where mode and provider came from (Phase 3 adds "setting"). */
-  source: "env";
+  /** Where mode and provider came from. */
+  source: RoutingSource;
 }
 
 export function resolveMode(env: Pick<RoutingEnv, "AI_MODE" | "LLM_PROVIDER">): RoutingMode {
@@ -171,12 +176,12 @@ type Built = BuiltTarget;
  * use the same base URL and host.
  */
 export function routingTargetFor(kind: ProviderKind, env: RoutingEnv): BuiltTarget {
-  if (kind === "anthropic") return buildAnthropic(env);
-  if (kind === "bedrock") return buildBedrock(env);
-  return buildOllama(env);
+  if (kind === "anthropic") return buildAnthropicRaw(env);
+  if (kind === "bedrock") return buildBedrockRaw(env);
+  return buildOllamaRaw(env);
 }
 
-function buildAnthropic(env: RoutingEnv): Built {
+function buildAnthropicRaw(env: RoutingEnv): Built {
   const problems: string[] = [];
   const model = env.ANTHROPIC_MODEL;
   // DEMO_MODE replays recorded answers and needs no key; a live call does.
@@ -203,7 +208,7 @@ function buildAnthropic(env: RoutingEnv): Built {
   return { target, opts, problems };
 }
 
-function buildBedrock(env: RoutingEnv): Built {
+function buildBedrockRaw(env: RoutingEnv): Built {
   const problems: string[] = [];
   const region = env.AWS_REGION;
   const modelId = env.BEDROCK_MODEL_ID;
@@ -281,7 +286,7 @@ const OLLAMA_PROBLEM: Readonly<Record<OllamaLocalityProblem, string>> = {
   plaintext_lan: "OLLAMA_BASE_URL must use https for an on-prem host (or set OLLAMA_ALLOW_PLAINTEXT_LAN=true)",
 };
 
-function buildOllama(env: RoutingEnv): Built {
+function buildOllamaRaw(env: RoutingEnv): Built {
   const loc = ollamaLocality({
     baseUrl: env.OLLAMA_BASE_URL,
     allowlist: env.OLLAMA_HOST_ALLOWLIST,
@@ -328,10 +333,38 @@ const HYBRID_DESTINATION: Readonly<Record<HybridRoute["to"], RouteDestination>> 
   blocked: "blocked",
 };
 
-/** What the active mode may send and where, derived from env only (Phase 2). */
-export function getRoutingSummary(env: RoutingEnv): RoutingSummary {
-  const mode = resolveMode(env);
+/** Health statuses that make a configured target unusable right now. */
+const UNHEALTHY: ReadonlySet<ProviderHealthStatus> = new Set<ProviderHealthStatus>([
+  "unreachable",
+  "misconfigured",
+  "model_missing",
+  "model_not_allowed",
+]);
+
+export interface RoutingSummaryOptions {
+  /** The effective routing (resolveEffectiveRouting); defaults to env precedence. */
+  routing?: EffectiveRouting;
+  /** Live health per provider kind; a bad status clears that target for nothing. */
+  health?: Partial<Record<ProviderKind, ProviderHealthStatus>>;
+}
+
+/** What the active mode may send and where. Without options: env only (as in Phase 2). */
+export function getRoutingSummary(env: RoutingEnv, opts: RoutingSummaryOptions = {}): RoutingSummary {
+  const effective = opts.routing ?? resolveEffectiveRouting(env, null);
+  const mode = effective.mode;
+  const source = effective.source;
   const demoMode = env.DEMO_MODE;
+  const withHealth = (b: Built): Built => {
+    const status = opts.health?.[b.target.providerKind];
+    if (!status) return b;
+    const target: RoutingTarget = { ...b.target, health: status };
+    if (UNHEALTHY.has(status)) target.clearance = { ...NO_CLEARANCE };
+    return { ...b, target };
+  };
+  const usable = (b: Built) => b.target.configured && !(b.target.health && UNHEALTHY.has(b.target.health));
+  const buildOllama = (e: RoutingEnv) => withHealth(buildOllamaRaw(e));
+  const buildBedrock = (e: RoutingEnv) => withHealth(buildBedrockRaw(e));
+  const buildAnthropic = (e: RoutingEnv) => withHealth(buildAnthropicRaw(e));
 
   if (mode === "local") {
     const ollama = buildOllama(env);
@@ -342,11 +375,11 @@ export function getRoutingSummary(env: RoutingEnv): RoutingSummary {
       routes: singleTargetRoutes(ollama.target.clearance),
       demoMode,
       configProblems: uniq(ollama.problems),
-      source: "env",
+      source,
     };
   }
 
-  const cloud = resolveCloudProvider(env) === "bedrock" ? buildBedrock(env) : buildAnthropic(env);
+  const cloud = effective.cloudProvider === "bedrock" ? buildBedrock(env) : buildAnthropic(env);
 
   if (mode === "cloud") {
     return {
@@ -356,7 +389,7 @@ export function getRoutingSummary(env: RoutingEnv): RoutingSummary {
       routes: singleTargetRoutes(cloud.target.clearance),
       demoMode,
       configProblems: uniq(cloud.problems),
-      source: "env",
+      source,
     };
   }
 
@@ -375,7 +408,7 @@ export function getRoutingSummary(env: RoutingEnv): RoutingSummary {
     problems.push(...ollama.problems);
   }
 
-  const route = (t: Built) => ({ targetClass: t.target.targetClass, opts: t.opts, available: t.target.configured });
+  const route = (t: Built) => ({ targetClass: t.target.targetClass, opts: t.opts, available: usable(t) });
   const clearance = { ...NO_CLEARANCE };
   const routes = {} as Record<Classification, RouteDestination>;
   for (const c of CLASSIFICATIONS) {
@@ -385,7 +418,7 @@ export function getRoutingSummary(env: RoutingEnv): RoutingSummary {
 
   // Local Ollama also takes non-EC records the cloud isn't cleared for; report its problems when it's needed.
   const needsLocal = CLASSIFICATIONS.some(
-    (c) => c !== "export_controlled" && !(cloud.target.configured && allowed(c, cloud.target.targetClass, cloud.opts)),
+    (c) => c !== "export_controlled" && !(usable(cloud) && allowed(c, cloud.target.targetClass, cloud.opts)),
   );
   if (ec !== ollama && needsLocal) problems.push(...ollama.problems);
 
@@ -398,6 +431,84 @@ export function getRoutingSummary(env: RoutingEnv): RoutingSummary {
     routes,
     demoMode,
     configProblems: uniq(problems),
-    source: "env",
+    source,
+  };
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// Settings precedence and the Settings picker (PLAN.md §4.11, docs/AI-GATEWAY.md §5.5)
+// ---------------------------------------------------------------------------------------------------------------
+
+const MODES = ["cloud", "local", "hybrid"] as const;
+const CLOUD_PROVIDERS = ["anthropic", "bedrock"] as const;
+
+/** app_settings[ai_routing] → a setting, or null when missing or invalid (an invalid value is ignored). */
+export function parseAiRoutingSetting(value: unknown): AiRoutingSetting | null {
+  if (!value || typeof value !== "object") return null;
+  const v = value as Record<string, unknown>;
+  if (!(MODES as readonly unknown[]).includes(v.mode)) return null;
+  if (!(CLOUD_PROVIDERS as readonly unknown[]).includes(v.cloudProvider)) return null;
+  return { mode: v.mode as RoutingMode, cloudProvider: v.cloudProvider as CloudProviderKind };
+}
+
+/** AI_SETTINGS_LOCKED=true → env only; else a valid in-app setting; else env (LLM_PROVIDER + AI_MODE). */
+export function resolveEffectiveRouting(
+  env: Pick<RoutingEnv, "AI_SETTINGS_LOCKED" | "AI_MODE" | "LLM_PROVIDER" | "HYBRID_CLOUD_PROVIDER">,
+  setting: AiRoutingSetting | null,
+): EffectiveRouting {
+  const fromEnv = { mode: resolveMode(env), cloudProvider: resolveCloudProvider(env) };
+  if (env.AI_SETTINGS_LOCKED) return { ...fromEnv, source: "locked_env", locked: true };
+  const valid = parseAiRoutingSetting(setting);
+  if (valid) return { ...valid, source: "setting", locked: false };
+  return { ...fromEnv, source: "env", locked: false };
+}
+
+export interface RoutingOption {
+  enabled: boolean;
+  /** Why it is disabled: names settings, never values. */
+  reason?: string;
+}
+
+export interface RoutingOptions {
+  locked: boolean;
+  modes: Record<RoutingMode, RoutingOption>;
+  cloudProviders: Record<CloudProviderKind, RoutingOption>;
+}
+
+const LOCKED_REASON = "Settings are locked (AI_SETTINGS_LOCKED=true)";
+
+/** Which modes and cloud providers the Settings picker may offer (disabled ones carry the reason). */
+export function routingOptionAvailability(env: RoutingEnv): RoutingOptions {
+  if (env.AI_SETTINGS_LOCKED) {
+    const off = { enabled: false, reason: LOCKED_REASON };
+    return {
+      locked: true,
+      modes: { cloud: off, local: off, hybrid: off },
+      cloudProviders: { anthropic: off, bedrock: off },
+    };
+  }
+  const option = (b: Built): RoutingOption =>
+    b.target.configured ? { enabled: true } : { enabled: false, reason: b.problems[0] ?? "Not configured" };
+  const anthropic = option(buildAnthropicRaw(env));
+  const bedrock = option(buildBedrockRaw(env));
+  const ollama = option(buildOllamaRaw(env));
+  const anyCloud = anthropic.enabled || bedrock.enabled;
+  const cloudReason = "No cloud provider is configured (ANTHROPIC_API_KEY or DEMO_MODE=true, or AWS_REGION and BEDROCK_MODEL_ID)";
+  let ecTarget: RoutingOption = ollama;
+  if (env.HYBRID_EC_TARGET === "govcloud") {
+    const b = buildBedrockRaw(env);
+    ecTarget =
+      b.target.configured && b.target.targetClass === "bedrock_govcloud"
+        ? { enabled: true }
+        : { enabled: false, reason: "HYBRID_EC_TARGET=govcloud needs a Bedrock endpoint that passes the GovCloud checks" };
+  }
+  return {
+    locked: false,
+    modes: {
+      cloud: anyCloud ? { enabled: true } : { enabled: false, reason: cloudReason },
+      local: ollama,
+      hybrid: !anyCloud ? { enabled: false, reason: cloudReason } : ecTarget,
+    },
+    cloudProviders: { anthropic, bedrock },
   };
 }

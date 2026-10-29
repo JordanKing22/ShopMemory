@@ -54,6 +54,13 @@ const EnvSchema = z.object({
    * Claude Code cloud environment, which reserves that name for its own sign-in).
    */
   FLOORWISE_ANTHROPIC_API_KEY: optionalString,
+  /**
+   * Resolved by getEnv(): FLOORWISE_ANTHROPIC_WORKSPACE_ID wins over ANTHROPIC_WORKSPACE_ID. Sent as the
+   * anthropic-workspace-id header by the Anthropic adapter, for API keys that aren't scoped to one workspace (the API
+   * then answers "must include the anthropic-workspace-id header"). An identifier, not a secret, but never logged.
+   */
+  ANTHROPIC_WORKSPACE_ID: optionalString,
+  FLOORWISE_ANTHROPIC_WORKSPACE_ID: optionalString,
   ANTHROPIC_MODEL: z
     .string()
     .optional()
@@ -104,7 +111,11 @@ export function getEnv(): Env {
       throw new Error(`Invalid environment configuration in: ${fields}`);
     }
     const data = parsed.data;
-    cached = { ...data, ANTHROPIC_API_KEY: data.FLOORWISE_ANTHROPIC_API_KEY ?? data.ANTHROPIC_API_KEY };
+    cached = {
+      ...data,
+      ANTHROPIC_API_KEY: data.FLOORWISE_ANTHROPIC_API_KEY ?? data.ANTHROPIC_API_KEY,
+      ANTHROPIC_WORKSPACE_ID: data.FLOORWISE_ANTHROPIC_WORKSPACE_ID ?? data.ANTHROPIC_WORKSPACE_ID,
+    };
   }
   return cached;
 }
@@ -119,6 +130,7 @@ export function envSummary(): Record<string, boolean> {
   const env = getEnv();
   return {
     ANTHROPIC_API_KEY: Boolean(env.ANTHROPIC_API_KEY),
+    ANTHROPIC_WORKSPACE_ID: Boolean(env.ANTHROPIC_WORKSPACE_ID),
     AWS_REGION: Boolean(env.AWS_REGION),
     BEDROCK_MODEL_ID: Boolean(env.BEDROCK_MODEL_ID),
     BEDROCK_BASE_URL: Boolean(env.BEDROCK_BASE_URL),

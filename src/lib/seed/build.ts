@@ -1119,6 +1119,7 @@ export function buildSeedBundle(sources: SeedSources, opts: BuildOptions = {}): 
       partClassificationFloor: c.part_classification_floor,
       qualityRequirementsMd: c.quality_requirements || null,
       redactionAliases: [c.name, ...c.aliases],
+      nearMissIgnore: c.near_miss_ignore,
       partNumberPattern: c.part_number_pattern,
       sortOrder: i + 1,
       classification: c.classification,

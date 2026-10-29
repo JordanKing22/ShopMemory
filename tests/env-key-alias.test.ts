@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { envSummary, getEnv, resetEnvCache } from "@/lib/env";
 
-const KEYS = ["ANTHROPIC_API_KEY", "FLOORWISE_ANTHROPIC_API_KEY"] as const;
+const KEYS = ["ANTHROPIC_API_KEY", "FLOORWISE_ANTHROPIC_API_KEY", "ANTHROPIC_WORKSPACE_ID", "FLOORWISE_ANTHROPIC_WORKSPACE_ID"] as const;
 const saved = Object.fromEntries(KEYS.map((k) => [k, process.env[k]]));
 
 function setKeys(values: Partial<Record<(typeof KEYS)[number], string>>) {
@@ -41,5 +41,20 @@ describe("Anthropic key alias", () => {
     setKeys({ ANTHROPIC_API_KEY: "  ", FLOORWISE_ANTHROPIC_API_KEY: "" });
     expect(getEnv().ANTHROPIC_API_KEY).toBeUndefined();
     expect(envSummary().ANTHROPIC_API_KEY).toBe(false);
+  });
+});
+
+describe("Anthropic workspace ID alias", () => {
+  it("prefers FLOORWISE_ANTHROPIC_WORKSPACE_ID over ANTHROPIC_WORKSPACE_ID", () => {
+    setKeys({ ANTHROPIC_WORKSPACE_ID: "wrkspc_a", FLOORWISE_ANTHROPIC_WORKSPACE_ID: "wrkspc_f" });
+    expect(getEnv().ANTHROPIC_WORKSPACE_ID).toBe("wrkspc_f");
+    expect(envSummary().ANTHROPIC_WORKSPACE_ID).toBe(true);
+  });
+
+  it("uses ANTHROPIC_WORKSPACE_ID alone, and treats blanks as unset", () => {
+    setKeys({ ANTHROPIC_WORKSPACE_ID: "wrkspc_a" });
+    expect(getEnv().ANTHROPIC_WORKSPACE_ID).toBe("wrkspc_a");
+    setKeys({ ANTHROPIC_WORKSPACE_ID: " ", FLOORWISE_ANTHROPIC_WORKSPACE_ID: "" });
+    expect(getEnv().ANTHROPIC_WORKSPACE_ID).toBeUndefined();
   });
 });

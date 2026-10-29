@@ -114,6 +114,8 @@ export interface DecideInput {
   excludeAboveClearance: boolean;
   /** Held → "It isn't — send anyway". Honoured only when there is no detector hit. */
   confirmNotControlled: boolean;
+  /** Pinned records (from the DB), so a blocked notice can name the pinned record that isn't cleared. */
+  pinned?: readonly { ref: RecordRef; classification: Classification }[];
 }
 
 export const BLOCK_REASONS = [

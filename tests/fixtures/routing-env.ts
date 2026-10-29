@@ -20,6 +20,8 @@ export function env(overrides: Partial<Env> = {}): Env {
     DEMO_PIN: undefined,
     ANTHROPIC_API_KEY: undefined,
     FLOORWISE_ANTHROPIC_API_KEY: undefined,
+    ANTHROPIC_WORKSPACE_ID: undefined,
+    FLOORWISE_ANTHROPIC_WORKSPACE_ID: undefined,
     ANTHROPIC_MODEL: "claude-sonnet-5-5",
     AWS_REGION: undefined,
     BEDROCK_ENDPOINT: "runtime",

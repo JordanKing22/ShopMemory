@@ -391,11 +391,5 @@ function prefixScope(id: string): CrossRegion {
   return m[1] === "global" ? "global" : "geo";
 }
 
-/**
- * Covered models (PLAN.md §4.1): the Fable and Mythos families (Fable 5.1, Mythos 5.1, Fable 5, Mythos 5 and their
- * Bedrock IDs) require 30-day retention. Matched by family name so every ID form is caught; any other version
- * of these families also counts (fail closed). Phase 3 moves this list to policy/covered-models.ts.
- */
-export function isCoveredModel(modelId: string | undefined): boolean {
-  return typeof modelId === "string" && /(?:^|[^a-z0-9])(?:fable|mythos)(?:[^a-z0-9]|$)/i.test(modelId);
-}
+/** Covered (30-day retention) models; the list lives in covered-models.ts. */
+export { isCoveredModel } from "./covered-models";

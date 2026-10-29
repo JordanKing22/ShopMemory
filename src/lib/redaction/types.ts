@@ -46,6 +46,11 @@ export interface RedactionDictionaryInput {
   contacts: readonly ContactInput[];
   /** shop_profile.seed. Keys the token HMAC (patterns.ts tokenKey()). */
   tokenSeed: number;
+  /**
+   * customers.part_number_pattern regexes ("^AV-\d{4}-\d{2}$"). The PN pattern tokenizes part-number-like strings of
+   * these shapes that aren't in the database (plus the shop's RJ-/RQ- job and quote shapes). Invalid ones are skipped.
+   */
+  partNumberPatterns?: readonly string[];
 }
 
 /** What an entity token stands for. Used by Reveal, local-replay de-tokenization and seed:check. */
