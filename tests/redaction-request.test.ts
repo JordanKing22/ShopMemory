@@ -4,6 +4,7 @@ import {
   NO_PATTERN_TOKENS,
   createMemoryPatternResolver,
   dictionaryHits,
+  redactAroundTokens,
   redactRequest,
   redactText,
   restoreJsonStrings,
@@ -107,6 +108,21 @@ describe("redactRequest", () => {
     const r = redactRequest(req, dict, createMemoryPatternResolver());
     const restored = restoreJsonStrings(r.value, { tokens: r.tokens, sentSourceKeys: null });
     expect(restored).toEqual({ ...req, system: req.system });
+  });
+});
+
+describe("redactAroundTokens (cloud responses before storage)", () => {
+  it("keeps this request's tokens, redacts names written in the clear, and escapes tokens the request didn't send", () => {
+    const sent = redactText("Ask Ray Delgado about Aerovance.", dict, NO_PATTERN_TOKENS);
+    const [person, customer] = sent.value.match(/\[\[[A-Z]+_[0-9A-Z]{4}(?:_[FL])?\]\]/g)!;
+    const raw = `${person} says ${customer} wants it by Friday; Dana Whitcomb agreed at $1,250. See [[PERSON_ZZZZ]].`;
+    const r = redactAroundTokens(raw, new Set(sent.tokensUsed), dict, createMemoryPatternResolver());
+    expect(r.value.startsWith(`${person} says ${customer} wants it by Friday; `)).toBe(true);
+    expect(dictionaryHits(r.value, dict)).toEqual([]);
+    expect(r.value).not.toContain("1,250");
+    expect(r.value).toContain("[ [PERSON_ZZZZ] ]");
+    expect(kinds(r.value)).toEqual(["PERSON", "CUSTOMER", "PERSON", "AMOUNT"]);
+    expect(r.tokensUsed).toEqual(expect.arrayContaining([person, customer]));
   });
 });
 

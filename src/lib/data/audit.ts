@@ -26,12 +26,12 @@ import {
 import { can } from "@/lib/auth/roles";
 import { DECISION_LABEL, FEATURE_LABEL, OUTCOME_LABEL, TRANSPORT_LABEL, providerLine, replayLabel, storedFormLabel } from "@/lib/audit/labels";
 import { canRevealRow } from "@/lib/audit/reveal";
-import { isSeededRequestId, type AuditFilters, type AuditRow, type AuditViewer, type EventRow } from "@/lib/audit/types";
+import { isSeededRequestId, type AuditFilters, type AuditRow, type AuditViewer, type EventRow, type TokenSegment } from "@/lib/audit/types";
 import { renderNotice } from "@/lib/policy/notices";
 import type { Notice, RenderedNotice } from "@/lib/policy/types";
 import { redactText } from "@/lib/redaction/redact";
 import type { PatternTokenResolver, RedactionDictionary } from "@/lib/redaction/types";
-import { tokensIn } from "@/lib/redaction/patterns";
+import { tokenRegex, tokensIn } from "@/lib/redaction/patterns";
 import { labelNamePart } from "./personas";
 
 export const AUDIT_PAGE_LIMIT = 200;
@@ -60,6 +60,22 @@ export interface AuditRowVM {
   isSeeded: boolean;
   canReveal: boolean;
   tokenCount: number;
+}
+
+export type { TokenSegment };
+
+export function tokenSegments(text: string | null): TokenSegment[] | null {
+  if (text === null) return null;
+  const out: TokenSegment[] = [];
+  let last = 0;
+  for (const m of text.matchAll(tokenRegex())) {
+    const i = m.index ?? 0;
+    if (i > last) out.push({ text: text.slice(last, i), token: false });
+    out.push({ text: m[0], token: true });
+    last = i + m[0].length;
+  }
+  if (last < text.length) out.push({ text: text.slice(last), token: false });
+  return out;
 }
 
 export interface AuditRecordVM {
@@ -105,6 +121,8 @@ export interface AuditDetailVM extends AuditRowVM {
   appVersion: string;
   /** The repair-retry chain this row belongs to (parent first), when there is one. */
   retryChain: number[];
+  /** The same texts split for token highlighting. */
+  segments: { userInput: TokenSegment[] | null; request: TokenSegment[] | null; response: TokenSegment[] | null };
 }
 
 export interface EventRowVM {
@@ -364,6 +382,11 @@ export function auditRowDetail(db: Db, viewer: AuditViewer, id: number): AuditDe
     policyVersion: r.policyVersion,
     appVersion: r.appVersion,
     retryChain: chain.length > 1 ? chain : [],
+    segments: {
+      userInput: tokenSegments(r.userInputRedacted),
+      request: tokenSegments(prettyJson(r.requestPayloadRedacted)),
+      response: tokenSegments(r.responseRedacted),
+    },
   };
 }
 

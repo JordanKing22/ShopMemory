@@ -80,7 +80,7 @@ Next.js 16 docs matching the installed version are in `node_modules/next/dist/do
 
 ## Testing
 - `npm test` (Vitest, node env) for pure modules: policy, entity detection, content classification, redaction round-trip + stream restorer, traceability gate on the scripted cards, interview plans + novelty check on the scripted text, replay key and parity, coverage golden numbers (PLAN.md Appendix A), seed determinism, FTS sanitizer, cassettes, role projection, secret hygiene (real SDK clients with an injected fetch stub), architecture rules.
-- `npm run test:e2e` (Playwright against a production build on port 3100 with `data/e2e.db`, no egress allowed). In this cloud container set `PW_CHROMIUM_PATH=/opt/pw-browsers/chromium-1194` (the Playwright CDN is blocked); elsewhere run `npx playwright install chromium`.
+- `npm run test:e2e` (Playwright against a production build on port 3100 with `data/e2e.db`, no egress allowed). In this cloud container set `PW_CHROMIUM_PATH=/opt/pw-browsers/chromium-1243` (the Playwright CDN is blocked); elsewhere run `npx playwright install chromium`.
 - Every bug in the demo path gets a regression test before the fix is committed.
 
 ## This build environment

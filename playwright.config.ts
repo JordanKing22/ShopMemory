@@ -6,7 +6,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 /**
  * PW_CHROMIUM_PATH points at a pre-installed Chromium when the Playwright CDN is blocked (e.g. the cloud container:
- * /opt/pw-browsers/chromium-1194). It may name the executable or a Playwright browser folder. Config files may read
+ * /opt/pw-browsers/chromium-1243). It may name the executable or a Playwright browser folder. Config files may read
  * process.env (CLAUDE.md hard rule 3). Unset → Playwright's own browser (`npx playwright install chromium`).
  */
 function chromiumExecutable(): string | undefined {

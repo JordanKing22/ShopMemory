@@ -207,3 +207,9 @@ export const REPLAY_TRANSPORTS: ReadonlySet<AuditTransport> = new Set<AuditTrans
   "demo_replay_scenario",
   "demo_fallback",
 ]);
+
+/** Text split into plain runs and redaction tokens, so a client component can highlight tokens without the grammar. */
+export interface TokenSegment {
+  text: string;
+  token: boolean;
+}

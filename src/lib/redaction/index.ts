@@ -6,7 +6,7 @@ export {
   type CompiledRedactionDictionary,
   type DictionaryHit,
 } from "./dictionary";
-export { redactRequest, redactText, tokensInValue, hasTokens } from "./redact";
+export { redactAroundTokens, redactRequest, redactText, tokensInValue, hasTokens } from "./redact";
 export { StreamRestorer, restoreText, restoreJsonStrings, detokenizeEntities, UNKNOWN_TOKEN_TEXT } from "./restore";
 export { createMemoryPatternResolver, NO_PATTERN_TOKENS, type MemoryPatternResolver } from "./memory-resolver";
 export * from "./patterns";

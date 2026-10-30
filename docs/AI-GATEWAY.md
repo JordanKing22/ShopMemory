@@ -1,9 +1,10 @@
-# AI gateway contract (Phase 3)
+# AI gateway contract (Phase 3, as built)
 
 The build contract for Phase 3 ("Provider abstraction, classification, routing policy, audit log", PLAN.md §13).
-Eight builders work in parallel on **disjoint files** against the shared types written by the architect. Read §0–§3
-first, then your own section, then §15 (tests) and §16 (rules). PLAN.md stays the source of truth: §3.2, §4, §5.2,
-§7.7, §9, §11.1, §11.4, §12. If this document and PLAN.md disagree, stop and report it (don't pick one silently).
+It was written as a contract for parallel builders; Phase 3 is now built and this document describes the code as it
+stands. Where the build changed the draft, the text below was updated and the reason is recorded in §17 (items 10+).
+PLAN.md stays the source of truth: §3.2, §4, §5.2, §7.7, §9, §11.1, §11.4, §12. If this document and PLAN.md disagree,
+fix one of them in the same change (don't pick one silently).
 
 Contents: [0 Shared files](#0-shared-files-already-written) · [1 Ownership](#1-module-map-and-ownership) ·
 [2 Data flow](#2-data-flow-and-the-pipeline) · [3 Cross-builder API](#3-cross-builder-api-the-names-you-may-rely-on) ·
@@ -233,19 +234,23 @@ and cloud provider from `opts.routing`; `RoutingTarget.health` from `opts.health
   `CONTACT` (+ `_F`/`_L`). Codes come from `assignEntityCodes(tokenKey(tokenSeed), every entity incl. ambiguity IDs)`.
   A first name shared by two people (or two contacts) → ambiguity token `formatToken(kind, code(ambiguityEntityId(name)), "F")`
   restoring to the first name only. `entityTokens` maps every token (all variants) to `EntityTokenInfo`.
-- **Patterns** (on text between dictionary hits, never inside a produced token), in this order: EMAIL
-  (`local@domain.tld`), PHONE (`(+1 )?(\(ddd\)|ddd)[ .-]ddd[ .-]dddd`), AMOUNT (`$1,800`, `$1800.50`, `$2.5k`,
-  `$165/hr`, `$165 per hour`, `165 an hour`, `165 dollars`, `USD 1,800`; bare numbers, hours, tolerances, percentages
-  and spec numbers never match), PN (strings matching any customer's `part_number_pattern` shape or the shop's
-  `RJ-yy-nnnn` / `RQ-yy-nnnn` shapes, unanchored, that are not dictionary hits; spec numbers AS/AMS/MIL/ASTM/SAE… never).
+- **Patterns** (never inside a produced token), in this order: EMAIL (`local@domain.tld`) and PN (strings matching any
+  customer's `part_number_pattern` shape or the shop's `RJ-yy-nnnn` / `RQ-yy-nnnn` shapes, unanchored; spec numbers
+  AS/AMS/MIL/ASTM/SAE… never) run BEFORE the dictionary, so an address or part number that contains a customer name
+  or alias becomes one token (a PN that is exactly a known part / job / quote number gets that record's dictionary
+  token instead); then the dictionary; then PHONE (`(+1 )?(\(ddd\)|ddd)[ .-]ddd[ .-]dddd`) and AMOUNT (`$1,800`,
+  `$1800.50`, `$2.5k`, `$165/hr`, `$165 per hour`, `165 an hour`, `165 dollars`, `USD 1,800`; bare numbers, hours,
+  tolerances, percentages and spec numbers never match) on the text between hits. See §17 item 10.
   Token = `patternTokenFor(key, kind, value, resolver.isTaken)` unless `resolver.tokenFor(kind, value)` exists; new ones
   are returned in `minted` (the gateway persists them at R1 only — previews never persist).
-- **redactText / redactRequest**: `escapeLiteralTokens` first, then dictionary, then patterns. `redactRequest` walks
+- **redactText / redactRequest**: NFC, `escapeLiteralTokens`, then EMAIL → PN → dictionary → PHONE → AMOUNT. `redactRequest` walks
   EVERY string: `system`, each `messages[i].content`, and every string key and value inside `output.jsonSchema` and
   `output.schemaName`. `tokensUsed` = distinct tokens in the result, code-point sorted. `TokenMapEntry.surface` = first
   replaced text for that token in this request. Suspects: lowercase first names of people/contacts (`ask ray`) with
   `field` = `"system"`, `"messages[1].content"`, … Never redact: materials, machine makes/models, process terms,
   tolerances, hours, spec numbers, the shop's own name.
+- **redactAroundTokens** (response storage, §17 item 16): a cloud response keeps the tokens this request sent and
+  everything between them is redacted like user input; a token the request didn't send is escaped.
 - **StreamRestorer**: holds back a trailing partial `[` / `[[…` / `[S…` (≤ `TOKEN_MAX_LENGTH`), restores tokens in
   `opts.tokens` to their `surface`, unknown tokens → `[unknown]`, keeps `[S#]` in `sentSourceKeys`, strips others
   (counted). Unit-tested by splitting every token and citation at every offset (and a fuzz over random chunkings).
@@ -416,8 +421,9 @@ export function createGateway(deps: GatewayDeps): Gateway;
 ```
 `src/server/ai.ts` (`import "server-only"`): a `globalThis` singleton `createGateway(defaultGatewayDeps())` and thin
 exports `runAI`, `getHealthReport`, `warmLocalModel`, `getAiRouting`. Scripts and tests call `createGateway` directly.
-`GatewayDeps` may gain a `tasks?` override (typed in `tasks/types.ts`) so tests can register a JSON task to exercise
-the repair retry.
+`GatewayDeps` also has `tasks?` (register test tasks, e.g. a JSON task for the repair retry), `healthStore?` (the
+health TTL cache, injectable), `retrieve?` (the Phase 4 retrieval seam: records found for the question, budgeted like
+pinned ones), `routingOverride?` and `transportPolicyOverride?` (tests and scripts only).
 
 ### 10.2 Tasks (`src/lib/ai/tasks/**`, projections only; never import `@/db` or `@/lib/data`)
 ```ts
@@ -425,7 +431,8 @@ interface TaskDefinition<P> {
   name: TaskName; features: FeatureName[]; promptVersion: string; capability: Capability;
   classificationFloor: Classification; consent: "none" | "required";
   output: { kind: "text" } | { kind: "json"; schemaName: string; jsonSchema: JsonObject; parse(v: unknown): unknown /* zod */ };
-  effort: Effort; maxTokens: number; scenarioReplay: boolean; defaultScenario?: string;
+  effort: Effort; maxTokens: number; scenarioReplay: boolean; defaultScenario?: string; maxPinned: number;
+  prepare(ctx: { actorName; input; pinned }): P;     // P1: the task input from the request (no DB access)
   buildPrompt(input: P, sources: { key: string; projection: unknown }[]): { system: string; messages: ProviderMessage[] };
   offlineFallback(input: P): OfflineFallback;     // labelled "scripted (not model output)"
 }
@@ -569,7 +576,7 @@ entries:
 
 ## 12. Seeded audit history (builder: auditSeed)
 
-`seed-data/audit/history.yaml`, ~20 fictional rows dated before DEMO_TODAY, tokenized with literal tokens computed by
+`seed-data/audit/history.yaml`, 21 fictional rows (SEED-0001…0021) dated before DEMO_TODAY, tokenized with literal tokens computed by
 `patterns.ts` + the dictionary (only ENTITY tokens: pattern tokens would be unresolvable after a reset). Suggested mix:
 6 cloud `allow` Ask rows (several personas), 2 `withheld_partial` (an EC job withheld), 2 `blocked` (an
 export-controlled question in Cloud: nothing sent), 1 `held`, 1 `allow` after "send anyway" (`sent_after_hold`),
@@ -701,13 +708,13 @@ private, no-store`. **`GET /api/health[?deep=1]`** → `HealthReport`. **`POST /
 | Seeded history: parses, no names, tokens resolvable, decisions consistent, reset skips archiving them | `tests/audit-history.test.ts` | auditSeed |
 | Adapters: request shape (no forbidden params, explicit baseURL, effort, format), streaming, refusal, error mapping, Ollama options identical every call, `remote_host` refusal, non-loopback refusal | `tests/providers-anthropic.test.ts`, `tests/providers-bedrock.test.ts`, `tests/providers-ollama.test.ts` | providers |
 | Secret hygiene: real Anthropic + Bedrock clients, injected fetch (success, HTTP 500, malformed JSON with a canary), `ANTHROPIC_LOG=debug` set; spy stdout/stderr/console; no canary key/phrase, no dictionary name (owner incl.), no prompt fragment; AIError messages clean | `tests/secret-hygiene.test.ts` | providers |
-| Replay key unchanged when `OLLAMA_MODEL`/base URLs change | `tests/replay-key.test.ts` | replay |
+| Replay key unchanged when `OLLAMA_MODEL`/base URLs change | `tests/replay-lookup.test.ts` ("replay key") | replay |
 | Lookup order; scenario refused when a cited fingerprint wasn't sent; card_extract never scenario; cloud/local never substitute; Bedrock uses Anthropic labelled | `tests/replay-lookup.test.ts` | replay |
-| Transport: chunking, speeds/caps, cloud tokenized vs local de-tokenized | `tests/replay-transport.test.ts` | replay |
+| Transport: chunking, speeds/caps, cloud tokenized vs local de-tokenized | `tests/replay-lookup.test.ts` ("ReplayTransport") | replay |
 | Cassettes: parse, exact-hit via the gateway, no seed names, citations ⊆ sent, manifest consistent | `tests/cassettes.test.ts` | replay |
 | Pipeline order; blocked/held never call the transport (resolver spy never invoked); every decision's audit row; preview token rejected after a Local → Cloud switch; escape hatch only narrows and is server-recomputed (forged POST still blocked); held "send anyway" only without a detector hit, audited + event; hybrid local down → blocked, never cloud; abort → aborted row | `tests/gateway-pipeline.test.ts`, `tests/gateway-preview.test.ts`, `tests/gateway-escape-hatch.test.ts` | gateway |
 | Parity: stub live transport vs replay → identical decision, payload hash and audit rows except transport/provenance/served_model | `tests/gateway-parity.test.ts` | gateway |
-| Full replay path hygiene: smoke through `runAI` with log spies; `ai_audit_log`/`event_log` contain no dictionary names | `tests/gateway-hygiene.test.ts` | gateway |
+| Full path hygiene: replay, live, failure, blocked and held calls through `runAI` with log spies; `ai_audit_log`/`event_log` contain no dictionary names (a name the model writes in the clear is stored tokenized) | `tests/gateway-hygiene.test.ts` | gateway |
 | Role projection for every role (AI projections) | `tests/ai-projection.test.ts` | gateway |
 | Architecture rules | `tests/architecture.test.ts` | lint |
 
@@ -755,3 +762,26 @@ in-memory cassette stores; use `seededDb()` / `actorFor()` from `tests/helpers/s
    `exportAudit`; tasks name their capability.
 9. **Smoke cassettes** carry one exact entry per switcher persona plus a scenario fallback, and their replies never
    echo a name, so every persona gets a REPLAY row.
+10. **EMAIL and PN run before the dictionary** (the draft had the dictionary first). Otherwise an address or part
+    number that contains a customer's name or alias ("buyer@aerovance.…", "HFC-99999") left the rest of the string
+    in the clear around a customer token. A PN-shaped string that is exactly a known part / job / quote number still
+    gets that record's own dictionary token, so the PN probe never changes the surface a later name restores to.
+11. **Retrieval seam.** `GatewayDeps.retrieve?` returns the records found for a question; they are budgeted with the
+    pinned ones and are what the hybrid "ask without controlled records" escape hatch can drop. Pinned records are
+    part of the request floor and are never dropped (the escape hatch only narrows). Phase 4 plugs FTS retrieval in here.
+12. **Health is a store, not a function.** `GatewayDeps.healthStore?` is the TTL cache (`createHealthSource`, 15 s ready /
+    5 s otherwise) so tests can inject a "local down" state; `/api/health` reads it and `?deep=1` refreshes it.
+13. **`capsFor()` is static** per provider kind (native JSON schema, effort support, context size); no capability probe.
+14. **`SourceChip.fingerprint`** (`kind:id@hash16`) travels with the chip so cassettes can cite sources stably across
+    S# renumbering, and the scenario matcher can require every cited fingerprint to have been sent.
+15. **Audit detail renders `TokenSegment[]`** (text / token pieces) for the typed input, the stored request and the
+    response, so the drawer can style tokens without parsing HTML; Reveal maps only that row's tokens.
+16. **Cloud responses are redacted around their tokens before storage** (`redactAroundTokens`): the request's own
+    tokens stay, a name or amount the model wrote in the clear is tokenized, and a token the request didn't send is
+    escaped. Local and fallback responses are redacted whole (they are plain text). Found by
+    `tests/gateway-hygiene.test.ts`.
+17. **Known limitation: pattern-token codes are keyed by the public shop seed.** AMOUNT / EMAIL / PHONE / PN tokens are
+    HMACs of the value under `tokenKey(shop seed)`, a demo constant, so someone with the repo could confirm a guessed
+    value from its token. Acceptable for fictional demo data; a real deployment needs a per-install secret key.
+18. **Seeded history has 21 rows** (every decision, local EC redacted-for-storage, Bedrock global profile, a smoke
+    test, a timeout and a repair chain), all `transport: seeded`, `SEED-NNNN` IDs, explicit row IDs inserted by Reset.

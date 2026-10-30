@@ -1,14 +1,17 @@
 "use server";
 /**
- * Reveal (PLAN.md §4.7): re-hydrates the tokens in ONE audit row's own tokens_used, for the viewer's role, at render
- * time. Nothing revealed is stored; the reveal itself is logged (counts only).
+ * /audit Server Actions (PLAN.md §4.7). The list and the detail are role-scoped by the data layer (owner: every row;
+ * others: their own). Free-text search travels here in the POST body, never in a URL, and is matched only after
+ * redaction. Reveal re-hydrates the tokens in ONE row's own tokens_used, for the viewer's role, at render time;
+ * nothing revealed is stored and the reveal itself is logged (counts only).
  */
 import { z } from "zod";
 import { writeEvent } from "@/lib/audit/events";
 import { canRevealRow, revealRow } from "@/lib/audit/reveal";
-import { lookupPatternToken } from "@/lib/audit/token-store";
+import { createPatternTokenResolver, lookupPatternToken } from "@/lib/audit/token-store";
 import type { RevealResult } from "@/lib/audit/types";
-import { auditRowForReveal } from "@/lib/data/audit";
+import { AuditFiltersSchema } from "@/lib/audit/filters";
+import { auditRowDetail, auditRowForReveal, listAuditRows, type AuditDetailVM, type AuditListVM } from "@/lib/data/audit";
 import { cachedRedactionDictionary } from "@/lib/data/dictionary";
 import { assertCan, requireActor } from "@/server/actor";
 import { getDb } from "@/server/db";
@@ -46,3 +49,25 @@ export const revealAuditRow = withSafeErrors(async (rowId: number): Promise<Reve
   );
   return result;
 }, "revealAuditRow");
+
+export type AuditQueryResult = { ok: true; list: AuditListVM } | { ok: false; message: string };
+
+export const queryAudit = withSafeErrors(async (filters: unknown): Promise<AuditQueryResult> => {
+  const actor = await requireActor();
+  assertCan(actor, "viewAudit");
+  const parsed = AuditFiltersSchema.safeParse(filters);
+  if (!parsed.success) return { ok: false, message: "Those filters couldn't be read. Clear them and try again." };
+  const db = getDb();
+  return {
+    ok: true,
+    list: listAuditRows(db, viewerOf(actor), parsed.data, { dict: cachedRedactionDictionary(db), patterns: createPatternTokenResolver(db) }),
+  };
+}, "queryAudit");
+
+export const getAuditRow = withSafeErrors(async (rowId: number): Promise<AuditDetailVM | null> => {
+  const actor = await requireActor();
+  assertCan(actor, "viewAudit");
+  const id = Id.safeParse(rowId);
+  if (!id.success) return null;
+  return auditRowDetail(getDb(), viewerOf(actor), id.data);
+}, "getAuditRow");

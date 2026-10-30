@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { can } from "@/lib/auth/roles";
 import { getEnv } from "@/lib/env";
 import { formatDate } from "@/lib/format";
-import { getRoutingSummary } from "@/lib/policy/summary";
+import { getAiRouting } from "@/server/ai";
 import { getActor, listPersonas } from "@/server/actor";
 import { getShellInfo } from "@/server/queries/shell";
 
@@ -18,7 +18,8 @@ import { getShellInfo } from "@/server/queries/shell";
 export default async function AppLayout({ children }: Readonly<{ children: ReactNode }>) {
   const [shell, actor, personas] = await Promise.all([getShellInfo(), getActor(), listPersonas()]);
   const env = getEnv();
-  const summary = getRoutingSummary(env);
+  // The effective routing: the in-app setting (unless AI_SETTINGS_LOCKED) over env, plus cached live health.
+  const summary = getAiRouting().summary;
   const canSwitch = can(actor.role, "switchPersona", { demoOpenControls: env.DEMO_OPEN_CONTROLS });
 
   return (

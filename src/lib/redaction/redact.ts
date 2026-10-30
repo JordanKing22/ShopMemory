@@ -195,6 +195,40 @@ export function redactText(
   };
 }
 
+/**
+ * Redacts a cloud model's response for storage: tokens in `keep` (the ones this request sent) stay as they are, and
+ * everything between them is redacted like user input, so a name the model wrote in the clear never reaches the audit
+ * log. A token the request didn't produce is escaped like any literal "[[…]]" (it can't be revealed later).
+ */
+export function redactAroundTokens(
+  text: string,
+  keep: ReadonlySet<string>,
+  dict: RedactionDictionary,
+  patterns: PatternTokenResolver,
+  opts: { field?: string } = {},
+): RedactionResult<string> {
+  const session = new RedactionSession(compiled(dict), patterns);
+  const field = opts.field ?? "response";
+  const s = text.normalize("NFC");
+  let value = "";
+  let last = 0;
+  for (const m of s.matchAll(tokenRegex())) {
+    if (!keep.has(m[0])) continue;
+    const start = m.index ?? 0;
+    if (start > last) value += session.redact(s.slice(last, start), field);
+    value += m[0];
+    last = start + m[0].length;
+  }
+  if (last < s.length) value += session.redact(s.slice(last), field);
+  return {
+    value,
+    tokens: session.tokens as TokenMap,
+    tokensUsed: sortedDistinctTokens([value]),
+    minted: session.minted,
+    suspects: session.suspects,
+  };
+}
+
 function redactJson(session: RedactionSession, value: JsonValue, field: string, out: string[]): JsonValue {
   if (typeof value === "string") {
     const r = session.redact(value, field);

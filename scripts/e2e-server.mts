@@ -16,7 +16,25 @@ const next = path.join(process.cwd(), "node_modules", "next", "dist", "bin", "ne
 // TZ is deliberately non-UTC, west of UTC, and different from the browser's timezoneId (Asia/Tokyo, playwright.config.ts).
 // Server-rendered local-time dates slip a day, so the date checks in the specs catch them, and client components that
 // format in local time cause hydration mismatches (PLAN.md §12).
-const env = childEnv({ FLOORWISE_DB: "e2e", TZ: "America/Chicago" });
+// No egress (PLAN.md §12): every non-loopback socket or DNS lookup is blocked and logged to data/e2e-egress.log (the
+// specs assert it stays empty; a connection to Ollama's port is logged too, since replay must not contact it). The demo
+// settings are pinned so a key in the developer's environment can never turn an E2E run into live calls.
+const egressLog = path.join(process.cwd(), "data", "e2e-egress.log");
+fs.writeFileSync(egressLog, "");
+const preload = path.join(process.cwd(), "e2e", "no-egress.cjs");
+const env = childEnv({
+  FLOORWISE_DB: "e2e",
+  TZ: "America/Chicago",
+  NODE_OPTIONS: `--require "${preload}"`,
+  NO_EGRESS_LOG: egressLog,
+  NO_EGRESS_FLAG_OLLAMA: "1",
+  DEMO_MODE: "true",
+  DEMO_MISS: "offline",
+  DEMO_LIVE_LOCAL: "false",
+  DEMO_REPLAY_SPEED: "fast",
+  DEMO_OPEN_CONTROLS: "true",
+  AI_SETTINGS_LOCKED: "false",
+});
 const child = spawn(process.execPath, [next, "start", "-p", "3100", "-H", "127.0.0.1"], { stdio: "inherit", env });
 for (const sig of ["SIGINT", "SIGTERM"] as const) process.on(sig, () => child.kill(sig));
 child.on("exit", (code, signal) => process.exit(code ?? (signal ? 1 : 0)));

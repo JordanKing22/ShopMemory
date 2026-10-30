@@ -1,4 +1,5 @@
 import "server-only";
+import Link from "next/link";
 import { Ban, Check, Cloud, Laptop, Layers, TriangleAlert, type LucideIcon } from "lucide-react";
 import { CLASSIFICATIONS, type Classification } from "@/db/schema/enums";
 import { getEnv } from "@/lib/env";
@@ -18,6 +19,7 @@ import {
 } from "@/lib/routing-copy";
 import { cn } from "@/lib/utils";
 import { InfoPopover } from "./info-popover";
+import { ReplayTag } from "./replay-tag";
 
 export type { RoutingSummary };
 type Mode = RoutingSummary["mode"];
@@ -68,20 +70,7 @@ export function ClearanceDots({ summary, className }: { summary: RoutingSummary;
   );
 }
 
-/** REPLAY tag (CLAUDE.md hard rule 10): signal-orange fill with INK text, never white. */
-export function ReplayTag({ className }: { className?: string }) {
-  return (
-    <span
-      data-replay=""
-      className={cn(
-        "inline-flex h-6 items-center rounded-sm bg-signal px-1.5 text-sm leading-none font-semibold tracking-wide text-ink",
-        className,
-      )}
-    >
-      REPLAY
-    </span>
-  );
-}
+export { ReplayTag };
 
 function Row({ term, children }: { term: string; children: React.ReactNode }) {
   return (
@@ -157,7 +146,17 @@ function Details({ summary }: { summary: RoutingSummary }) {
           </ul>
         </div>
       ) : null}
-      <p className="text-muted-foreground">Set by the server configuration. Keys and secrets are never shown here.</p>
+      <p className="text-muted-foreground">
+        {summary.source === "setting"
+          ? "Set in Settings."
+          : summary.source === "locked_env"
+            ? "Locked by the server configuration (AI_SETTINGS_LOCKED=true)."
+            : "Set by the server configuration."}{" "}
+        Keys and secrets are never shown here.{" "}
+        <Link href="/settings" className="font-medium text-primary underline underline-offset-2">
+          Open Settings
+        </Link>
+      </p>
     </div>
   );
 }

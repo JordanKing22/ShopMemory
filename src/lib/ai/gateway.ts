@@ -31,7 +31,7 @@ import { renderNotice } from "@/lib/policy/notices";
 import { PROVIDER_LABEL, getRoutingSummary, resolveEffectiveRouting, type RoutingSummary } from "@/lib/policy/summary";
 import type { BudgetedRecord, Decision, EffectiveRouting, PolicyTarget, RequestClassification } from "@/lib/policy/types";
 import type { CompiledRedactionDictionary } from "@/lib/redaction/dictionary";
-import { redactRequest, redactText } from "@/lib/redaction/redact";
+import { redactAroundTokens, redactRequest, redactText } from "@/lib/redaction/redact";
 import { StreamRestorer, detokenizeEntities, restoreJsonStrings } from "@/lib/redaction/restore";
 import { parseToken } from "@/lib/redaction/patterns";
 import type { PatternTokenRecord, RedactionResult, TokenMap } from "@/lib/redaction/types";
@@ -558,9 +558,14 @@ export function createGateway(deps: GatewayDeps): Gateway {
     let stats = { citationsValid: 0, citationsStripped: 0 };
     const started = performance.now();
 
+    // A cloud response is already tokenized, but the model may still write a name in the clear: keep this request's
+    // own tokens and redact around them. Local and fallback text is plain, so it is redacted whole.
     const responseForStorage = (raw: string, r: ResolvedTransport): { text: string; tokens: string[] } => {
-      if (d.isCloud && r.transport !== "demo_fallback") return { text: raw, tokens: rowTokens };
-      const red = redactText(raw, p.dict, createPatternTokenResolver(db), { field: "response" });
+      const resolver = createPatternTokenResolver(db);
+      const red =
+        d.isCloud && r.transport !== "demo_fallback"
+          ? redactAroundTokens(raw, new Set([...tokens.keys(), ...rowTokens]), p.dict, resolver, { field: "response" })
+          : redactText(raw, p.dict, resolver, { field: "response" });
       persistPatternTokens(db, red.minted, deps.now().toISOString());
       return { text: red.value, tokens: sortTokens([...rowTokens, ...red.tokensUsed]) };
     };

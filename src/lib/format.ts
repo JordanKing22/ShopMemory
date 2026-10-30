@@ -175,3 +175,20 @@ export function formatProviderShort(t: Pick<ProviderLineTarget, "providerLabel">
   if (label.includes("Bedrock")) return "Bedrock";
   return label;
 }
+
+const TIMESTAMP_FORMAT = new Intl.DateTimeFormat("en-US", {
+  timeZone: "UTC",
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
+
+/** A real-time ISO timestamp (audit/event rows) as "Sep 2, 2026, 14:05 UTC". Fixed locale and zone: hydration-safe. */
+export function formatTimestampUtc(iso: string | null | undefined): string {
+  if (!iso) return NOT_AVAILABLE;
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? NOT_AVAILABLE : `${TIMESTAMP_FORMAT.format(d)} UTC`;
+}

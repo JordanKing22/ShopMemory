@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, ClipboardList, Factory, Grid3x3, Users, type LucideIcon } from "lucide-react";
+import { BookOpen, ClipboardList, Ellipsis, Factory, Grid3x3, ScrollText, Settings, Users, type LucideIcon } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
 export interface NavItem {
@@ -11,13 +12,19 @@ export interface NavItem {
   icon: LucideIcon;
 }
 
-/** Phase 2 destinations (PLAN.md §9). Later phases add Ask, Interviews, Documents, Training, Audit, Privacy, Settings. */
+/** Destinations so far (PLAN.md §9). Later phases add Ask, Interviews, Documents, Training and Privacy. */
 export const NAV_ITEMS: readonly NavItem[] = [
   { href: "/risk", label: "Risk", icon: Grid3x3 },
   { href: "/library", label: "Library", icon: BookOpen },
   { href: "/people", label: "People", icon: Users },
   { href: "/machines", label: "Machines", icon: Factory },
   { href: "/jobs", label: "Jobs", icon: ClipboardList },
+];
+
+/** System pages: below the main items in the side nav; behind "More" in the phone tab bar. */
+export const SYSTEM_NAV_ITEMS: readonly NavItem[] = [
+  { href: "/audit", label: "Audit log", icon: ScrollText },
+  { href: "/settings", label: "Settings", icon: Settings },
 ];
 
 function isActive(pathname: string, href: string): boolean {
@@ -36,10 +43,10 @@ export function SideNav() {
       className="sticky top-(--app-header-h) hidden h-[calc(100dvh-var(--app-header-h))] shrink-0 overflow-y-auto border-r bg-sidebar text-sidebar-foreground sm:block sm:w-22 wide:w-52 print:hidden"
     >
       <ul className="flex flex-col gap-1 p-2 wide:p-3">
-        {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
+        {[...NAV_ITEMS, ...SYSTEM_NAV_ITEMS].map(({ href, label, icon: Icon }, i) => {
           const active = isActive(pathname, href);
           return (
-            <li key={href}>
+            <li key={href} className={i === NAV_ITEMS.length ? "mt-3 border-t pt-3" : undefined}>
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
@@ -70,7 +77,7 @@ export function BottomTabBar() {
       aria-label="Main"
       className="fixed inset-x-0 bottom-0 z-40 border-t bg-surface pb-[env(safe-area-inset-bottom)] sm:hidden print:hidden"
     >
-      <ul className="grid h-(--app-tabbar-h) grid-cols-5">
+      <ul className="grid h-(--app-tabbar-h) grid-cols-6">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
           const active = isActive(pathname, href);
           return (
@@ -96,6 +103,31 @@ export function BottomTabBar() {
             </li>
           );
         })}
+        <li className="min-w-0">
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className={cn(
+                "flex h-full w-full min-w-0 flex-col items-center justify-center gap-0.5 text-sm font-medium transition-colors",
+                SYSTEM_NAV_ITEMS.some((x) => isActive(pathname, x.href)) ? "text-primary" : "text-muted-foreground hover:text-ink",
+              )}
+            >
+              <span className="flex h-7 w-12 items-center justify-center rounded-full">
+                <Ellipsis aria-hidden="true" className="size-5" />
+              </span>
+              <span className="max-w-full truncate px-0.5 leading-tight">More</span>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" side="top" className="min-w-48">
+              {SYSTEM_NAV_ITEMS.map(({ href, label, icon: Icon }) => (
+                <DropdownMenuItem key={href} asChild className="min-h-tap">
+                  <Link href={href} aria-current={isActive(pathname, href) ? "page" : undefined}>
+                    <Icon aria-hidden="true" className="size-5" />
+                    {label}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </li>
       </ul>
     </nav>
   );

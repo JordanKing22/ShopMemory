@@ -26,6 +26,8 @@ export const ROUTES = [
   "/jobs/J-A03",
   "/jobs/Q-A01",
   "/jobs/J-A10",
+  "/settings",
+  "/audit",
 ] as const;
 
 /** Print views (the (print) route group: no app shell). */
